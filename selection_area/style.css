@@ -15,7 +15,7 @@
 :root{
 
     --bg-primary:#05070d;
-    --bg-card:#001633;
+    --bg-card:#07111f;
 
     --border-color:#c6853a;
 
@@ -100,7 +100,9 @@ body{
 
     min-height:360px;
 
-    transition:var(--transition);
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
 }
 
 /* Hover do card */
