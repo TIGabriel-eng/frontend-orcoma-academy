@@ -1,0 +1,307 @@
+/* ==================================================
+   RESET GLOBAL
+   Remove margens e paddings padrões do navegador
+================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+/* ==================================================
+   BODY
+   Fundo principal da página
+================================================== */
+
+body{
+    min-height:100vh;
+    font-family:'DM Sans',sans-serif;
+    background:#050b16;
+    color:white;
+}
+
+
+/* ==================================================
+   CONTAINER PRINCIPAL
+   Divide a tela em duas colunas:
+   Esquerda (branding)
+   Direita (login)
+================================================== */
+
+.login-page{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:1fr 500px;
+}
+
+
+/* ==================================================
+   COLUNA ESQUERDA
+   Área da logo e slogan da empresa
+================================================== */
+
+.login-left{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    padding:60px;
+}
+
+
+/* ==================================================
+   LOGO PRINCIPAL
+   Logo da Orcoma Academy
+================================================== */
+
+.logo-big{
+    width:350px;
+}
+
+
+/* ==================================================
+   TÍTULO PRINCIPAL
+   "Conhecimento que transforma"
+================================================== */
+
+.login-left h1{
+    margin-top:30px;
+
+    font-family:'Sora',sans-serif;
+    font-size:40px;
+
+    max-width:600px;
+}
+
+
+/* ==================================================
+   SUBTÍTULO
+   "Inovação que impulsiona"
+================================================== */
+
+.login-left p{
+    margin-top:15px;
+
+    color:#8b9ab5;
+    font-size:18px;
+}
+
+
+/* ==================================================
+   COLUNA DIREITA
+   Área que contém o formulário
+================================================== */
+
+.login-right{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border-left:1px solid rgba(255,255,255,.08);
+}
+
+
+/* ==================================================
+   CARD DE LOGIN
+   Container dos campos de acesso
+================================================== */
+
+.login-card{
+    width:380px;
+}
+
+
+/* ==================================================
+   TÍTULO DO LOGIN
+   Texto "Entrar"
+================================================== */
+
+.login-card h2{
+    margin-bottom:30px;
+    font-size:32px;
+}
+
+
+/* ==================================================
+   GRUPO DE INPUT
+   Label + Campo
+================================================== */
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+
+    gap:8px;
+    margin-bottom:20px;
+}
+
+
+/* ==================================================
+   LABEL DOS INPUTS
+================================================== */
+
+.input-group label{
+    font-size:14px;
+}
+
+
+/* ==================================================
+   INPUTS
+   Email e senha
+================================================== */
+
+.input-group input{
+    height:52px;
+
+    background:#091528;
+
+    border:1px solid #1e2d45;
+
+    border-radius:12px;
+
+    color:white;
+
+    padding:0 16px;
+}
+
+
+/* ==================================================
+   BOTÃO DE LOGIN
+================================================== */
+
+button{
+    width:100%;
+    height:52px;
+    border:none;
+    border-radius:12px;
+    background:#002b86;
+    color:white;
+    font-weight:700;
+    margin-top:10px;
+    cursor:pointer;
+}
+
+/* =========================================
+   ESQUECI MINHA SENHA
+========================================= */
+
+.forgot-password{
+    margin-top:20px;
+    text-align:center;
+}
+
+.forgot-password a{
+    color:#4f7cff;
+    text-decoration:none;
+    font-size:14px;
+    transition:.3s;
+}
+
+.forgot-password a:hover{
+    color:#79a0ff;
+}
+
+
+/* =========================================
+   MODAL RECUPERAÇÃO DE SENHA
+========================================= */
+
+.recovery-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.recovery-modal.active{
+    display:flex;
+}
+
+.recovery-box{
+    width:420px;
+    background:#081426;
+    border:1px solid rgba(37,99,235,.35);
+    border-radius:20px;
+    padding:35px;
+    position:relative;
+    animation:fadeUp .3s ease;
+}
+
+.recovery-box h2{
+    color:#fff;
+    margin-bottom:12px;
+}
+
+.recovery-box p{
+    color:#8b9ab5;
+    margin-bottom:20px;
+    line-height:1.5;
+}
+
+.recovery-input{
+    width:100%;
+    height:50px;
+    border-radius:12px;
+    border:1px solid #1e3a8a;
+    background:#06111f;
+    color:#fff;
+    padding:0 15px;
+    margin-bottom:15px;
+}
+
+.recovery-btn{
+    width:100%;
+    height:50px;
+    border:none;
+    border-radius:12px;
+    background:#2563eb;
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.recovery-btn:hover{
+    background:#1d4ed8;
+}
+
+.recovery-box small{
+    display:block;
+    margin-top:15px;
+    color:#7a8ca7;
+    line-height:1.4;
+}
+
+.close-modal{
+    position:absolute;
+    right:15px;
+    top:15px;
+    color:#fff;
+    font-size:18px;
+    background:none;
+    border:none;
+    cursor:pointer;
+}
+
+
+/* =========================================
+   ANIMAÇÃO
+========================================= */
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}

@@ -1,0 +1,1705 @@
+/* ============================================================
+   ORCOMA ACADEMY — Stylesheet
+   Organização:
+   1. Variáveis CSS (tokens de design)
+   2. Reset e base
+   3. Layout principal (sidebar + main)
+   4. Sidebar
+   5. Topbar
+   6. Hero / Boas-vindas
+   7. Progresso (círculo + barras)
+   8. Seções genéricas
+   9. Cards de curso
+   10. Trilhas
+   11. Eventos
+   12. Stats Bar
+   13. Responsivo
+   14. Scrollbar customizada
+   15. 
+   ============================================================ */
+
+
+/* ============================================================
+   1. VARIÁVEIS CSS
+   ============================================================ */
+:root {
+  /* Cores principais */
+  --color-bg:           #091528;   /* Fundo global */
+  --color-surface:      #111827;   /* Superfície de cards */
+  --color-surface-2:    #1a2235;   /* Superfície mais clara */
+  --color-border:       #1e2d45;   /* Bordas sutis */
+  --color-accent:       #ff9d00;   /* Amarelo/laranja de destaque */
+  --color-accent-2:     #3b82f6;   /* Azul secundário */
+  --color-accent-hover: #e8941a;   /* Hover do accent */
+
+  /* Texto */
+  --color-text-primary:   #ffffff;
+  --color-text-secondary: #8b9ab5;
+  --color-text-muted:     #4a5568;
+
+  /* Sidebar */
+  --sidebar-width:      240px;
+  --sidebar-bg:         #0d1526;
+  --sidebar-item-hover: #1a2640;
+  --sidebar-item-active:#1e3a5f;
+
+  /* Tipografia */
+  --font-display: 'Sora', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+
+  /* Espaçamentos */
+  --spacing-xs:  4px;
+  --spacing-sm:  8px;
+  --spacing-md:  16px;
+  --spacing-lg:  24px;
+  --spacing-xl:  32px;
+  --spacing-2xl: 48px;
+
+  /* Bordas arredondadas */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+  --radius-full: 9999px;
+
+  /* Sombras */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(245, 166, 35, 0.15);
+
+  /* Transições */
+  --transition-fast:   0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow:   0.4s ease;
+}
+
+
+/* ============================================================
+   2. RESET E BASE
+   ============================================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 14px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+
+/* ============================================================
+   3. LAYOUT PRINCIPAL
+   ============================================================ */
+/* Sidebar fixa à esquerda, main ocupa o restante */
+body {
+  display: flex;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  min-height: 100vh;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 100;
+  transition: transform var(--transition-normal);
+  scrollbar-width: thin;
+  scrollbar-color: #2563EB #0d1526;
+}
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+
+/* ============================================================
+   4. SIDEBAR
+   ============================================================ */
+
+/* Logo */
+.sidebar__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sidebar__logo-img {
+  width: 180px;        /* Ajuste conforme o tamanho da sua logo */
+  height: auto;        /* Mantém a proporção original */
+  object-fit: contain;
+}
+
+.sidebar__logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--color-accent), #d4890a);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  color: #000;
+  flex-shrink: 0;
+}
+
+.sidebar__logo-text {
+  font-family: var(--font-display);
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--color-text-secondary);
+}
+
+.sidebar__logo-text strong {
+  color: var(--color-text-primary);
+  font-weight: 700;
+  display: block;
+}
+
+/* Navegação */
+.sidebar__nav {
+  padding: var(--spacing-md) var(--spacing-xl);
+}
+
+.sidebar__nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 9px var(--spacing-md);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  position: relative;
+  user-select: none;
+}
+
+.nav-item i {
+  width: 16px;
+  text-align: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.nav-item:hover {
+  background-color: var(--sidebar-item-hover);
+  color: var(--color-text-primary);
+}
+
+.nav-item.active {
+  background-color: var(--sidebar-item-active);
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* Badge de notificação */
+.badge {
+  margin-left: auto;
+  background-color: var(--color-accent);
+  color: #000;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Item de logout */
+.nav-item--logout {
+  margin-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--spacing-md);
+}
+
+/* Ambiente ativo */
+.sidebar__env {
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.sidebar__env-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-xs);
+  text-transform: uppercase;
+}
+
+.sidebar__env-item {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  padding: 4px 0;
+}
+
+.active-env {
+  color: var(--color-accent-2);
+  font-weight: 600;
+}
+
+.sidebar__env-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: linear-gradient(
+    180deg,
+    #00173b 0%,
+    #0f1f38 100%
+  );
+
+  border: 1px solid rgba(59,130,246,.18);
+  border-radius: 14px;
+
+  padding: 14px 12px;
+  margin-top: 10px;
+
+  color: #dbe7ff;
+  font-size: 13px;
+  font-weight: 500;
+
+  transition: .3s;
+}
+
+.sidebar__env-selector:hover {
+  border-color: rgba(59,130,246,.4);
+  background: linear-gradient(
+    180deg,
+    #001f52 0%,
+    #122544 100%
+  );
+}
+
+.sidebar__env-selector i:last-child {
+  margin-left: auto;
+  font-size: 10px;
+}
+
+/* Card Premium */
+.sidebar__premium {
+  margin: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: linear-gradient(135deg, #1a2e4a, #0f1e35);
+  border: 1px solid #2a4a6a;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.sidebar__premium > i {
+  color: var(--color-accent);
+  font-size: 18px;
+}
+
+.premium__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--color-text-primary);
+}
+
+.premium__desc {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.btn-premium {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+  color: #000;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 8px var(--spacing-md);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  justify-content: center;
+  transition: opacity var(--transition-fast);
+  margin-top: var(--spacing-xs);
+}
+
+.btn-premium:hover {
+  opacity: 0.85;
+}
+
+/* Overlay mobile (escurece o fundo quando sidebar aberta) */
+.sidebar__overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 99;
+}
+
+
+/* ============================================================
+   5. TOPBAR
+   ============================================================ */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Botão de menu para mobile */
+.topbar__menu-btn {
+  display: none;  /* Visível só no mobile */
+  color: var(--color-text-secondary);
+  font-size: 18px;
+}
+
+/* Campo de busca */
+.topbar__search {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 8px var(--spacing-md);
+  flex: 1;
+  max-width: 400px;
+  transition: border-color var(--transition-fast);
+}
+
+/* Foco no campo de busca */
+.topbar__search:focus-within {
+  border-color: var(--color-accent-2);
+}
+
+/* Ícone de busca */
+.topbar__search i {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* Input de busca */
+.topbar__search input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  width: 100%;
+}
+
+/* Placeholder do input de busca */
+.topbar__search input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Atalho de teclado (ex: Ctrl + K) */
+.topbar__search kbd {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Ações à direita (notificações, perfil) */
+.topbar__search i {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+/* Input de busca */
+.topbar__search input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  width: 100%;
+}
+
+/* Placeholder do input de busca */
+.topbar__search input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Ações à direita (notificações, perfil) */
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-left: auto;
+}
+
+/* Botões de ícone (notificações, perfil) */
+.topbar__icon-btn {
+  position: relative;
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  padding: var(--spacing-xs);
+  transition: color var(--transition-fast);
+}
+
+/* Hover nos ícones da topbar */
+.topbar__icon-btn:hover {
+  color: var(--color-text-primary);
+}
+
+/* Ponto de notificação */
+.topbar__notif-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 7px;
+  height: 7px;
+  background-color: var(--color-accent);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-bg);
+}
+
+/* ============================================================
+6. HERO / BOAS-VINDAS
+============================================================ */
+
+.hero{
+display:grid;
+grid-template-columns: 320px 400px;  /* Colunas fixas */
+gap: var(--spacing-lg);
+align-items:end;
+background:#000c20;
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+min-height:220px;
+border:1px solid var(--color-border);
+border-radius:var(--radius-xl);
+padding:var(--spacing-xl);
+position:relative;
+overflow:hidden;
+min-height: 220px;
+width: fit-content;   /* ← Hero só ocupa o espaço necessário */
+max-width: 100%;      /* ← Mas nunca ultrapassa a tela */
+}
+
+/* Glow decorativo */
+.hero::before{
+content:'';
+position:absolute;
+top:-80px;
+right:300px;
+width:320px;
+height:320px;
+pointer-events:none;
+z-index: 2;
+}
+
+/* Conteúdo principal */
+.hero__content{
+max-width:620px;
+position:relative;
+z-index:2;
+}
+
+/* Logo */
+.hero__brand-logo-img{
+width:220px;
+height:auto;
+object-fit:contain;
+
+
+margin-bottom:20px;
+
+}
+
+.hero__brand-logo-img--large{
+width:260px;
+}
+
+/* Subtítulo */
+.hero__brand-sub{
+font-size:11px;
+letter-spacing:.15em;
+text-transform:uppercase;
+
+
+color:var(--color-text-muted);
+
+margin-bottom:8px;
+
+}
+
+/* Nome da marca */
+.hero__brand-name{
+font-family:var(--font-display);
+font-size:28px;
+font-weight:800;
+
+line-height:1.1;
+margin-bottom:16px;
+}
+
+.hero__brand-name span{
+color:var(--color-accent);
+}
+
+/* Chamada principal */
+.hero__tagline{
+font-family:var(--font-display);
+font-size:20px;
+line-height:1.5;
+margin-bottom:14px;
+
+color:#ffffff;
+}
+
+.hero__tagline strong{
+color:var(--color-accent);
+}
+
+/* Descrição */
+.hero__desc{
+font-size:13px;
+line-height:1.8;
+color:var(--color-text-secondary);
+
+max-width:540px;
+
+margin-bottom:28px;
+
+}
+
+/* Ambiente */
+.tag-env{
+display:inline-flex;
+align-items:center;
+background:#2563eb;
+
+color:#fff;
+
+padding:4px 10px;
+
+border-radius:999px;
+
+font-size:11px;
+font-weight:600;
+}
+
+/* Botão */
+.btn-hero{
+display:inline-flex;
+align-items:center;
+gap:8px;
+padding:12px 24px;
+
+background:linear-gradient(
+    135deg,
+    var(--color-accent),
+    var(--color-accent-hover)
+);
+
+color:#000;
+
+border-radius:999px;
+
+font-family:var(--font-display);
+font-weight:700;
+
+transition:.3s;
+
+}
+
+.btn-hero:hover{
+transform:translateY(-2px);
+box-shadow:
+    0 10px 30px rgba(255,157,0,.25);
+
+}
+
+/* ============================================================
+CARDS DE AMBIENTE
+============================================================ */
+
+.hero__cards{
+display:flex;
+flex-direction:column;
+gap:16px;
+width:100%;
+
+position:relative;
+z-index:2;
+
+}
+
+.hero__env-card{
+background:rgba(0,13,54,.85);
+backdrop-filter:blur(10px);
+border:1px solid rgba(255,255,255,.08);
+border-radius:16px;
+padding:20px;
+transition:.3s;
+}
+
+.hero__env-card:hover{
+transform:translateY(-3px);
+border-color:#2563eb;
+
+background:rgba(11,32,72,.95);
+}
+
+.hero__env-card i{
+font-size:18px;
+color:#3b82f6;
+margin-bottom:10px;
+}
+
+.hero__env-card h3{
+font-family:var(--font-display);
+font-size:15px;
+font-weight:700;
+margin-bottom:8px;
+
+}
+
+.hero__env-card p{
+font-size:12px;
+color:#9fb3d9;
+
+line-height:1.7;
+
+margin-bottom:14px;
+
+}
+
+.env-card__link{
+display:flex;
+align-items:center;
+gap:6px;
+color:var(--color-accent);
+
+font-size:13px;
+font-weight:700;
+
+transition:.3s;
+
+}
+
+.env-card__link:hover{
+gap:10px;
+}
+
+/* ============================================================
+RESPONSIVO
+============================================================ */
+
+@media (max-width:1200px){
+
+.hero{
+    grid-template-columns:1fr;
+    }
+
+.hero__cards{
+    flex-direction:row;
+}
+
+.hero__env-card{
+    flex:1;
+}
+}
+
+@media (max-width:768px){
+
+
+.hero{
+    padding:24px;
+}
+
+.hero__cards{
+    flex-direction:column;
+}
+
+.hero__brand-logo-img{
+    width:180px;
+}
+
+.hero__tagline{
+    font-size:18px;
+}
+
+}
+
+
+
+/* ============================================================
+   7. PROGRESSO (CÍRCULO + BARRAS)
+   ============================================================ */
+
+/* Painel de progresso no hero */
+.hero__progress {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* Ajusta a altura da progress sidebar para não ultrapassar a tela */
+.main-content {
+  margin-left: var(--sidebar-width);
+  margin-right: 260px;
+  flex: 1;
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+/* Header do painel de progresso */
+.progress__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Título "Progresso" no header do painel */
+.progress__header span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* Link "Ver detalhes" no header do progresso */
+.progress__header a {
+  font-size: 11px;
+  color: var(--color-accent-2);
+  transition: opacity var(--transition-fast);
+}
+
+/* Hover no link "Ver detalhes" */
+.progress__header a:hover {
+  opacity: 0.7;
+}
+
+/* Círculo SVG */
+.progress__circle-wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+/* O SVG do círculo de progresso é rotacionado -90 graus para que o início da animação comece no topo (12 horas) em vez da direita (3 horas) */
+.progress__ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.08);
+  stroke-width: 10;
+}
+
+/* Parte preenchida do círculo, animada via JS ajustando stroke-dashoffset para criar o efeito de progresso */
+.progress__ring-fill {
+  fill: none;
+  stroke: #2563EB;
+  stroke-width: 10;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.35));
+  stroke-dasharray: 314;
+  stroke-dashoffset: 314;
+  transition: stroke-dashoffset 1.2s ease;
+}
+
+
+/* O SVG do círculo de progresso é rotacionado -90 graus para que o início da animação comece no topo (12 horas) em vez da direita (3 horas) */
+.progress__ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+/* Fundo do círculo */
+.progress__ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.08);
+  stroke-width: 8;
+}
+
+/* Parte preenchida do círculo, animada via JS ajustando stroke-dashoffset para criar o efeito de progresso */
+.progress__ring-fill {
+  fill: none;
+  stroke: #002a85;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.15));
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 314;
+  stroke-dashoffset: 314; /* Começa zerado, animado via JS */
+  transition: stroke-dashoffset 1.2s ease;
+}
+
+/* Texto central do círculo */
+.progress__circle-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Label abaixo do percentual no círculo */
+.progress__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* Subtítulo ou descrição adicional abaixo do label no círculo */
+.progress__sub {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+/* Barras de progresso */
+.progress__bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Cada item de barra de progresso, contendo header (título + percentual) e a barra em si */
+.progress__bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Header de cada barra, com título do curso ou módulo e percentual alinhados nas extremidades */
+.progress__bar-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+/* Título do curso ou módulo na barra de progresso */
+.progress__bar-track {
+  width: 100%;
+  height: 5px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+/* Parte preenchida da barra de progresso, animada via JS ajustando a largura (width) para criar o efeito de progresso */
+.progress__bar-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #001b3b,
+    #0073ff
+  );
+  border-radius: var(--radius-full);
+}
+
+
+.progress__summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.progress__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.progress__percent {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff
+}
+
+/* ============================================================
+   8. SEÇÕES GENÉRICAS
+   ============================================================ */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section__title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.section__link {
+  font-size: 12px;
+  color: var(--color-accent-2);
+  transition: opacity var(--transition-fast);
+}
+
+.section__link:hover {
+  opacity: 0.7;
+}
+
+.section--trilhas {
+    max-width: 830px; /* ajuste conforme o hero */
+}
+
+/* ============================================================
+   9. CARDS DE CURSO
+   ============================================================ */
+.courses-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-start;
+    width: 735px;  /*ajuste conforme o Hero */
+
+}
+
+.course-card {
+  min-width: 200px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  cursor: pointer;
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+}
+
+/* Thumbnail do card */
+.course-card__thumb {
+  position: relative;
+  height: 110px;
+  overflow: hidden;
+}
+
+/* Gradientes de cor como placeholder das imagens */
+.course-card__img {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform var(--transition-slow);
+}
+
+.course-card:hover .course-card__img {
+  transform: scale(1.05);
+}
+
+/* Cores de placeholder por curso */
+.course-card__img--1 { background: linear-gradient(135deg, #1a3a5c, #0d2440); }
+.course-card__img--2 { background: linear-gradient(135deg, #1a4a2e, #0d2818); }
+.course-card__img--3 { background: linear-gradient(135deg, #3a1a4a, #200d30); }
+.course-card__img--4 { background: linear-gradient(135deg, #4a1a1a, #2c0d0d); }
+.course-card__img--5 { background: linear-gradient(135deg, #2a2a1a, #1a1a0d); }
+
+/* Badge de status */
+.course-card__badge {
+  position: absolute;
+  top: var(--spacing-sm);
+  left: var(--spacing-sm);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 7px;
+  border-radius: var(--radius-full);
+  z-index: 2;
+}
+
+/* Cores de badge por status */
+.badge--em-andamento {
+  background-color: #0057FF;
+  color: #fff;
+}
+
+.badge--concluido {
+  background-color: #22C55E;
+  color: #fff;
+}
+
+.badge--
+
+/* ============================================================
+   14.SCROLLBAR CUSTOMIZADA
+   ============================================================ */
+
+.sidebar::-webkit-scrollbar {
+  width: 10px; /* Largura da barra */
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #0d1526; /* Cor do track da barra */
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #3b82f6; /* Azul */
+  border-radius: var(--radius-full);
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #60a5fa; /* Azul mais claro no hover */
+}
+
+/* ============================================================
+   16. EVENTS SIDEBAR — barra fixa lateral direita
+   ============================================================ */
+
+.progress-profile-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 260px; /* mesma largura da sidebar */
+  height: 70px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  background: none;
+  z-index: 99999;
+}
+
+/* Sidebar de progresso fixa à direita */
+.progress-sidebar {
+  position: absolute;
+  top: 100px;
+  right: 20px;
+  width: 250px;
+  height: calc(100vh - 40px);
+  background: linear-gradient(
+    180deg,
+    #000c20 0%,
+    #091528 100%
+  );
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
+  padding: 24px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+/* Perfil do usuário no topo da progress sidebar */
+.progress-sidebar__profile {
+  display: absolute;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--spacing-md);
+  cursor: pointer;
+}
+
+.progress-sidebar__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.progress-sidebar__user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.progress-sidebar__username {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.3;
+}
+
+.progress-sidebar__plan {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-accent);
+  background-color: rgba(245, 166, 35, 0.1);
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+}
+
+.progress-sidebar__chevron {
+  color: var(--color-text-muted);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   16. EVENTS SIDEBAR — barra fixa lateral direita
+   ============================================================ */
+
+.events-sidebar {
+  position: absolute;
+  top: 710px; /* abaixo do card de progresso */
+  right: 20px;
+  width: 250px;
+  background: linear-gradient(
+    180deg,
+    #000c20 0%,
+    #091528 100%
+  );
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 24px;
+  padding: 20px;
+  z-index: 999;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+.events-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.events-header h3 {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.events-header a {
+  color: #2563eb;
+  font-size: 12px;
+}
+
+.event-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #071733;
+  border: 1px solid #102550;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 12px;
+  transition: .3s;
+}
+
+.event-card:hover {
+  background: #0b2048;
+  border-color: #1d4ed8;
+}
+
+.event-date {
+  width: 48px;
+  height: 58px;
+  border-radius: 10px;
+  background: #0c2a63;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.event-date .day {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.event-date .month {
+  color: #7ea6ff;
+  font-size: 10px;
+}
+
+.event-content {
+  flex: 1;
+}
+
+.event-content h4 {
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.event-content span {
+  color: #7c8fb4;
+  font-size: 11px;
+}
+
+.event-card i {
+  color: #7c8fb4;
+}
+
+.events-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #2563eb;
+  font-size: 12px;
+}
+
+/* =========================
+   17 . TRILHAS COM IMAGEM
+========================= */
+
+.trilha-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 92px;
+    padding: 16px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.trilha-card:hover {
+    transform: translateX(4px);
+    border-color: #2563eb;
+}
+
+.trilha-card__image {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.trilha-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.trilha-card__content {
+    flex: 1;
+}
+
+.trilha-card__content h4 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.trilha-card__content span {
+    font-size: 13px;
+    opacity: .7;
+}
+
+.trilha-card:hover {
+  transform: translateX(4px);
+  border-color: #2563eb;
+}
+
+.trilha-card__arrow {
+    margin-left: auto;
+    font-size: 14px;
+}
+
+/* =========================
+   18 . ALUNOS ATIVOS, CERTIFICADOS EMITIDOS, CURSOS,ETC
+========================= */
+
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: linear-gradient(
+        180deg,
+        #08111f 0%,
+        #050c17 100%
+    );
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 18px 24px;
+
+    position: relative;
+}
+.stat-item:not(:last-child) {
+    border-right: 1px solid rgba(255,255,255,.06);
+}
+
+.stat-item i {
+    font-size: 22px;
+    color: #2563eb;
+}
+
+.stat-item__number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+
+.stat-item p {
+    font-size: 11px;
+    color: #7c8fb4;
+    margin-top: 3px;
+    line-height: 1.3;
+}
+
+.stat-item:hover {
+    background: rgba(37,99,235,.04);
+}
+
+/* =========================
+   19 . Sessão Academy Courses
+
+========================= */
+
+.cursos-disponiveis{
+    margin-top:32px;
+    width: 810px   /*esse controla o tamanho dos cards dos cursos do Cursos Disponíveis*/
+}
+
+.curso-card{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    min-height:92px;
+    padding:16px;
+    margin-bottom:14px;
+    background:rgba(8,20,45,.9);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    transition: all .3s ease;
+    cursor:pointer;
+}
+
+.curso-card:hover{
+
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(37,99,235,.15);
+    border-color: rgba(37,99,235,.35);
+}
+
+.curso-card__image{
+    width:64px;
+    height:64px;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    flex-shrink:0;
+}
+
+.curso-card__image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.curso-card__content{
+    flex:1;
+}
+
+.curso-card__content h4{
+    margin:0 0 6px;
+}
+
+.curso-card__content span{
+    font-size:13px;
+    opacity:1;
+    color:#ffffff
+}
+
+.curso-card__progress{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.progress-bar{
+    width:100%;
+    height:8px;
+    background:#12284f;
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    background:#2563eb;
+}
+
+.progress-percent{
+
+    color:#ffffff;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    min-width:40px;
+}
+
+.curso-card i{
+    font-size:18px;
+}
+
+.curso-recursos{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+
+    margin:8px 0;
+}
+
+.curso-recursos span{
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    font-size:12px;
+    color:#9fb3d9;
+}
+
+.curso-recursos img{
+    width:16px;
+    height:16px;
+    object-fit:contain;
+}
+
+.curso-progresso{
+    display:block;
+
+    margin-top:8px;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+
+    font-weight:500;
+}
+
+.curso-card__progress{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    min-width:220px;
+}
+
+.progress-percent{
+
+    color:#ffffff;
+
+    font-weight:700;
+
+    min-width:40px;
+}
+
+.btn-acessar{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    color:#ffffff;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.btn-acessar:hover{
+
+    color:#3b82f6;
+
+    transform:translateX(3px);
+}
+
+
+/* =========================
+   20 . Sessão Academy Courses ( Modulos )
+
+========================= */
+
+.curso-modulos{
+    margin-top:20px;
+    background:rgba(255,255,255,.02);
+    border:1px solid rgba(255,255,255,.05);
+    border-radius:14px;
+    padding:16px;
+    display:none;
+}
+
+.modulo-item{
+
+    background:#081a3a;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:12px;
+
+    padding:14px;
+
+    margin-bottom:10px;
+
+    transition:.3s;
+}
+
+.modulo-item:hover{
+    border-color:#2563eb;
+}
+
+.modulo-item h5{
+    margin-bottom:6px;
+    color:#fff;
+}
+
+.modulo-item span{
+    color:#94a3b8;
+}
+
+
+
+/* Voltar para a tela Orcoma Business */
+
+.btn-voltar{
+
+    display:inline-flex;
+    align-items:center;
+    gap:1px;
+    padding:10px 16px;
+    background:#081a3a;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:10px;
+    color:#ffffff;
+    text-decoration:none;
+    font-weight:600;
+    width:auto;
+    max-width:max-content;
+    margin-bottom:-0px;
+    transition:.3s;
+}
+
+.btn-voltar:hover{
+
+    background:#0d2450;
+
+    border-color:#2563eb;
+}
+
+/* BODY ANIMAÇÃO */
+
+.hero{
+
+    animation: fadeUp 1.5s ease;
+}
+
+.cursos-disponiveis{
+
+    animation: fadeUp 1.5s ease;
+}
+
+.stats-container{
+
+    animation: fadeUp 1.1s ease;
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}

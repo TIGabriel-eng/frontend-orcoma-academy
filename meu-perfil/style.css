@@ -1,0 +1,1313 @@
+/* ============================================================
+   ORCOMA ACADEMY — Stylesheet
+   Organização:
+   1. Variáveis CSS (tokens de design)
+   2. Reset e base
+   3. Layout principal (sidebar + main)
+   4. Sidebar
+   5. Topbar
+   6. Hero / Boas-vindas
+   7. Progresso (círculo + barras)
+   8. Seções genéricas
+   9. Cards de curso
+   10. Trilhas
+   11. Eventos
+   12. Stats Bar
+   13. Responsivo
+   14. Scrollbar customizada
+   15. 
+   ============================================================ */
+
+
+/* ============================================================
+   1. VARIÁVEIS CSS
+   ============================================================ */
+:root {
+  /* Cores principais */
+  --color-bg:           #07111F;   /* Fundo global */
+  --color-surface:      #111827;   /* Superfície de cards */
+  --color-surface-2:    #1a2235;   /* Superfície mais clara */
+  --color-border:       #1e2d45;   /* Bordas sutis */
+  --color-accent:       #ff9d00;   /* Amarelo/laranja de destaque */
+  --color-accent-2:     #3b82f6;   /* Azul secundário */
+  --color-accent-hover: #e8941a;   /* Hover do accent */
+
+  /* Texto */
+  --color-text-primary:   #ffffff;
+  --color-text-secondary: #8b9ab5;
+  --color-text-muted:     #4a5568;
+
+  /* Sidebar */
+  --sidebar-width:      240px;
+  --sidebar-bg:         #0d1526;
+  --sidebar-item-hover: #1a2640;
+  --sidebar-item-active:#1e3a5f;
+
+  /* Tipografia */
+  --font-display: 'Sora', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+
+  /* Espaçamentos */
+  --spacing-xs:  4px;
+  --spacing-sm:  8px;
+  --spacing-md:  16px;
+  --spacing-lg:  24px;
+  --spacing-xl:  32px;
+  --spacing-2xl: 48px;
+
+  /* Bordas arredondadas */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+  --radius-full: 9999px;
+
+  /* Sombras */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(245, 166, 35, 0.15);
+
+  /* Transições */
+  --transition-fast:   0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow:   0.4s ease;
+}
+
+
+/* ============================================================
+   2. RESET E BASE
+   ============================================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 14px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+
+/* ============================================================
+   3. LAYOUT PRINCIPAL
+   ============================================================ */
+/* Sidebar fixa à esquerda, main ocupa o restante */
+body {
+  display: flex;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 100;
+  transition: transform var(--transition-normal);
+  scrollbar-width: thin;
+  scrollbar-color: #2563EB #0d1526;
+}
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+/* ============================================================
+   4. SIDEBAR
+   ============================================================ */
+
+/* Logo */
+.sidebar__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sidebar__logo-img {
+  width: 180px;        /* Ajuste conforme o tamanho da sua logo */
+  height: auto;        /* Mantém a proporção original */
+  object-fit: contain;
+}
+
+.sidebar__logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--color-accent), #d4890a);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  color: #000;
+  flex-shrink: 0;
+}
+
+.sidebar__logo-text {
+  font-family: var(--font-display);
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--color-text-secondary);
+}
+
+.sidebar__logo-text strong {
+  color: var(--color-text-primary);
+  font-weight: 700;
+  display: block;
+}
+
+/* Navegação */
+.sidebar__nav {
+  padding: var(--spacing-md) var(--spacing-xl);
+}
+
+.sidebar__nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 9px var(--spacing-md);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  position: relative;
+  user-select: none;
+}
+
+.nav-item i {
+  width: 16px;
+  text-align: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.nav-item:hover {
+  background-color: var(--sidebar-item-hover);
+  color: var(--color-text-primary);
+}
+
+.nav-item.active {
+  background-color: var(--sidebar-item-active);
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* Badge de notificação */
+.badge {
+  margin-left: auto;
+  background-color: var(--color-accent);
+  color: #000;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Item de logout */
+.nav-item--logout {
+  margin-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--spacing-md);
+}
+
+/* Ambiente ativo */
+.sidebar__env {
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+}
+
+.sidebar__env-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-xs);
+  text-transform: uppercase;
+}
+
+.sidebar__env-item {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  padding: 4px 0;
+}
+
+.active-env {
+  color: var(--color-accent-2);
+  font-weight: 600;
+}
+
+.sidebar__env-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: linear-gradient(
+    180deg,
+    #00173b 0%,
+    #0f1f38 100%
+  );
+
+  border: 1px solid rgba(59,130,246,.18);
+  border-radius: 14px;
+
+  padding: 14px 12px;
+  margin-top: 10px;
+
+  color: #dbe7ff;
+  font-size: 13px;
+  font-weight: 500;
+
+  transition: .3s;
+}
+
+.sidebar__env-selector:hover {
+  border-color: rgba(59,130,246,.4);
+  background: linear-gradient(
+    180deg,
+    #001f52 0%,
+    #122544 100%
+  );
+}
+
+.sidebar__env-selector i:last-child {
+  margin-left: auto;
+  font-size: 10px;
+}
+
+/* Card Premium */
+.sidebar__premium {
+  margin: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: linear-gradient(135deg, #1a2e4a, #0f1e35);
+  border: 1px solid #2a4a6a;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.sidebar__premium > i {
+  color: var(--color-accent);
+  font-size: 18px;
+}
+
+.premium__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--color-text-primary);
+}
+
+.premium__desc {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.btn-premium {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+  color: #000;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 8px var(--spacing-md);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  justify-content: center;
+  transition: opacity var(--transition-fast);
+  margin-top: var(--spacing-xs);
+}
+
+.btn-premium:hover {
+  opacity: 0.85;
+}
+
+/* Overlay mobile (escurece o fundo quando sidebar aberta) */
+.sidebar__overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 99;
+}
+
+
+/* ============================================================
+   5. TOPBAR
+   ============================================================ */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Botão de menu para mobile */
+.topbar__menu-btn {
+  display: none;  /* Visível só no mobile */
+  color: var(--color-text-secondary);
+  font-size: 18px;
+}
+
+/* Campo de busca */
+.topbar__search {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 8px var(--spacing-md);
+  flex: 1;
+  max-width: 400px;
+  transition: border-color var(--transition-fast);
+}
+
+/* Foco no campo de busca */
+.topbar__search:focus-within {
+  border-color: var(--color-accent-2);
+}
+
+/* Ícone de busca */
+.topbar__search i {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* Input de busca */
+.topbar__search input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  width: 100%;
+}
+
+/* Placeholder do input de busca */
+.topbar__search input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Atalho de teclado (ex: Ctrl + K) */
+.topbar__search kbd {
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Ações à direita (notificações, perfil) */
+.topbar__search i {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+/* Input de busca */
+.topbar__search input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  width: 100%;
+}
+
+/* Placeholder do input de busca */
+.topbar__search input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Hover nos ícones da topbar */
+.topbar__icon-btn:hover {
+  color: var(--color-text-primary);
+}
+
+
+/* ============================================================
+   7. PROGRESSO (CÍRCULO + BARRAS)
+   ============================================================ */
+
+/* Painel de progresso no hero */
+.hero__progress {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+/* Ajusta a altura da progress sidebar para não ultrapassar a tela */
+.main-content {
+  margin-left: var(--sidebar-width);
+  margin-right: 260px;
+  flex: 1;
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+/* Header do painel de progresso */
+.progress__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Título "Progresso" no header do painel */
+.progress__header span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* Link "Ver detalhes" no header do progresso */
+.progress__header a {
+  font-size: 11px;
+  color: var(--color-accent-2);
+  transition: opacity var(--transition-fast);
+}
+
+/* Hover no link "Ver detalhes" */
+.progress__header a:hover {
+  opacity: 0.7;
+}
+
+/* Círculo SVG */
+.progress__circle-wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+/* O SVG do círculo de progresso é rotacionado -90 graus para que o início da animação comece no topo (12 horas) em vez da direita (3 horas) */
+.progress__ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.08);
+  stroke-width: 10;
+}
+
+/* Parte preenchida do círculo, animada via JS ajustando stroke-dashoffset para criar o efeito de progresso */
+.progress__ring-fill {
+  fill: none;
+  stroke: #2563EB;
+  stroke-width: 10;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.35));
+  stroke-dasharray: 314;
+  stroke-dashoffset: 314;
+  transition: stroke-dashoffset 1.2s ease;
+}
+
+
+/* O SVG do círculo de progresso é rotacionado -90 graus para que o início da animação comece no topo (12 horas) em vez da direita (3 horas) */
+.progress__ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+/* Fundo do círculo */
+.progress__ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.08);
+  stroke-width: 8;
+}
+
+/* Parte preenchida do círculo, animada via JS ajustando stroke-dashoffset para criar o efeito de progresso */
+.progress__ring-fill {
+  fill: none;
+  stroke: #002a85;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.15));
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 314;
+  stroke-dashoffset: 314; /* Começa zerado, animado via JS */
+  transition: stroke-dashoffset 1.2s ease;
+}
+
+/* Texto central do círculo */
+.progress__circle-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Label abaixo do percentual no círculo */
+.progress__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* Subtítulo ou descrição adicional abaixo do label no círculo */
+.progress__sub {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+/* Barras de progresso */
+.progress__bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Cada item de barra de progresso, contendo header (título + percentual) e a barra em si */
+.progress__bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Header de cada barra, com título do curso ou módulo e percentual alinhados nas extremidades */
+.progress__bar-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+/* Título do curso ou módulo na barra de progresso */
+.progress__bar-track {
+  width: 100%;
+  height: 5px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+/* Parte preenchida da barra de progresso, animada via JS ajustando a largura (width) para criar o efeito de progresso */
+.progress__bar-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #001b3b,
+    #0073ff
+  );
+  border-radius: var(--radius-full);
+}
+
+
+.progress__summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.progress__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.progress__percent {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff
+}
+
+
+/* =========================
+   18 . ALUNOS ATIVOS, CERTIFICADOS EMITIDOS, CURSOS,ETC
+========================= */
+
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: linear-gradient(
+        180deg,
+        #08111f 0%,
+        #050c17 100%
+    );
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 18px 24px;
+
+    position: relative;
+}
+.stat-item:not(:last-child) {
+    border-right: 1px solid rgba(255,255,255,.06);
+}
+
+.stat-item i {
+    font-size: 22px;
+    color: #2563eb;
+}
+
+.stat-item__number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+}
+
+.stat-item p {
+    font-size: 11px;
+    color: #7c8fb4;
+    margin-top: 3px;
+    line-height: 1.3;
+}
+
+.stat-item:hover {
+    background: rgba(37,99,235,.04);
+}
+
+
+/* BODY ANIMAÇÃO */
+
+.hero{
+
+    animation: fadeUp 1.5s ease;
+}
+
+.cursos-disponiveis{
+
+    animation: fadeUp 1.5s ease;
+}
+
+.stats-container{
+
+    animation: fadeUp 1.2s ease;
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* MEU PERFIL */
+
+/*card hero do perfil */
+.profile-card{
+    background:#08111f;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:20px;
+    padding:24px;
+}
+
+.profile-card__header{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+/* Avatar */
+
+.profile-avatar{
+    width:92px;
+    height:92px;
+
+    border-radius:50%;
+
+    background:#ffffff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:34px;
+    font-weight:700;
+    color:#000000;
+
+    position:relative;
+}
+
+.profile-avatar__edit{
+    position:absolute;
+    bottom:0;
+    right:0;
+
+    width:26px;
+    height:26px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#d4890a;
+    color:#fff;
+
+    cursor:pointer;
+}
+
+/* Informações */
+
+.profile-info h1{
+    font-size:36px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.profile-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 12px;
+    border-radius:999px;
+    border:1px solid #ff8f3d;
+    color:#d4890a;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:16px;
+}
+
+.profile-meta{
+    display:flex;
+    gap:30px;
+    flex-wrap:wrap;
+}
+
+.profile-meta span{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    color:#9eb0ca;
+    font-size:14px;
+}
+
+/* ==========================================================
+   ESTATÍSTICAS
+========================================================== */
+
+.profile-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+
+    margin-top:20px;
+}
+
+.stat-card{
+    background:#101f38;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:16px;
+
+    padding:28px;
+
+    text-align:center;
+
+    transition:.3s;
+}
+
+.stat-card:hover{
+    border-color:#2563eb;
+}
+
+.stat-number{
+    display:block;
+
+    font-size:46px;
+    font-weight:700;
+
+    color:#ff8f3d;
+
+    margin-bottom:8px;
+}
+
+.stat-label{
+    color:#8ca0bf;
+    font-size:14px;
+}
+
+/* ==========================================================
+   DASHBOARD SIDEPANEL
+========================================================== */
+
+.dashboard-sidepanel{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+}
+
+/* CARD */
+
+.panel-card{
+    background:#172b45;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:14px;
+    padding:16px;
+}
+
+/* TÍTULO */
+
+.panel-card__title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    font-size:11px;
+    font-weight:700;
+    color:#ff8a3d;
+
+    margin-bottom:16px;
+}
+
+.panel-card__title span{
+    width:3px;
+    height:14px;
+    background:#ff8a3d;
+    border-radius:999px;
+}
+
+/* SCORE */
+
+.completion-score{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+.completion-circle{
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    border:4px solid #ff8a3d;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+.completion-score h3{
+    color:#ff8a3d;
+}
+
+.completion-score p{
+    font-size:11px;
+    color:#8ca3c5;
+}
+
+/* RECOMENDADO */
+
+.recommended-course{
+    text-align:center;
+}
+
+.recommended-icon{
+    width:48px;
+    height:48px;
+
+    margin:auto;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:10px;
+
+    background:#203758;
+}
+
+.recommended-course h4{
+    margin:12px 0 6px;
+}
+
+.recommended-course p{
+    color:#8ca3c5;
+    font-size:12px;
+}
+
+.recommended-course button{
+    width:100%;
+    margin-top:16px;
+
+    background:#ffffff;
+    color:#111;
+
+    border-radius:10px;
+    padding:10px;
+
+    font-weight:700;
+}
+
+/* BARRAS */
+
+.mini-progress{
+    margin-bottom:12px;
+}
+
+.mini-progress__header{
+    display:flex;
+    justify-content:space-between;
+
+    font-size:11px;
+}
+
+.mini-progress__bar{
+    height:5px;
+    background:#263d60;
+    border-radius:999px;
+    margin-top:4px;
+}
+
+.mini-progress__bar div{
+    height:100%;
+    border-radius:999px;
+
+    background:#ff8a3d;
+}
+
+/* ATIVIDADE */
+
+.activity-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.activity-list li{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    font-size:12px;
+}
+
+.activity-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+
+    background:#00d26a;
+}
+
+/* TRILHAS */
+
+.trail-card{
+    background:#203758;
+    border-radius:10px;
+
+    padding:12px;
+    margin-bottom:10px;
+}
+
+.trail-card h4{
+    font-size:12px;
+}
+
+.trail-card span{
+    color:#ff8a3d;
+    font-size:11px;
+}
+
+/* FAVORITOS */
+
+.favorites-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.favorites-list li{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    font-size:12px;
+}
+
+.favorites-list i{
+    color:#ff8a3d;
+}
+
+/* ==========================================================
+   CONFIGURAÇÕES E ASSINATURA
+========================================================== */
+
+.account-panel{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+}
+
+.account-card{
+    background:#172b45;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:14px;
+    padding:18px;
+}
+
+/* TÍTULO */
+
+.account-card__title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    font-size:11px;
+    font-weight:700;
+    color:#ff8a3d;
+
+    margin-bottom:18px;
+}
+
+.account-card__title span{
+    width:3px;
+    height:14px;
+    background:#ff8a3d;
+    border-radius:999px;
+}
+
+/* CAMPOS */
+
+.form-group{
+    margin-bottom:12px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+
+    font-size:10px;
+    text-transform:uppercase;
+    color:#7f97bc;
+}
+
+.input-readonly{
+    height:38px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 12px;
+
+    background:#10233d;
+    border:1px solid #203758;
+    border-radius:8px;
+
+    color:#fff;
+    font-size:13px;
+}
+
+.input-readonly i{
+    color:#ff8a3d;
+}
+
+.locked i{
+    color:#667c9d;
+}
+
+/* IDIOMA */
+
+.language-selector{
+    margin-top:20px;
+}
+
+.language-selector label{
+    display:block;
+    margin-bottom:10px;
+
+    color:#7f97bc;
+    font-size:10px;
+    text-transform:uppercase;
+}
+
+.language-options{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.language-options button{
+    background:#10233d;
+    border:1px solid #203758;
+
+    color:#fff;
+
+    padding:8px 12px;
+    border-radius:8px;
+
+    font-size:12px;
+}
+
+.language-options button.active{
+    border-color:#ff8a3d;
+    color:#ff8a3d;
+}
+
+/* BOTÃO */
+
+.save-btn{
+    width:100%;
+    margin-top:20px;
+
+    background:#ffffff;
+    color:#111;
+
+    border:none;
+    border-radius:10px;
+
+    height:42px;
+
+    font-weight:700;
+}
+
+/* ASSINATURA */
+
+.subscription-box{
+    background:#10233d;
+    border:1px solid #203758;
+    border-radius:12px;
+    padding:16px;
+}
+
+.subscription-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.subscription-header h4{
+    font-size:14px;
+}
+
+.subscription-header small{
+    color:#7f97bc;
+}
+
+.subscription-badge{
+    background:#d4890a;
+    color:#fff;
+
+    font-size:11px;
+    font-weight:700;
+
+    padding:4px 10px;
+    border-radius:999px;
+}
+
+.renew-info{
+    margin:16px 0;
+
+    font-size:12px;
+    color:#7f97bc;
+}
+
+.subscription-btn{
+    width:100%;
+
+    height:40px;
+
+    border:1px solid #ffffff;
+    border-radius:10px;
+
+    color:#fff;
+}
+
+
+/* Botão Interativo Meu Perfil e Inicio */
+
+.nav-item{
+    padding:0;
+}
+
+.nav-item a{
+    display:flex;
+    align-items:center;
+    gap:var(--spacing-sm);
+
+    width:100%;
+    padding:9px var(--spacing-md);
+
+    color:inherit;
+    text-decoration:none;
+}

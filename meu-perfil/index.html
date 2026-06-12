@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orcoma Academy</title>
+  <link rel="icon" type="image/png" href="../assets/images/orcoma-logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar__logo">
+      <img src="../assets/images/orcoma-academy.png" alt="Orcoma Academy" class="sidebar__logo-img" />
+    </div>
+
+    <!-- Navegação principal -->
+    <nav class="sidebar__nav">
+      <ul>
+        <li class="nav-item">
+          <a href="../orcoma-business/index.html">
+              <i class="fa-solid fa-house"></i>
+                <span>Início</span>
+          </a>
+        </li>
+
+        <li class="nav-item active">
+          <a href="../meu-perfil/index.html">
+                <i class="fa-regular fa-user"></i>
+                <span>Meu Perfil</span>
+          </a>
+        </li>
+        <li class="nav-item" data-page="cursos">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span>Meus cursos</span>
+        </li>
+        <li class="nav-item" data-page="continuar">
+          <i class="fa-solid fa-play"></i>
+          <span>Continuar assistindo</span>
+        </li>
+        <li class="nav-item" data-page="concluidos">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Cursos concluídos</span>
+        </li>
+        <li class="nav-item" data-page="certificados">
+          <i class="fa-solid fa-certificate"></i>
+          <span>Certificados</span>
+        </li>
+        <li class="nav-item" data-page="trilhas">
+          <i class="fa-solid fa-route"></i>
+          <span>Trilhas de aprendizagem</span>
+        </li>
+        <li class="nav-item" data-page="favoritos">
+          <i class="fa-regular fa-heart"></i>
+          <span>Favoritos</span>
+        </li>
+        <li class="nav-item" data-page="suporte">
+          <i class="fa-regular fa-circle-question"></i>
+          <span>Suporte</span>
+        </li>
+        <li class="nav-item" data-page="config">
+          <i class="fa-solid fa-gear"></i>
+          <span>Configurações</span>
+        </li>
+        <li class="nav-item nav-item--logout" data-page="sair">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Sair</span>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Ambiente ativo -->
+    <div class="sidebar__env">
+      <p class="sidebar__env-label">AMBIENTE ATIVO</p>
+      <div class="sidebar__env-selector">
+        <i class="fa-solid fa-building"></i>
+        <span>Academy Business</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </div>
+
+    <!-- Card Premium -->
+    <div class="sidebar__premium">
+      <i class="fa-solid fa-crown"></i>
+      <div>
+        <p class="premium__title">Seja Premium</p>
+        <p class="premium__desc">Tenha acesso a todos os cursos, trilhas e certificados.</p>
+      </div>
+      <button class="btn-premium">Assinar agora <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+  </aside>
+  <!-- ========== FIM SIDEBAR ========== -->
+
+
+  <!-- ========== CONTEÚDO PRINCIPAL ========== -->
+  <main class="main-content" id="mainContent">
+
+  <!-- ===== TOPBAR ===== -->
+    <header class="topbar">
+      <button class="topbar__menu-btn" id="menuToggle" aria-label="Abrir menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="topbar__search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Buscar cursos, trilhas ou conteúdos..." />
+        <kbd>Ctrl K</kbd>
+      </div>
+    </header>
+    <!-- ===== FIM TOPBAR ===== -->
+    <!--Inicio Conteúdo Principal-->
+
+<section class="profile-card">
+
+  <div class="profile-card__header">
+
+    <div class="profile-avatar">
+      GA
+      <button class="profile-avatar__edit">
+        <i class="fa-solid fa-camera"></i>
+      </button>
+    </div>
+
+    <div class="profile-info">
+
+      <h1>Gabriel Anacleto</h1>
+
+      <span class="profile-badge">
+        <i class="fa-regular fa-star"></i>
+        Cliente Orcoma
+      </span>
+
+      <div class="profile-meta">
+
+        <span>
+          <i class="fa-regular fa-envelope"></i>
+          gabriel.ti.@orcoma.com.br
+        </span>
+
+        <span>
+          <i class="fa-solid fa-building"></i>
+          Orcoma
+        </span>
+
+        <span>
+          <i class="fa-regular fa-calendar"></i>
+          Membro desde Jan 2024
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="profile-stats">
+
+  <div class="stat-card">
+    <span class="stat-number">127h</span>
+    <span class="stat-label">Horas estudadas</span>
+  </div>
+
+  <div class="stat-card">
+    <span class="stat-number">8</span>
+    <span class="stat-label">Cursos concluídos</span>
+  </div>
+
+  <div class="stat-card">
+    <span class="stat-number">3</span>
+    <span class="stat-label">Em andamento</span>
+  </div>
+
+</section>
+
+<section class="dashboard-sidepanel">
+
+    <!-- TAXA DE CONCLUSÃO -->
+    <div class="panel-card">
+
+        <div class="panel-card__title">
+            <span></span>
+            TAXA DE CONCLUSÃO
+        </div>
+
+        <div class="completion-score">
+
+            <div class="completion-circle">
+                <span>72%</span>
+            </div>
+
+            <div>
+                <h3>Excelente</h3>
+                <p>86 de 120 cursos concluídos</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PRÓXIMO RECOMENDADO -->
+    <div class="panel-card">
+
+        <div class="panel-card__title">
+            <span></span>
+            PRÓXIMO RECOMENDADO
+        </div>
+
+        <div class="recommended-course">
+
+            <div class="recommended-icon">
+                <i class="fa-solid fa-calendar-days"></i>
+            </div>
+
+            <h4>Análise de Dados Financeiros</h4>
+
+            <p>
+                Contábil • 45 conteúdos
+            </p>
+
+            <button>
+                Começar agora
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- PROGRESSO DOS CURSOS -->
+    <div class="panel-card">
+
+        <div class="panel-card__title">
+            <span></span>
+            PROGRESSO DOS CURSOS
+        </div>
+
+        <div class="course-progress-list">
+
+            <div class="mini-progress">
+                <div class="mini-progress__header">
+                    <span>Reforma Tributária</span>
+                    <span>75%</span>
+                </div>
+                <div class="mini-progress__bar">
+                    <div style="width:75%"></div>
+                </div>
+            </div>
+
+            <div class="mini-progress">
+                <div class="mini-progress__header">
+                    <span>Gestão Financeira</span>
+                    <span>60%</span>
+                </div>
+                <div class="mini-progress__bar">
+                    <div style="width:60%"></div>
+                </div>
+            </div>
+
+            <div class="mini-progress">
+                <div class="mini-progress__header">
+                    <span>Planejamento Estratégico</span>
+                    <span>45%</span>
+                </div>
+                <div class="mini-progress__bar">
+                    <div style="width:45%"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ATIVIDADE RECENTE -->
+    <div class="panel-card">
+
+        <div class="panel-card__title">
+            <span></span>
+            ATIVIDADE RECENTE
+        </div>
+
+        <ul class="activity-list">
+
+            <li>
+                <span class="activity-dot"></span>
+                Reforma Tributária - Módulo 3
+            </li>
+
+            <li>
+                <span class="activity-dot"></span>
+                Gestão Financeira - Aula 7
+            </li>
+
+            <li>
+                <span class="activity-dot"></span>
+                Planejamento Estratégico
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- TRILHAS -->
+    <div class="panel-card">
+
+        <div class="panel-card__title">
+            <span></span>
+            TRILHAS CONQUISTADAS
+        </div>
+
+        <div class="trail-card">
+            <h4>Contabilidade Essencial</h4>
+            <span>Concluída</span>
+        </div>
+
+        <div class="trail-card">
+            <h4>Gestão Empresarial</h4>
+            <span>Em andamento</span>
+        </div>
+
+    </div>
+
+    <!-- FAVORITOS -->
+    <div class="panel-card">
+
+        <div class="panel-card__title">
+            <span></span>
+            MEUS FAVORITOS
+        </div>
+
+        <ul class="favorites-list">
+
+            <li>
+                Tributação para MEI
+                <i class="fa-regular fa-heart"></i>
+            </li>
+
+            <li>
+                Fluxo de Caixa
+                <i class="fa-regular fa-heart"></i>
+            </li>
+
+            <li>
+                Fiscal Completo
+                <i class="fa-regular fa-heart"></i>
+            </li>
+
+        </ul>
+
+    </div>
+
+</section>
+
+<section class="account-panel">
+
+    <!-- CONFIGURAÇÕES DA CONTA -->
+    <div class="account-card">
+
+        <div class="account-card__title">
+            <span></span>
+            CONFIGURAÇÕES DA CONTA
+        </div>
+
+        <div class="form-group">
+            <label>Nome Completo</label>
+            <div class="input-readonly">
+                Gabriel Anacleto
+                <i class="fa-solid fa-pen"></i>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>E-mail</label>
+            <div class="input-readonly">
+                gabriel@orcoma.com.br
+                <i class="fa-solid fa-pen"></i>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Telefone</label>
+            <div class="input-readonly">
+                (11) 98765-4321
+                <i class="fa-solid fa-pen"></i>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Empresa</label>
+            <div class="input-readonly locked">
+                Orcoma
+                <i class="fa-solid fa-lock"></i>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Plano</label>
+            <div class="input-readonly locked">
+                Premium
+                <i class="fa-solid fa-lock"></i>
+            </div>
+        </div>
+
+        <div class="language-selector">
+
+            <label>Idioma de preferência</label>
+
+            <div class="language-options">
+
+                <button class="active">
+                    🇧🇷 Português
+                </button>
+
+                <button>
+                    🇺🇸 Inglês
+                </button>
+
+                <button>
+                    🇪🇸 Espanhol
+                </button>
+
+            </div>
+
+        </div>
+
+        <button class="save-btn">
+            Salvar alterações
+        </button>
+
+    </div>
+
+    <!-- ASSINATURA -->
+    <div class="account-card">
+
+        <div class="account-card__title">
+            <span></span>
+            PLANO & ASSINATURA
+        </div>
+
+        <div class="subscription-box">
+
+            <div class="subscription-header">
+                <div>
+                    <h4>Premium Access</h4>
+                    <small>Acesso completo</small>
+                </div>
+
+                <span class="subscription-badge">
+                    Ativo
+                </span>
+            </div>
+
+            <div class="renew-info">
+                Renovação automática em
+                <strong>15 ago 2026</strong>
+            </div>
+
+            <button class="subscription-btn">
+                Gerenciar Assinatura
+            </button>
+
+        </div>
+        
+</section>
+
+
+    <!-- ===== STATS ===== -->
+    <section class="stats-bar">
+
+      <div class="stat-item">
+        <i class="fa-solid fa-play-circle"></i>
+        <div>
+          <span class="stat-item__number" data-target="120">0</span><span>+</span>
+          <p>Cursos disponíveis</p>
+        </div>
+      </div>
+
+      <div class="stat-item">
+        <i class="fa-solid fa-users"></i>
+        <div>
+          <span class="stat-item__number" data-target="15000">0</span><span>+</span>
+          <p>Alunos ativos</p>
+        </div>
+      </div>
+
+      <div class="stat-item">
+        <i class="fa-solid fa-id-card"></i>
+        <div>
+          <span class="stat-item__number" data-target="3200">0</span><span>+</span>
+          <p>Certificados emitidos</p>
+        </div>
+      </div>
+
+      <div class="stat-item">
+        <i class="fa-solid fa-star"></i>
+        <div>
+          <span class="stat-item__number" data-target="98">0</span><span>%</span>
+          <p>Satisfação dos alunos</p>
+        </div>
+      </div>
+
+    </section>
+    <!-- ===== FIM STATS ===== -->
+
+  </main>
+
+  <!-- Overlay mobile -->
+  <div class="sidebar__overlay" id="sidebarOverlay"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

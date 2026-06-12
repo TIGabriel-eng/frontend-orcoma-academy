@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fonte -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Ícones -->
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>Portal Orcoma</title>
+</head>
+
+<body>
+
+<div class="login-page">
+
+    <!-- LADO ESQUERDO -->
+    <div class="login-left">
+
+        <div class="logo-wrapper">
+            <img
+                src="../assets/images/orcoma-academy.png"
+                alt="Orcoma Academy"
+                class="logo-big"
+            >
+        </div>
+
+        <h1>
+            Conhecimento que transforma.
+        </h1>
+
+        <p>
+            Inovação que impulsiona.
+        </p>
+
+    </div>
+
+    <!-- LADO DIREITO -->
+    <div class="login-right">
+
+        <div class="login-card">
+
+            <h2>Entrar</h2>
+    
+            <form>
+
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <input
+                        type="email"
+                        placeholder="Digite seu e-mail"
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input
+                        type="password"
+                        placeholder="Digite sua senha"
+                    >
+                </div>
+    
+    <!-- Link recuperar senha -->
+    <p class="forgot-password">
+        <a href="#" id="openRecovery">
+            Esqueci a minha senha
+        </a>
+    </p>
+                <button type="submit">
+                    Entrar
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+<!-- =========================================
+     MODAL RECUPERAR SENHA
+========================================= -->
+<div class="recovery-modal" id="recoveryModal">
+
+    <div class="recovery-box">
+
+        <button class="close-modal" id="closeRecovery">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <h2>Recupere sua senha</h2>
+
+        <p>
+            Informe seu e-mail cadastrado para receber
+            as instruções de redefinição de senha.
+        </p>
+
+        <input
+            type="email"
+            placeholder="Seu e-mail"
+            class="recovery-input"
+        >
+
+        <button class="recovery-btn">
+            Enviar instruções
+        </button>
+
+        <small>
+            Recuperação disponível apenas para usuários
+            com acesso ativo à plataforma.
+        </small>
+
+    </div>
+
+</div>
+
+</body>
+</html>
