@@ -16,7 +16,8 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <title>Portal Orcoma</title>
+    <title>Portal | Orcoma Academy</title>
+    <link rel="icon" type="image/png" href="../assets/images/orcoma-logo.png">
 </head>
 
 <body>
@@ -47,7 +48,7 @@
     <!-- LADO DIREITO -->
     <div class="login-right">
 
-        <div class="login-card">
+        <div class="login-card" id="login-form">
 
             <h2>Entrar</h2>
     
@@ -79,15 +80,110 @@
                     Entrar
                 </button>
 
+                <div class="login-divider">
+                    <span>ou</span>
+                </div>
+
+                <p class="cadastro-texto">
+                    Não possui uma conta?
+                </p>
+
+                <button
+                    type="button"
+                    onclick="mostrarCadastro()">
+                            Criar conta
+                </button>
+
             </form>
 
         </div>
+
+    <!-- CADASTRO -->
+        <div id="cadastro-form" class="login-card hidden">
+
+            <h2>Cadastro</h2>
+
+            <form>
+                <div class="input-group">
+                    <label>Nome Completo</label>
+                    <input type="text" placeholder="Digite seu nome" autocomplete="name" required maxlength="100">
+                </div>
+
+                <div class="input-group">
+                    <label>E-mail</label>
+                    <input type="email" placeholder="Digite seu e-mail" autocomplete="email" required maxlength="255">
+                </div>
+
+        <div class="input-group">
+
+            <label>Senha</label>
+
+        <div class="password-wrapper">
+
+            <input
+                type="password"
+                id="senha"
+                placeholder="Deve ter no mínimo 8 caracteres">
+        </div>
+
+        </div>
+
+        <div class="input-group">
+
+            <label>Confirme a sua senha</label>
+
+        <div class="password-wrapper">
+
+        <input
+            type="password"
+            id="confirmarSenha"
+            placeholder="Deve ter no mínimo 8 caracteres"
+            autocomplete="new-password"
+            required
+            maxlength="255">
+
+        </div>
+
+        </div>
+
+                <div class="input-group">
+                    <label>Empresa <span style="color:#8b9ab5;font-weight:400">(opcional)</span></label>
+                    <input type="text" placeholder="Digite a sua empresa (caso seja para uma empresa)" autocomplete="organization" maxlength="120">
+                </div>
+                    
+                
+        <p class="termos-texto">
+            Ao se cadastrar, você aceita nossos
+
+        <a href="termos-de-uso.html">
+            termos de uso
+        </a>
+
+            e a nossa
+
+        <a href="politica-de-privacidade.html">
+            política de privacidade
+        </a>.
+        </p>
+                
+                <button type="submit">Cadastrar</button>
+
+                <div class="login-divider"><span>ou</span></div>
+
+                <p class="cadastro-texto">Já possui uma conta?</p>
+
+                <button type="button" onclick="mostrarLogin()">Entrar</button>
+            </form>
+
+        </div>
+
 
     </div>
 
 </div>
 
-<script src="script.js"></script>
+</body>
+</html>
 
 <!-- =========================================
      MODAL RECUPERAR SENHA
@@ -125,6 +221,39 @@
     </div>
 
 </div>
+
+<script>
+        // MODAL RECUPERAR SENHA
+        const openRecovery  = document.getElementById("openRecovery");
+        const closeRecovery = document.getElementById("closeRecovery");
+        const recoveryModal = document.getElementById("recoveryModal");
+
+        openRecovery.addEventListener("click", (e) => {
+            e.preventDefault();
+            recoveryModal.classList.add("active");
+        });
+
+        closeRecovery.addEventListener("click", () => {
+            recoveryModal.classList.remove("active");
+        });
+
+        recoveryModal.addEventListener("click", (e) => {
+            if (e.target === recoveryModal) {
+                recoveryModal.classList.remove("active");
+            }
+        });
+
+        // ALTERNÂNCIA LOGIN / CADASTRO
+        function mostrarCadastro() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('cadastro-form').classList.remove('hidden');
+        }
+
+        function mostrarLogin() {
+            document.getElementById('cadastro-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+    </script>
 
 </body>
 </html>

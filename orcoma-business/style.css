@@ -523,22 +523,36 @@ body {
    6. HERO / BOAS-VINDAS
    ============================================================ */
 
-/* mexe no card de boas-vindas para ter uma largura fixa, evitando que o texto fique muito esticado em telas maiores */
-.hero {
-  display: grid;
-  grid-template-columns: 320px 400px;  /* Colunas fixas */
-  gap: var(--spacing-lg);
-  align-items: end;       /* Alinha tudo na base */
-  background: #000c20;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-xl);
-  position: relative;
-  overflow: hidden;
-  min-height: 220px;
-  width: fit-content;   /* ← Hero só ocupa o espaço necessário */
-  max-width: 100%;      /* ← Mas nunca ultrapassa a tela */
+.hero{
+display:grid;
+grid-template-columns: 1.5fr 1fr;
+gap: var(--spacing-lg);
+align-items:end;
+background:#000c20;
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+min-height:220px;
+border:1px solid var(--color-border);
+border-radius:var(--radius-xl);
+padding:var(--spacing-xl);
+position:relative;
+overflow:hidden;
+min-height: 220px;
+width: fit-content;   /* ← Hero só ocupa o espaço necessário */
+max-width: 100%;      /* ← Mas nunca ultrapassa a tela */
 }
+
+.hero__welcome{
+  min-width:0;
+}
+
+.hero__desc,
+.hero h5{
+  max-width: 550px;
+  line-height: 1.8;
+}
+
 /* Efeito decorativo de fundo no hero */
 .hero::before {
   content: '';
@@ -658,15 +672,16 @@ body {
 
 /* Cards de ambiente (Business / Team) */
 .hero__cards {
-  display: flex;
+  display: grid;
   flex-direction: row;
-  gap: var(--spacing-md);
-  align-items: flex-end;
-  width: 400px; /* Define uma largura fixa para os cards, evitando que fiquem muito largos em telas grandes */
-  flex-shrink: 0;  /* Evita que os cards encolham demais em telas menores */
+  gap: 16px;
+  align-items: stretch;
+  justify-content: flex-end;
+  width: auto;
+  flex-wrap: nowrap;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
 }
 
-/* Cards de ambiente (Contábil / Gestão Empresarial) */
 .hero__env-card {
   background-color: #050c17;
   border: 1px solid var(--color-border);
@@ -674,12 +689,11 @@ body {
   padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
-  gap: 6px;    /*Espaçamento reduzido para caber melhor no layout do hero */
-  width: 190px;        /* Largura fixa por card */
-  flex-shrink: 0;      /* Impede que encolha */
+  gap: 6px;
+  flex: 1 1 240px;
+  min-width: 220px;
   transition: background var(--transition-fast);
 }
-
 .hero__env-card:hover {
   background-color: #1E3A8A; /* Azul mais escuro no hover para destacar no hero */
 }
@@ -746,15 +760,14 @@ body {
 }
 
 /* Ajusta a altura da progress sidebar para não ultrapassar a tela */
-.main-content {
+.main-content{
   margin-left: var(--sidebar-width);
-  margin-right: 260px;
+  margin-right: 290px;
+  min-height:100vh;
+  padding:var(--spacing-lg);
+  display:flex;
   flex: 1;
-  min-height: 100vh;
-  padding: var(--spacing-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xl);
+  gap:24px;
 }
 
 /* Header do painel de progresso */
@@ -929,7 +942,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
+
 
 .section__header {
   display: flex;
@@ -948,6 +965,8 @@ body {
   font-size: 12px;
   color: var(--color-accent-2);
   transition: opacity var(--transition-fast);
+  position: relative;
+  right: 20px;
 }
 
 .section__link:hover {
@@ -969,16 +988,21 @@ body {
     max-width:100%;
     position:relative;
     overflow:hidden;
-    padding:0 50px; /* espaço para as setas */
+    padding:0; /* espaço para as setas */
+}
+
+.courses-slider-wrapper {
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Área que contém os cards.
    É ela que será movimentada pelo JavaScript */
 .courses-slider{
     display:flex;
-    gap:20px;
+    gap:10px;
     overflow:hidden;
-    scroll-behavior:smooth;
 }
 
 /* Esconde a barra de rolagem nativa do navegador */
@@ -986,13 +1010,29 @@ body {
     display:none;
 }
 
+.course-card img {
+    width: 95%;
+    height: 160px;        /* altura fixa consistente */
+    object-fit: cover;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;  /* arredonda só o topo */
+    display: block;
+}
+
 /*
 Alternativa mais profissional para EAD:
 
 Mantém tamanho fixo independente da resolução.*/
 
-.course-card{
-    flex:0 0 calc((100% - 40px) / 3);
+.course-card {
+    flex: 0 0 calc((100% - 20px) / 3);
+    min-width: 0;
+}
+
+.course-card {
+    flex: 0 0 calc((100% - 20px) / 3);
+    min-width: 0;
+    overflow: hidden;  /* ← evita que a imagem vaze */
+    border-radius: var(--radius-md);
 }
 
 
@@ -1014,16 +1054,16 @@ Mantém tamanho fixo independente da resolução.*/
     border:1px solid var(--color-border);
     border-radius:10px;
     color:#fff;
-    z-index:10;
+    z-index:9999;
     cursor:pointer;
 }
 
 .slider-btn--prev{
-    left:0;
+    left:0px;
 }
 
 .slider-btn--next{
-    right:0;
+    right:0px;
 }
 
 /* Efeito ao passar o mouse */
@@ -1084,21 +1124,35 @@ Mantém tamanho fixo independente da resolução.*/
 }
 
 /* Sidebar de progresso fixa à direita */
-.progress-sidebar {
-  position: absolute;
-  top: 100px;
-  right: 20px;
+.right-sidebar{
+  position: fixed;
+  top: 24px;
+  right: 24px;
+
   width: 250px;
-  height: calc(100vh - 40px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  z-index: 100;
+}
+
+.progress-sidebar{
+  position: absolute;
+  top: 108px;
+  right: 24px;
+  width: 250px;
   background: linear-gradient(
     180deg,
     #000c20 0%,
     #091528 100%
   );
-  border: 1px solid rgba(255,255,255,0.08);
+
+  border: 1px solid rgba(255,255,255,.08);
   border-radius: 24px;
   padding: 24px;
-  overflow-y: auto;
+
   z-index: 100;
 }
 
@@ -1156,8 +1210,8 @@ Mantém tamanho fixo independente da resolução.*/
 
 .events-sidebar {
   position: absolute;
-  top: 710px; /* abaixo do card de progresso */
-  right: 20px;
+  top: 600px;
+  right: 24px;
   width: 250px;
   background: linear-gradient(
     180deg,
@@ -1260,61 +1314,165 @@ Mantém tamanho fixo independente da resolução.*/
    17 . TRILHAS COM IMAGEM
 ========================= */
 
-.trilha-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    min-height: 92px;
-    padding: 16px;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 14px;
-    transition: .3s;
-    cursor: pointer;
-}
+/* ==========================================
+   TRILHAS DE APRENDIZAGEM
+========================================== */
 
-.trilha-card:hover {
-    transform: translateX(4px);
-    border-color: #2563eb;
-}
-
-.trilha-card__image {
-    width: 80px;
-    height: 80px;
-    border-radius: 12px;
+.section--trilhas {
+    width: 100%;
+    max-width: 100%;
     overflow: hidden;
+}
+
+/* Reduz o título das trilhas */
+.learning-paths__header h3 {
+    font-size: 1rem;  /* era 2rem, muito grande */
+    font-weight: 800;
+}
+
+/* Impede o header de vazar */
+.learning-paths__header {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* Garante que o link não ultrapasse */
+.learning-paths__header a {
+    white-space: nowrap;
     flex-shrink: 0;
 }
 
-.trilha-card__image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+.learning-paths{
+    position:relative;
 }
 
-.trilha-card__content {
-    flex: 1;
+.trilhas-next-btn{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+
+  width:42px;
+  height:42px;
+
+  border:none;
+  border-radius:12px;
+
+  background:#0f2348;
+  color:#fff;
+
+  cursor:pointer;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  z-index:10;
 }
 
-.trilha-card__content h4 {
-    margin: 0;
-    font-size: 15px;
+.trilhas-prev-btn{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+
+  width:42px;
+  height:42px;
+
+  border:none;
+  border-radius:12px;
+
+  background:#0f2348;
+  color:#fff;
+
+  cursor:pointer;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  z-index:10;
 }
 
-.trilha-card__content span {
-    font-size: 13px;
-    opacity: .7;
+.trilhas-prev-btn{
+  left:0;
 }
 
-.trilha-card:hover {
-  transform: translateX(4px);
-  border-color: #2563eb;
+.trilhas-next-btn{
+  right:0;
 }
 
-.trilha-card__arrow {
-    margin-left: auto;
-    font-size: 14px;
+.learning-paths__header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.learning-paths__header h3{
+    font-size:2rem;
+    font-weight:700;
+}
+
+.learning-paths__header a{
+    color:#2563eb;
+    text-decoration:none;
+}
+
+.learning-paths__list{
+    display:flex;
+    gap:20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior:smooth;
+}
+
+.learning-paths__list::-webkit-scrollbar{
+    display:none;
+}
+
+.trail-card{
+    flex:0 0 calc((100% - 40px) / 3);
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:18px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    background:#071425;
+    transition:.3s;
+}
+
+.trail-card:hover{
+    border-color:#2563eb;
+    transform:translateY(-2px);
+}
+
+.trail-card__icon{
+    width:48px;
+    height:48px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:12px;
+
+    background:#102550;
+    color:#2563eb;
+}
+
+.trail-card h3{
+    font-size:1rem;
+    margin-bottom:4px;
+}
+
+.trail-card span{
+    color:#8aa0c8;
+    font-size:.9rem;
+}
+
+.learning-paths .courses-slider-wrapper{
+    position:relative;
 }
 
 /* =========================
@@ -1429,4 +1587,108 @@ Mantém tamanho fixo independente da resolução.*/
     padding:14px 18px;
     color:inherit;
     text-decoration:none;
+}
+
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
+/* Notebook pequeno. Lagura maior do que 1400px */
+@media (max-width: 1400px){
+
+  .hero{
+    grid-template-columns: 1fr;
+  }
+
+  .hero__cards{
+    width:100%;
+    justify-content:flex-start;
+    flex-wrap:wrap;
+  }
+
+  .main-content{
+    margin-right:0;
+  }
+
+  .events-sidebar{
+    display:none;
+  }
+
+  .section--trilhas{
+    max-width:100%;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1024px){
+
+  .sidebar{
+    width:clamp(220px, 15vw, 320px);
+  }
+
+  .main-content{
+    margin-left:80px;
+  }
+
+  .hero__env-card{
+    width:100%;
+  }
+
+  .course-card{
+    flex:0 0 calc((100% - 10px) / 2);
+  }
+
+  .trail-card{
+    flex:0 0 calc((100% - 10px) / 2);
+  }
+
+  .stats-bar{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+/* Celular */
+@media (max-width: 768px){
+
+  .sidebar{
+    transform:translateX(-100%);
+  }
+
+  .main-content{
+    margin-left:0;
+    padding:16px;
+  }
+
+  .hero{
+    padding:20px;
+  }
+
+  .hero__brand-logo-img{
+    width:180px;
+  }
+
+  .hero__cards{
+    flex-direction:column;
+  }
+
+  .hero__env-card{
+    width:100%;
+  }
+
+  .course-card{
+    flex:0 0 100%;
+  }
+
+  .trail-card{
+    flex:0 0 100%;
+  }
+
+  .stats-bar{
+    grid-template-columns:1fr;
+  }
+
+  .section__title{
+    font-size:20px;
+  }
 }

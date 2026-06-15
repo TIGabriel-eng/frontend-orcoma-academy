@@ -36,21 +36,16 @@
   });
 
   /* Detecta abertura do DevTools pela diferença de tamanho da janela */
-  const THRESHOLD = 160; /* pixels de diferença que indicam painel aberto */
+  const THRESHOLD = 300;
 
   function checkDevTools() {
-    const widthDiff  = window.outerWidth  - window.innerWidth;
-    const heightDiff = window.outerHeight - window.innerHeight;
+  const heightDiff = window.outerHeight - window.innerHeight;
 
-    if (widthDiff > THRESHOLD || heightDiff > THRESHOLD) {
-      /* Redireciona para uma página de aviso ou em branco */
-      document.body.innerHTML =
-        "<div style=\"display:flex;align-items:center;justify-content:center;" +
-        "height:100vh;background:#0a0e1a;color:#f5a623;font-family:sans-serif;" +
-        "font-size:1.2rem;text-align:center;\">" +
-        "<p>⚠️ Acesso não autorizado.<br>Feche o DevTools para continuar.</p></div>";
-    }
+  // ← Remova a verificação de widthDiff, só usa heightDiff
+  if (heightDiff > THRESHOLD) {
+    document.body.innerHTML = "...aviso...";
   }
+}
 
   /* Verifica a cada 800ms */
   setInterval(checkDevTools, 800);

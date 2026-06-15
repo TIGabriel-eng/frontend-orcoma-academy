@@ -1,15 +1,7 @@
-/* =========================================
-   MODAL RECUPERAR SENHA
-========================================= */
-
-const openRecovery =
-document.getElementById("openRecovery");
-
-const closeRecovery =
-document.getElementById("closeRecovery");
-
-const recoveryModal =
-document.getElementById("recoveryModal");
+// MODAL RECUPERAR SENHA
+const openRecovery  = document.getElementById("openRecovery");
+const closeRecovery = document.getElementById("closeRecovery");
+const recoveryModal = document.getElementById("recoveryModal");
 
 openRecovery.addEventListener("click", (e) => {
     e.preventDefault();
@@ -21,12 +13,35 @@ closeRecovery.addEventListener("click", () => {
 });
 
 recoveryModal.addEventListener("click", (e) => {
-    if(e.target === recoveryModal){
+    if (e.target === recoveryModal) {
         recoveryModal.classList.remove("active");
     }
 });
 
-/* =========================================
-   CONEXÃO COM ACADEMY
-========================================= */
+function togglePassword(inputId, button){
 
+    const input = document.getElementById(inputId);
+
+    const icon = button.querySelector("img");
+
+    if(input.type === "password"){
+
+        input.type = "text";
+
+        icon.src =
+        "../assets/images/olho-senha.png";
+
+        icon.alt =
+        "Ocultar senha";
+
+    }else{
+
+        input.type = "password";
+
+        icon.src =
+        "../assets/images/olho-senha-hidden.png";
+
+        icon.alt =
+        "Mostrar senha";
+    }
+}

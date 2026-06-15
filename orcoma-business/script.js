@@ -38,20 +38,6 @@
   /* Detecta abertura do DevTools pela diferença de tamanho da janela */
   const THRESHOLD = 160; /* pixels de diferença que indicam painel aberto */
 
-  function checkDevTools() {
-    const widthDiff  = window.outerWidth  - window.innerWidth;
-    const heightDiff = window.outerHeight - window.innerHeight;
-
-    if (widthDiff > THRESHOLD || heightDiff > THRESHOLD) {
-      /* Redireciona para uma página de aviso ou em branco */
-      document.body.innerHTML =
-        "<div style=\"display:flex;align-items:center;justify-content:center;" +
-        "height:100vh;background:#0a0e1a;color:#f5a623;font-family:sans-serif;" +
-        "font-size:1.2rem;text-align:center;\">" +
-        "<p>⚠️ Acesso não autorizado.<br>Feche o DevTools para continuar.</p></div>";
-    }
-  }
-
   /* Verifica a cada 800ms */
   setInterval(checkDevTools, 800);
 
@@ -341,54 +327,75 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // ===============================
-// 9 . RENDERIZAR TRILHAS
+// 9. SLIDER DE CURSOS
 // ===============================
-function renderTrilhas() {
-  const container = document.querySelector(".trilhas-grid");
+const slider = document.getElementById("coursesSlider");
 
-  container.innerHTML = trilhas.map(trilha => `
-    <div class="trilha-card">
-      <div class="trilha-card__image">
-        <img src="${trilha.imagem}" alt="${trilha.titulo}">
-      </div>
+if (slider) {
+  document.querySelector(".slider-btn--next")?.addEventListener("click", () => {
+    slider.scrollBy({ left: 320, behavior: "smooth" });
+  });
 
-      <div class="trilha-card__content">
-        <h4>${trilha.titulo}</h4>
-        <span>${trilha.cursos} cursos</span>
-      </div>
-
-      <i class="fa-solid fa-chevron-right trilha-card__arrow"></i>
-    </div>
-  `).join("");
+  document.querySelector(".slider-btn--prev")?.addEventListener("click", () => {
+    slider.scrollBy({ left: -320, behavior: "smooth" });
+  });
 }
 
 // ===============================
-// 10 . INICIAR
+// 10. SLIDER DAS TRILHAS
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
-  renderTrilhas();
+  const trilhasSlider = document.getElementById("trilhasSlider");
+  const trilhasPrev   = document.querySelector(".trilhas-prev");
+  const trilhasNext   = document.querySelector(".trilhas-next");
+
+  if (trilhasSlider && trilhasNext) {
+    trilhasNext.addEventListener("click", () => {
+      trilhasSlider.scrollBy({ left: 260, behavior: "smooth" });
+    });
+  }
+
+  if (trilhasSlider && trilhasPrev) {
+    trilhasPrev.addEventListener("click", () => {
+      trilhasSlider.scrollBy({ left: -260, behavior: "smooth" });
+    });
+  }
 });
 
-// ===================================
-// 11 . ANIMAÇÃO CARROSSEL CURSOS
-// ===================================
 
-const slider = document.getElementById("coursesSlider");
+// carrocel dos cursos //
 
-document
-  .querySelector(".slider-btn--next")
-  .addEventListener("click", () => {
-    slider.scrollBy({
-      left: 320,
-      behavior: "smooth"
-    });
+const cards = document.querySelectorAll('.course-card');
+
+let current = 0;
+
+function showCard(index){
+
+  cards.forEach(card => {
+    card.classList.remove('active');
   });
 
-document
-  .querySelector(".slider-btn--prev")
-  .addEventListener("click", () => {
-    slider.scrollBy({
-      left: -320,
-      behavior: "smooth"
-    });
-  });
+  cards[index].classList.add('active');
+}
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+
+  current++;
+
+  if(current >= cards.length){
+    current = 0;
+  }
+
+  showCard(current);
+});
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+
+  current--;
+
+  if(current < 0){
+    current = cards.length - 1;
+  }
+
+  showCard(current);
+});
