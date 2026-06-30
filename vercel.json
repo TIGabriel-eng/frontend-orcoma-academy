@@ -1,6 +1,8 @@
 {
+  "redirects": [
+    { "source": "/", "destination": "/Login/index.html", "permanent": false }
+  ],
   "rewrites": [
-    { "source": "/", "destination": "/Login/index.html" },
     { "source": "/([^/.]+)", "destination": "/$1/index.html" }
   ]
 }
