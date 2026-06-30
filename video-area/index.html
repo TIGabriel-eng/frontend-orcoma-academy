@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Orcoma Academy | Play</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" aria-label="Menu do curso">
+    <div class="sidebar-logo">
+      <a href="../orcoma-business/index.html" aria-label="Voltar ao início">
+        <img src="../assets/images/LOGO ORCOMA ACADEMY.png" alt="Orcoma Academy" class="sidebar__logo-img" />
+      </a>
+    </div>
+
+    <div class="sidebar-course-title">Reforma Tributária</div>
+
+    <nav aria-label="Módulos do curso">
+      <!-- Módulo 01 -->
+      <div class="module-group">
+        <div class="module-label">Módulo 01 </div>
+        <ul>
+          <li class="module-item active" role="button" tabindex="0" aria-current="true" onclick="selectLesson(this, 'Introdução à Reforma Tributária', 'https://www.youtube.com/embed/ib0wuDAWElc')">
+            <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M6.5 5.5l4 2.5-4 2.5V5.5z"/></svg>
+            Inicio MEI Introdução
+            <div class="check-circle done" aria-label="Concluído"></div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Módulo 02 -->
+      <div class="module-group">
+        <div class="module-label">Módulo 02</div>
+        <ul>
+          <li class="module-item" role="button" tabindex="0" onclick="selectLesson(this, 'CBS e IBS — Nova Estrutura', '')">
+            <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M6.5 5.5l4 2.5-4 2.5V5.5z"/></svg>
+            Rotinas Fiscais
+            <div class="check-circle" aria-label="Não concluído"></div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Módulo 03 -->
+      <div class="module-group">
+        <div class="module-label">Módulo 03</div>
+        <ul>
+          <li class="module-item" role="button" tabindex="0" onclick="selectLesson(this, 'Transição e Prazos', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+            <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M6.5 5.5l4 2.5-4 2.5V5.5z"/></svg>
+            Departamento Pessoal
+            <div class="check-circle" aria-label="Não concluído"></div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Módulo 04 -->
+      <div class="module-group">
+        <div class="module-label">Módulo 04</div>
+        <ul>
+          <li class="module-item" role="button" tabindex="0" onclick="selectLesson(this, 'Avaliação Final', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+            <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M5.5 6h5M5.5 8.5h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Finanças
+            <div class="check-circle" aria-label="Não concluído"></div>
+          </li>
+        </ul>
+      </div>
+
+      <!--Modulo 5-->
+      <div class="module-group">
+        <div class="module-label">Módulo 05</div>
+        <ul>
+          <li class="module-item" role="button" tabindex="0" onclick="selectLesson(this, 'Avaliação Final', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+            <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M5.5 6h5M5.5 8.5h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Dicas de Gestão e Crescimento
+            <div class="check-circle" aria-label="Não concluído"></div>
+          </li>
+        </ul>
+      </div>
+
+      <!--Módulo 6-->
+      <div class="module-group">
+        <div class="module-label">Módulo 06</div>
+        <ul>
+          <li class="module-item" role="button" tabindex="0" onclick="selectLesson(this, 'Avaliação Final', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+            <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M5.5 6h5M5.5 8.5h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Alertas Importantes
+            <div class="check-circle" aria-label="Não concluído"></div>
+          </li>
+        </ul>
+      </div>
+
+      <!--Módulo 7-->
+      <div class="module-group">
+        <div class="module-label">CONTEÚDO BONUS</div>
+        <ul>
+          <li class="module-item" role="button" tabindex="0" onclick="selectLesson(this, 'Avaliação Final', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">
+            <svg class="icon" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M5.5 6h5M5.5 8.5h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Migração do MEI para o ME
+            <div class="check-circle" aria-label="Não concluído"></div>
+          </li>
+        </ul>
+      </div>
+      </nav>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main" id="main-content">
+
+    <!-- VIDEO + CHAT ROW -->
+    <div class="content-row">
+
+      <!-- VIDEO COLUMN -->
+      <div class="video-col">
+
+        <!-- VIDEO -->
+        <div class="video-wrapper">
+          <iframe
+            id="course-video"
+            src="https://www.youtube.com/embed/ib0wuDAWElc?rel=0&modestbranding=1"
+            title="Vídeo da aula"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+            sandbox="allow-scripts allow-same-origin"
+          ></iframe>
+          <div class="video-share-blocker" aria-hidden="true"></div>
+        </div>
+
+        <!-- VIDEO META -->
+        <div class="video-meta">
+          <h1 id="lesson-title">Introdução à Reforma Tributária</h1>
+          <p>Módulo 01 · Aula 1 de 7 · 3:02 min</p>
+        </div>
+
+        <!-- RATING BAR -->
+        <div class="rating-bar">
+          <div class="stars-display">
+            <span class="star lit" onclick="rate(1)" role="button" tabindex="0" aria-label="1 estrela">★</span>
+            <span class="star lit" onclick="rate(2)" role="button" tabindex="0" aria-label="2 estrelas">★</span>
+            <span class="star lit" onclick="rate(3)" role="button" tabindex="0" aria-label="3 estrelas">★</span>
+            <span class="star lit" onclick="rate(4)" role="button" tabindex="0" aria-label="4 estrelas">★</span>
+            <span class="star" onclick="rate(5)" role="button" tabindex="0" aria-label="5 estrelas">★</span>
+          </div>
+          <span class="rating-label"><strong>4/5</strong></span>
+          <div class="rating-divider" aria-hidden="true"></div>
+          <button class="review-toggle" onclick="toggleReview()" aria-expanded="false" aria-controls="review-form">Avaliar</button>
+        </div>
+
+        <!-- REVIEW FORM -->
+        <div class="review-form" id="review-form" aria-hidden="true">
+          <textarea id="review-text" placeholder="Escreva seu comentário sobre esta aula..." aria-label="Campo de comentário da avaliação" maxlength="2000"></textarea>
+          <div class="review-form-footer">
+            <button class="post-btn" onclick="postReview()">Postar avaliação</button>
+          </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs" role="tablist">
+          <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-resources" onclick="switchTab(this,'panel-resources')">Materiais</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-notes" onclick="switchTab(this,'panel-notes')">Anotações</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-about" onclick="switchTab(this,'panel-about')">Sobre o Curso</button>
+        </div>
+
+        <!-- TAB: MATERIALS -->
+        <div class="tab-panel active" id="panel-resources" role="tabpanel">
+          <div class="resource-list">
+            <div class="resource-item">
+              <div class="resource-icon pdf">PDF</div>
+              <div class="resource-info">
+                <strong>Resumo — Reforma Tributária 2024.pdf</strong>
+                <span>2,4 MB · PDF</span>
+              </div>
+              <button class="dl-btn" aria-label="Baixar Resumo da Reforma Tributária">Baixar</button>
+            </div>
+            <div class="resource-item">
+              <div class="resource-icon pdf">PDF</div>
+              <div class="resource-info">
+                <strong>Slides — CBS e IBS Detalhado.pdf</strong>
+                <span>1,1 MB · PDF</span>
+              </div>
+              <button class="dl-btn" aria-label="Baixar Slides CBS e IBS">Baixar</button>
+            </div>
+            <div class="resource-item">
+              <div class="resource-icon xls">XLS</div>
+              <div class="resource-info">
+                <strong>Planilha de Simulação Tributária.xlsx</strong>
+                <span>380 KB · Excel</span>
+              </div>
+              <button class="dl-btn" aria-label="Baixar Planilha de Simulação">Baixar</button>
+            </div>
+            <div class="resource-item">
+              <div class="resource-icon zip">ZIP</div>
+              <div class="resource-info">
+                <strong>Legislação Complementar — PLP 68.zip</strong>
+                <span>5,7 MB · Arquivo ZIP</span>
+              </div>
+              <button class="dl-btn" aria-label="Baixar Legislação Complementar">Baixar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: NOTES -->
+        <div class="tab-panel" id="panel-notes" role="tabpanel">
+          <textarea
+            class="notes-area"
+            id="notes-area"
+            placeholder="Suas anotações sobre esta aula ficam aqui..."
+            aria-label="Campo de anotações da aula"
+            maxlength="4000"
+          ></textarea>
+          <button class="notes-save" onclick="saveNotes()">Salvar anotações</button>
+        </div>
+
+        <!-- TAB: ABOUT -->
+        <div class="tab-panel" id="panel-about" role="tabpanel">
+          <p style="color:var(--text-2);font-size:.84rem;line-height:1.7;max-width:600px;">
+            Neste módulo, você vai entender o que é o MEI (Microempreendedor Individual), quem pode 
+            se formalizar e quais 
+            são os principais benefícios de se tornar 
+            um empreendedor legalizado. 
+            Vamos abordar o passo a passo para 
+            abertura do MEI, direitos e deveres 
+            do microempreendedor, além de orientações 
+            iniciais para começar seu negócio de forma organizada e segura.
+          </p>
+          <p style="color:var(--text-3);font-size:.76rem;margin-top:12px;"> Atualizado em 2026 · Certificado incluso</p>
+        </div>
+
+      </div><!-- /video-col -->
+
+    </div><!-- /content-row -->
+
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

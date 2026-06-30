@@ -1,15 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orcoma Academy | Orcomakers</title>
-    <link rel="icon" type="image/png" href="../assets/images/orcoma-logo.png">
-</head>
-<body>
-    
-</body>
-</html><!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -33,67 +22,63 @@
 
     <!-- Logo -->
     <div class="sidebar__logo">
-      <img src="../assets/images/orcoma-academy.png" alt="Orcoma Academy" class="sidebar__logo-img" />
+      <img src="../assets/images/LOGO ORCOMA ACADEMY.png" alt="Orcoma Academy" class="sidebar__logo-img" />
     </div>
 
     <!-- Navegação principal -->
     <nav class="sidebar__nav">
       <ul>
-        <li class="nav-item active">
-          <a href="../orcoma-business/index.html">
-              <i class="fa-solid fa-house"></i>
-                <span>Início</span>
-          </a>
+        <li class="nav-item active" data-page="inicio">
+          <i class="fa-solid fa-house"></i>
+          <span data-i18n="nav.inicio">Início</span>
         </li>
 
-        <li class="nav-item active">
-          <a href="../meu-perfil/index.html">
-                <i class="fa-regular fa-user"></i>
-                <span>Meu Perfil</span>
-          </a>
+        <li class="nav-item" data-page="meu-perfil">
+          <i class="fa-regular fa-user"></i>
+          <span data-i18n="nav.perfil">Meu Perfil</span>
         </li>
         <li class="nav-item" data-page="cursos">
           <i class="fa-solid fa-graduation-cap"></i>
-          <span>Meus cursos</span>
+          <span data-i18n="nav.cursos">Meus cursos</span>
         </li>
         <li class="nav-item" data-page="continuar">
           <i class="fa-solid fa-play"></i>
-          <span>Continuar assistindo</span>
+          <span data-i18n="nav.continuar">Continuar assistindo</span>
         </li>
         <li class="nav-item" data-page="concluidos">
           <i class="fa-solid fa-circle-check"></i>
-          <span>Cursos concluídos</span>
+          <span data-i18n="nav.concluidos">Cursos concluídos</span>
         </li>
         <li class="nav-item" data-page="certificados">
           <i class="fa-solid fa-certificate"></i>
-          <span>Certificados</span>
+          <span data-i18n="nav.certificados">Certificados</span>
         </li>
         <li class="nav-item" data-page="trilhas">
           <i class="fa-solid fa-route"></i>
-          <span>Trilhas de aprendizagem</span>
+          <span data-i18n="nav.trilhas">Trilhas de aprendizagem</span>
         </li>
         <li class="nav-item" data-page="favoritos">
           <i class="fa-regular fa-heart"></i>
-          <span>Favoritos</span>
+          <span data-i18n="nav.favoritos">Favoritos</span>
         </li>
         <li class="nav-item" data-page="suporte">
           <i class="fa-regular fa-circle-question"></i>
-          <span>Suporte</span>
+          <span data-i18n="nav.suporte">Suporte</span>
         </li>
         <li class="nav-item" data-page="config">
           <i class="fa-solid fa-gear"></i>
-          <span>Configurações</span>
+          <span data-i18n="nav.config">Configurações</span>
         </li>
         <li class="nav-item nav-item--logout" data-page="sair">
           <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Sair</span>
+          <span data-i18n="nav.sair">Sair</span>
         </li>
       </ul>
     </nav>
 
     <!-- Ambiente ativo -->
     <div class="sidebar__env">
-      <p class="sidebar__env-label">AMBIENTE ATIVO</p>
+       <p class="sidebar__env-label" data-i18n="sidebar.env.label">AMBIENTE ATIVO</p>
       <div class="sidebar__env-selector">
         <i class="fa-solid fa-building"></i>
         <span>Academy Business</span>
@@ -105,10 +90,10 @@
     <div class="sidebar__premium">
       <i class="fa-solid fa-crown"></i>
       <div>
-        <p class="premium__title">Seja Premium</p>
-        <p class="premium__desc">Tenha acesso a todos os cursos, trilhas e certificados.</p>
+        <p class="premium__title" data-i18n="sidebar.premium.title">Seja Premium</p>
+        <p class="premium__desc" data-i18n="sidebar.premium.desc">Tenha acesso a todos os cursos, trilhas e certificados.</p>
       </div>
-      <button class="btn-premium">Assinar agora <i class="fa-solid fa-arrow-right"></i></button>
+      <button class="btn-premium" data-i18n="sidebar.premium.btn">Assinar agora <i class="fa-solid fa-arrow-right"></i></button>
     </div>
 
   </aside>
@@ -173,7 +158,7 @@
 <section class="cursos-disponiveis">
 
     <div class="section-header">
-        <h2>Cursos Disponíveis (exemplos)</h2>
+        <h2>Cursos Disponíveis </h2>
     </div>
 
     <div class="curso-card">
@@ -346,7 +331,7 @@
 <!-- ========== PERFIL FLUTUANTE ========== -->
 <div class="progress-profile-bar">
   <img 
-    src="src="../assets/images/avatar-icon.jpg"
+    src="../assets/images/avatar-icon.jpg"
     alt="Avatar" 
     class="progress-sidebar__avatar"
     onerror="this.src='../assets/images/avatar-icon.jpg'"
@@ -479,6 +464,10 @@
   <!-- Overlay mobile -->
   <div class="sidebar__overlay" id="sidebarOverlay"></div>
 
+  <script src="../i18n.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
+  <script src="../search.js"></script>
 </body>
 </html>

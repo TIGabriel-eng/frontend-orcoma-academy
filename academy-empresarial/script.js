@@ -1,90 +1,12 @@
 /* ============================================================
    ORCOMA ACADEMY — JavaScript
    Organização:
-   1. Proteção contra DevTools / console injection
-   2. Sidebar mobile (abrir/fechar)
-   3. Navegação da sidebar (item ativo)
-   4. Animação do círculo de progresso
-   5. Animação das barras de progresso
-   6. Animação dos contadores de estatísticas (stats)
-   7. Inicialização (chamada na carga do DOM)
+   1. Sidebar mobile (abrir/fechar)
+   2. Navegação da sidebar (item ativo)
+   3. Animação dos contadores de estatísticas (stats)
+   4. Inicialização (chamada na carga do DOM)
    ============================================================ */
 
-
-/* ============================================================
-   1. PROTEÇÃO CONTRA DEVTOOLS E INJECT
-   ============================================================ */
-
-/**
- * Detecta abertura do DevTools monitorando a diferença entre
- * o tamanho interno e externo da janela.
- * Quando detectado, redireciona para página de aviso.
- */
-(function protectDevTools() {
-  "use strict";
-
-  /* Limpa o console periodicamente */
-  const consoleClearInterval = setInterval(function () {
-    console.clear();
-  }, 1000);
-
-  /* Sobrescreve os métodos do console para bloquear outputs */
-  const noop = function () {};
-  const consoleMethods = ["log", "warn", "error", "info", "debug", "table", "dir"];
-  consoleMethods.forEach(function (method) {
-    console[method] = noop;
-  });
-
-  /* Detecta abertura do DevTools pela diferença de tamanho da janela */
-  const THRESHOLD = 160; /* pixels de diferença que indicam painel aberto */
-
-  function checkDevTools() {
-    const widthDiff  = window.outerWidth  - window.innerWidth;
-    const heightDiff = window.outerHeight - window.innerHeight;
-
-    if (widthDiff > THRESHOLD || heightDiff > THRESHOLD) {
-      /* Redireciona para uma página de aviso ou em branco */
-      document.body.innerHTML =
-        "<div style=\"display:flex;align-items:center;justify-content:center;" +
-        "height:100vh;background:#0a0e1a;color:#f5a623;font-family:sans-serif;" +
-        "font-size:1.2rem;text-align:center;\">" +
-        "<p>⚠️ Acesso não autorizado.<br>Feche o DevTools para continuar.</p></div>";
-    }
-  }
-
-  /* Verifica a cada 800ms */
-  setInterval(checkDevTools, 800);
-
-  /* Bloqueia atalhos de teclado comuns do DevTools */
-  document.addEventListener("keydown", function (event) {
-    const blockedKeys = [
-      { key: "F12" },                                    /* F12 */
-      { key: "I", ctrlKey: true, shiftKey: true },       /* Ctrl+Shift+I */
-      { key: "J", ctrlKey: true, shiftKey: true },       /* Ctrl+Shift+J */
-      { key: "C", ctrlKey: true, shiftKey: true },       /* Ctrl+Shift+C */
-      { key: "U", ctrlKey: true },                       /* Ctrl+U (View Source) */
-    ];
-
-    const isBlocked = blockedKeys.some(function (combo) {
-      return (
-        event.key === combo.key &&
-        (combo.ctrlKey  === undefined || event.ctrlKey  === combo.ctrlKey)  &&
-        (combo.shiftKey === undefined || event.shiftKey === combo.shiftKey)
-      );
-    });
-
-    if (isBlocked) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  });
-
-  /* Bloqueia clique direito (menu de contexto) */
-  document.addEventListener("contextmenu", function (event) {
-    event.preventDefault();
-  });
-
-}()); /* Execução imediata para proteção antes do DOM */
 
 
 /* ============================================================
@@ -141,87 +63,43 @@ function initSidebarNav() {
 
   navItems.forEach(function (item) {
     item.addEventListener("click", function () {
-      /* Remove o estado ativo de todos */
-      navItems.forEach(function (i) {
-        i.classList.remove("active");
-      });
+      var page = item.getAttribute("data-page");
+      if (page === "sair") {
+        sessionStorage.clear();
+        window.location.href = "../Login/index.html";
+        return;
+      }
 
-      /* Adiciona ao clicado */
-      item.classList.add("active");
+      var url = null;
+      if (page === "inicio") url = "../orcoma-business/index.html";
+      else if (page === "meu-perfil") url = "../meu-perfil/index.html";
+      else if (page === "cursos") url = "../meuscursos/index.html";
+      else if (page === "continuar") url = "../continuarassistindo/index.html";
+      else if (page === "concluidos") url = "../cursos-concluidos/index.html";
+      else if (page === "certificados") url = "../certificados/index.html";
+      else if (page === "trilhas") url = "../trilhasdeaprendizagem/index.html";
+      else if (page === "favoritos") url = "../favoritos/index.html";
+      else if (page === "suporte") url = "../suporte/index.html";
+      else if (page === "config") url = "../configuracoes/index.html";
+
+      if (!url) {
+        navItems.forEach(function (i) { i.classList.remove("active"); });
+        item.classList.add("active");
+        return;
+      }
+
+      item.classList.add("clicked");
+
+      setTimeout(function () {
+        window.location.href = url;
+      }, 200);
     });
   });
 }
 
 
 /* ============================================================
-   4. ANIMAÇÃO DO CÍRCULO DE PROGRESSO
-   ============================================================ */
-
-/**
- * Anima o círculo SVG de progresso de 0 até o valor alvo.
- * Usa stroke-dashoffset para controlar o preenchimento.
- *
- * @param {number} targetPercent - Percentual alvo (0 a 100)
- */
-function animateProgressCircle(targetPercent) {
-  const ring          = document.getElementById("progressRing");
-  const percentLabel  = document.getElementById("progressPercent");
-
-  if (!ring || !percentLabel) return;
-
-  const circumference = 2 * Math.PI * 50; /* r=50, conforme o SVG */
-  const targetOffset  = circumference - (targetPercent / 100) * circumference;
-
-  /* Força reflow para a transição CSS funcionar do início */
-  ring.style.strokeDasharray  = circumference;
-  ring.style.strokeDashoffset = circumference;
-
-  /* Aguarda 1 frame e inicia a animação */
-  requestAnimationFrame(function () {
-    requestAnimationFrame(function () {
-      ring.style.strokeDashoffset = targetOffset;
-    });
-  });
-
-  /* Anima o número no centro do círculo */
-  let currentValue = 0;
-  const step       = targetPercent / 60; /* ~60 passos */
-  const counter    = setInterval(function () {
-    currentValue += step;
-    if (currentValue >= targetPercent) {
-      currentValue = targetPercent;
-      clearInterval(counter);
-    }
-    percentLabel.textContent = Math.round(currentValue) + "%";
-  }, 20);
-}
-
-
-/* ============================================================
-   5. ANIMAÇÃO DAS BARRAS DE PROGRESSO
-   ============================================================ */
-
-/**
- * Percorre todos os elementos com classe 'progress__bar-fill'
- * e aplica a largura definida em data-width após um pequeno delay.
- */
-function animateProgressBars() {
-  const bars = document.querySelectorAll(".progress__bar-fill");
-
-  bars.forEach(function (bar) {
-    const targetWidth = bar.getAttribute("data-width");
-    if (!targetWidth) return;
-
-    /* Pequeno delay para garantir que o CSS transition funcione */
-    setTimeout(function () {
-      bar.style.width = targetWidth + "%";
-    }, 300);
-  });
-}
-
-
-/* ============================================================
-   6. ANIMAÇÃO DOS CONTADORES DE ESTATÍSTICAS
+   3. ANIMAÇÃO DOS CONTADORES DE ESTATÍSTICAS
    ============================================================ */
 
 /**
@@ -282,7 +160,7 @@ function initStatsCounters() {
 
 
 /* ============================================================
-   7. INICIALIZAÇÃO
+   4. INICIALIZAÇÃO
    ============================================================ */
 
 /**
@@ -297,42 +175,73 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Inicializa abertura/fechamento da sidebar no mobile */
   initSidebarMobile();
 
-  /* Anima o círculo de progresso geral (72%) */
-  animateProgressCircle(72);
-
-  /* Anima todas as barras de progresso */
-  animateProgressBars();
-
   /* Inicia os contadores de estatísticas */
   initStatsCounters();
 
   const planoMap = {
-  'cliente_orcoma':     'Cliente Orcoma',
-  'colaborador_orcoma': 'Colaborador Orcoma',
-  'gestor_orcoma':      'Gestor Orcoma',
-    };  /* Atualiza o plano do usuário no sidebar de progresso */
+    'admin':              'Administrador',
+    'cliente_orcoma':     'Cliente Orcoma',
+    'colaborador_orcoma': 'Orcoma Team',
+    'gestor_orcoma':      'Orcoma Business',
+    'visitor':            'Visitante'
+  };
 
-    const tipoUsuario = 'Cliente Orcoma';
+  const tipoUsuario = sessionStorage.getItem('orcoma_user_role') || 'visitor';
 
-    const planLabel = document.querySelector('.progress-sidebar__plan');
-        if (planLabel) {
-         planLabel.textContent = planoMap[tipoUsuario] ?? 'Cliente Orcoma';
+  const planLabel = document.querySelector('.progress-sidebar__plan');
+  if (planLabel) {
+    planLabel.textContent = planoMap[tipoUsuario] ?? 'Cliente Orcoma';
+    planLabel.classList.remove('pill-admin', 'pill-cliente', 'pill-visitor');
+    if (tipoUsuario === 'admin') {
+      planLabel.classList.add('pill-admin');
+    } else if (tipoUsuario === 'visitor') {
+      planLabel.classList.add('pill-visitor');
+    } else {
+      planLabel.classList.add('pill-cliente');
     }
+  }
 
-    /* Avatar: usa foto do usuário ou fallback para avatar-icon.jpg */
-    const avatarEl = document.getElementById('userAvatar');
-    const fotoUsuario = null; // substitua por ex: usuario.foto_url vindo do backend
+  /* Dropdown do perfil */
+  const chevron = document.getElementById('profileChevron');
+  const dropdown = document.getElementById('profileDropdown');
+  if (chevron && dropdown) {
+    chevron.addEventListener('click', function (e) {
+      e.stopPropagation();
+      chevron.classList.toggle('is-open');
+      dropdown.classList.toggle('is-visible');
+    });
+    document.addEventListener('click', function () {
+      chevron.classList.remove('is-open');
+      dropdown.classList.remove('is-visible');
+    });
+    dropdown.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+  }
 
-        if (avatarEl) {
-        if (fotoUsuario) {
-                avatarEl.src = fotoUsuario;
-            } 
-        else {
-                avatarEl.src = 'assets/images/avatar-icon.jpg';
-        }
+  /* Dropdown do admin pill (hover) */
+  if (tipoUsuario === 'admin') {
+    const adminPill = document.getElementById('adminPill');
+    const adminDropdown = document.getElementById('adminDropdown');
+    if (adminPill && adminDropdown) {
+      var adminDropdownTimeout;
+      function showAdminDropdown() {
+        clearTimeout(adminDropdownTimeout);
+        adminDropdown.classList.add('is-visible');
+      }
+      function hideAdminDropdown() {
+        adminDropdownTimeout = setTimeout(function () {
+          adminDropdown.classList.remove('is-visible');
+        }, 150);
+      }
+      adminPill.addEventListener('mouseenter', showAdminDropdown);
+      adminPill.addEventListener('mouseleave', hideAdminDropdown);
+      adminDropdown.addEventListener('mouseenter', showAdminDropdown);
+      adminDropdown.addEventListener('mouseleave', hideAdminDropdown);
     }
+  }
 
-    /* Atalho de teclado: Ctrl + K para focar no input de busca */
+  /* Atalho de teclado: Ctrl + K para focar no input de busca */
     document.addEventListener('keydown', function(e) {
   if (e.ctrlKey && e.key === 'k') {
     e.preventDefault();
@@ -340,33 +249,4 @@ document.addEventListener("DOMContentLoaded", function () {
     if (input) input.focus();
   }
 });
-});
-
-// ===============================
-// 9 . RENDERIZAR TRILHAS
-// ===============================
-function renderTrilhas() {
-  const container = document.querySelector(".trilhas-grid");
-
-  container.innerHTML = trilhas.map(trilha => `
-    <div class="trilha-card">
-      <div class="trilha-card__image">
-        <img src="${trilha.imagem}" alt="${trilha.titulo}">
-      </div>
-
-      <div class="trilha-card__content">
-        <h4>${trilha.titulo}</h4>
-        <span>${trilha.cursos} cursos</span>
-      </div>
-
-      <i class="fa-solid fa-chevron-right trilha-card__arrow"></i>
-    </div>
-  `).join("");
-}
-
-// ===============================
-// 10 . INICIAR
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-  renderTrilhas();
 });

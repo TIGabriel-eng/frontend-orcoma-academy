@@ -23,67 +23,63 @@
 
     <!-- Logo -->
     <div class="sidebar__logo">
-      <img src="../assets/images/orcoma-academy.png" alt="Orcoma Academy" class="sidebar__logo-img" />
+      <img src="../assets/images/LOGO ORCOMA ACADEMY.png" alt="Orcoma Academy" class="sidebar__logo-img" />
     </div>
 
     <!-- Navegação principal -->
     <nav class="sidebar__nav">
       <ul>
-        <li class="nav-item active">
-          <a href="../orcoma-business/index.html">
-              <i class="fa-solid fa-house"></i>
-                <span>Início</span>
-          </a>
+        <li class="nav-item active" data-page="inicio">
+          <i class="fa-solid fa-house"></i>
+          <span data-i18n="nav.inicio">Início</span>
         </li>
 
-        <li class="nav-item">
-          <a href="../meu-perfil/index.html">
-                <i class="fa-regular fa-user"></i>
-                <span>Meu Perfil</span>
-          </a>
+        <li class="nav-item" data-page="meu-perfil">
+          <i class="fa-regular fa-user"></i>
+          <span data-i18n="nav.perfil">Meu Perfil</span>
         </li>
         <li class="nav-item" data-page="cursos">
           <i class="fa-solid fa-graduation-cap"></i>
-          <span>Meus cursos</span>
+          <span data-i18n="nav.cursos">Meus cursos</span>
         </li>
         <li class="nav-item" data-page="continuar">
           <i class="fa-solid fa-play"></i>
-          <span>Continuar assistindo</span>
+          <span data-i18n="nav.continuar">Continuar assistindo</span>
         </li>
         <li class="nav-item" data-page="concluidos">
           <i class="fa-solid fa-circle-check"></i>
-          <span>Cursos concluídos</span>
+          <span data-i18n="nav.concluidos">Cursos concluídos</span>
         </li>
         <li class="nav-item" data-page="certificados">
           <i class="fa-solid fa-certificate"></i>
-          <span>Certificados</span>
+          <span data-i18n="nav.certificados">Certificados</span>
         </li>
         <li class="nav-item" data-page="trilhas">
           <i class="fa-solid fa-route"></i>
-          <span>Trilhas de aprendizagem</span>
+          <span data-i18n="nav.trilhas">Trilhas de aprendizagem</span>
         </li>
         <li class="nav-item" data-page="favoritos">
           <i class="fa-regular fa-heart"></i>
-          <span>Favoritos</span>
+          <span data-i18n="nav.favoritos">Favoritos</span>
         </li>
         <li class="nav-item" data-page="suporte">
           <i class="fa-regular fa-circle-question"></i>
-          <span>Suporte</span>
+          <span data-i18n="nav.suporte">Suporte</span>
         </li>
         <li class="nav-item" data-page="config">
           <i class="fa-solid fa-gear"></i>
-          <span>Configurações</span>
+          <span data-i18n="nav.config">Configurações</span>
         </li>
         <li class="nav-item nav-item--logout" data-page="sair">
           <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Sair</span>
+          <span data-i18n="nav.sair">Sair</span>
         </li>
       </ul>
     </nav>
 
     <!-- Ambiente ativo -->
     <div class="sidebar__env">
-      <p class="sidebar__env-label">AMBIENTE ATIVO</p>
+       <p class="sidebar__env-label" data-i18n="sidebar.env.label">AMBIENTE ATIVO</p>
       <div class="sidebar__env-selector">
         <i class="fa-solid fa-building"></i>
         <span>Academy Business</span>
@@ -95,10 +91,10 @@
     <div class="sidebar__premium">
       <i class="fa-solid fa-crown"></i>
       <div>
-        <p class="premium__title">Seja Premium</p>
-        <p class="premium__desc">Tenha acesso a todos os cursos, trilhas e certificados.</p>
+        <p class="premium__title" data-i18n="sidebar.premium.title">Seja Premium</p>
+        <p class="premium__desc" data-i18n="sidebar.premium.desc">Tenha acesso a todos os cursos, trilhas e certificados.</p>
       </div>
-      <button class="btn-premium">Assinar agora <i class="fa-solid fa-arrow-right"></i></button>
+      <button class="btn-premium" data-i18n="sidebar.premium.btn">Assinar agora <i class="fa-solid fa-arrow-right"></i></button>
     </div>
 
   </aside>
@@ -136,7 +132,7 @@
         <div class="hero__brand">
           <div>
             <p class="hero__brand-sub">BEM-VINDO À</p>
-            <img src="../assets/images/orcoma-academy.png" alt="Orcoma Academy" class="hero__brand-logo-img hero__brand-logo-img--large" />
+            <img src="../assets/images/LOGO ORCOMA ACADEMY.png" alt="Orcoma Academy" class="hero__brand-logo-img hero__brand-logo-img--large" />
           </div>
         </div>
         <p class="hero__tagline">Conhecimento que <strong>transforma.</strong><br>Inovação que <strong>impulsiona.</strong></p>
@@ -144,26 +140,37 @@
           Você está em: <span class="tag-env">Pagina Inicial</span><br>
         </p>
         <h5>Acesse conteúdos exclusivos, treinamentos e trilhas de aprendizagem criadas para impulsionar a gestão,
-          fortalecer processos e preparar pessoas para novos desafios!</h4>
-        </h5>
+          fortalecer processos e preparar pessoas para novos desafios!</h5>
         <button class="btn-hero">Explorar conteúdos <i class="fa-solid fa-arrow-right"></i></button>
       </div>
 
       <!-- Cards de ambiente -->
-    <div class="hero__cards">
-      <div class="hero__env-card">
-      <i class="fa-solid fa-calculator"></i> 
-      <h3>Academy Contábil</h3>
-      <p>Capacitações em contabilidade, fiscal, tributário e legislação para apoiar a gestão segura e eficiente do seu negócio.</p>
-      <a href="../academy-contabil/index.html" class="env-card__link">Acessar <i class="fa-solid fa-arrow-right"></i></a>
+    <div class="hero__pills">
+      <a href="../academy-contabil/index.html" class="module-pill" data-roles="admin,cliente_orcoma">
+        <div class="module-pill__inner">
+          <div class="module-pill__header">
+            <i class="fa-solid fa-calculator"></i>
+            <span class="module-pill__name">Academy Contábil</span>
+          </div>
+          <div class="module-pill__body">
+            <p class="module-pill__desc">Capacitações em contabilidade, fiscal, tributário e legislação para apoiar a gestão segura e eficiente do seu negócio.</p>
+            <span class="module-pill__cta">Acessar <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+        </div>
+      </a>
+      <a href="../academy-empresarial/index.html" class="module-pill" data-roles="admin,cliente_orcoma,empresario">
+        <div class="module-pill__inner">
+          <div class="module-pill__header">
+            <i class="fa-solid fa-chart-line"></i>
+            <span class="module-pill__name">Academy Gestão Empresárial</span>
+          </div>
+          <div class="module-pill__body">
+            <p class="module-pill__desc">Conteúdos de gestão, liderança e estratégia para impulsionar o crescimento e a performance empresarial.</p>
+            <span class="module-pill__cta">Acessar <i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+        </div>
+      </a>
     </div>
-  <div class="hero__env-card">
-    <i class="fa-solid fa-chart-line"></i>
-    <h3>Academy Gestão Empresárial</h3>
-    <p>Conteúdos de gestão, liderança e estratégia para impulsionar o crescimento e a performance empresarial.</p>
-    <a href="../academy-empresarial/index.html" class="env-card__link">Acessar <i class="fa-solid fa-arrow-right"></i></a>
-  </div>
-</div>
 
 
 
@@ -254,7 +261,7 @@
       <!--Progresso-->
           <div class="course-card__progress">
             <div class="progress__bar-track">
-              <div class="progress__bar-fill" data-width="60%"></div>
+              <div class="progress__bar-fill" data-width="60"></div>
             </div>
 
             <span>60%</span>
@@ -291,7 +298,7 @@
       <!--Progresso-->
           <div class="course-card__progress">
             <div class="progress__bar-track">
-              <div class="progress__bar-fill" data-width="40%"> </div>
+              <div class="progress__bar-fill" data-width="40"></div>
             </div>
 
             <span>40%</span>
@@ -445,7 +452,51 @@
 
 </section>
 
+    </div>
     <!-- ===== FIM LINHA INFERIOR ===== -->
+  
+  <!---------Curso Recomendado--------------->
+
+<h1 class="section-tittle">
+      Curso Recomendado para você!
+   </h1>
+
+  <section class="curso-recomendado">
+
+  <div class="curso-recomendado__badge">
+    <i class="fa-solid fa-sparkles"></i>
+    Recomendado para você
+  </div>
+
+  <div class="curso-recomendado__content">
+
+    <div class="curso-recomendado__thumb">
+      <img src="../assets/images/orcoma-tributária.png" alt="Reforma Tributária">
+    </div>
+
+    <div class="curso-recomendado__info">
+      <h3>ONBOARDING MEI</h3>
+
+      <p>
+        Entenda as mudanças da reforma tributária e prepare sua empresa
+        para as novas regras fiscais.
+      </p>
+
+      <div class="curso-recomendado__meta">
+        <span><i class="fa-solid fa-clock"></i> 44h de conteúdo</span>
+        <span><i class="fa-solid fa-video"></i> 7 aulas</span>
+        <span><i class="fa-solid fa-certificate"></i> Certificado</span>
+      </div>
+
+      <a href="../video-area/index.html" class="btn-recomendado">
+        Começar agora
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+
+  </div>
+
+</section>
 
 
     <!-- ===== STATS ===== -->
@@ -488,216 +539,195 @@
 
   </main>
 
-<!-- PERFIL DO USUÁRIO -->
-<div class="progress-profile-bar">
+<!-- ========== PAINEL LATERAL DIREITO ========== -->
+<aside class="right-panel">
 
-  <img
-    src="../assets/images/avatar-icon.jpg"
-    alt="Avatar do usuário"
-    class="progress-sidebar__avatar"
-    id="userAvatar"
-    onerror="this.src='../assets/images/avatar-icon.jpg'"
-  >
+  <!-- PERFIL DO USUÁRIO -->
+  <div class="progress-profile-bar">
 
-  <div class="progress-sidebar__user-info">
+    <img
+      src="../assets/images/avatar-icon.jpg"
+      alt="Avatar do usuário"
+      class="progress-sidebar__avatar"
+      id="userAvatar"
+      onerror="this.src='../assets/images/avatar-icon.jpg'"
+    >
 
-    <span class="progress-sidebar__username">
-      Gabriel Anacleto
-    </span>
+    <div class="progress-sidebar__user-info">
 
-    <span class="progress-sidebar__plan">
-      Cliente Orcoma
-    </span>
-
-  </div>
-
-  <i class="fa-solid fa-chevron-down progress-sidebar__chevron"></i>
-
-</div>
-
-<!-- ========== CARD DE PROGRESSO ========== -->
-<section class="progress-sidebar" id="progressSidebar">
-
-  <div class="progress__header">
-    <h3>Seu progresso geral</h3>
-    <a href="#">Ver detalhes</a>
-  </div>
-
-  <div class="progress__summary">
-
-    <div class="progress__circle-wrap">
-      <svg class="progress__ring" viewBox="0 0 120 120">
-        <circle
-          class="progress__ring-bg"
-          cx="60"
-          cy="60"
-          r="50">
-        </circle>
-
-        <circle
-          class="progress__ring-fill"
-          cx="60"
-          cy="60"
-          r="50"
-          id="progressRing">
-        </circle>
-      </svg>
-
-      <div class="progress__circle-text">
-        <span
-          class="progress__percent"
-          id="progressPercent">
-          72%
-        </span>
-      </div>
-    </div>
-
-    <div class="progress__info">
-      <span class="progress__label">
-        Excelente!
+      <span class="progress-sidebar__username">
+        Gabriel Anacleto
       </span>
 
-      <span class="progress__sub">
-        Você está no caminho certo para concluir seus cursos.
+      <span class="progress-sidebar__plan pill-admin" id="adminPill">
+        Admin
       </span>
+      <div class="admin-dropdown" id="adminDropdown">
+        <a href="../admin-page/index.html" class="admin-dropdown__item">
+          <i class="fa-solid fa-shield-halved"></i> Painel Administrativo
+        </a>
+      </div>
+
+    </div>
+
+    <i class="fa-solid fa-chevron-down progress-sidebar__chevron" id="profileChevron"></i>
+
+    <div class="profile-dropdown" id="profileDropdown">
+      <a href="../meu-perfil/index.html" class="profile-dropdown__item">
+        <i class="fa-regular fa-user"></i> Meu Perfil
+      </a>
+      <a href="../meuscursos/index.html" class="profile-dropdown__item">
+        <i class="fa-solid fa-graduation-cap"></i> Meus cursos
+      </a>
+      <a href="../Certificados/index.html" class="profile-dropdown__item">
+        <i class="fa-solid fa-certificate"></i> Certificados
+      </a>
     </div>
 
   </div>
 
-  <div class="progress__bars">
+  <!-- ========== CARD DE PROGRESSO ========== -->
+  <section class="progress-sidebar" id="progressSidebar">
 
-    <div class="progress__bar-item">
-      <div class="progress__bar-header">
-        <span>Reforma Tributária</span>
-        <span>75%</span>
-      </div>
-
-      <div class="progress__bar-track">
-        <div
-          class="progress__bar-fill"
-          data-width="75">
-        </div>
-      </div>
+    <div class="progress__header">
+      <h3>Seu progresso geral</h3>
     </div>
 
-    <div class="progress__bar-item">
-      <div class="progress__bar-header">
-        <span>Gestão Financeira</span>
-        <span>60%</span>
-      </div>
+    <div class="progress__summary">
 
-      <div class="progress__bar-track">
-        <div
-          class="progress__bar-fill"
-          data-width="60">
+      <div class="progress__circle-wrap">
+        <svg class="progress__ring" viewBox="0 0 120 120">
+          <circle class="progress__ring-bg" cx="60" cy="60" r="50"></circle>
+          <circle class="progress__ring-fill" cx="60" cy="60" r="50" id="progressRing"></circle>
+        </svg>
+
+        <div class="progress__circle-text">
+          <span class="progress__percent" id="progressPercent">72%</span>
         </div>
       </div>
-    </div>
 
-    <div class="progress__bar-item">
-      <div class="progress__bar-header">
-        <span>Atendimento ao Cliente</span>
-        <span>90%</span>
+      <div class="progress__info">
+        <span class="progress__label">Excelente!</span>
+        <span class="progress__sub">Você está no caminho certo para concluir seus cursos.</span>
       </div>
 
-      <div class="progress__bar-track">
-        <div
-          class="progress__bar-fill"
-          data-width="90">
+    </div>
+
+    <div class="progress__bars">
+
+      <div class="progress__bars-header">
+        <span>Cursos em Andamento</span>
+        <a href="#">Ver todos</a>
+      </div>
+
+      <div class="progress__bar-item">
+        <div class="progress__bar-header">
+          <span>Reforma Tributária</span>
+          <span>75%</span>
+        </div>
+        <div class="progress__bar-track">
+          <div class="progress__bar-fill" data-width="75"></div>
         </div>
       </div>
-    </div>
 
-    <div class="progress__bar-item">
-      <div class="progress__bar-header">
-        <span>Processos Internos</span>
-        <span>30%</span>
-      </div>
-
-      <div class="progress__bar-track">
-        <div
-          class="progress__bar-fill"
-          data-width="30">
+      <div class="progress__bar-item">
+        <div class="progress__bar-header">
+          <span>Gestão Financeira</span>
+          <span>60%</span>
+        </div>
+        <div class="progress__bar-track">
+          <div class="progress__bar-fill" data-width="60"></div>
         </div>
       </div>
+
+      <div class="progress__bar-item">
+        <div class="progress__bar-header">
+          <span>Atendimento ao Cliente</span>
+          <span>90%</span>
+        </div>
+        <div class="progress__bar-track">
+          <div class="progress__bar-fill" data-width="90"></div>
+        </div>
+      </div>
+
+      <div class="progress__bar-item">
+        <div class="progress__bar-header">
+          <span>Processos Internos</span>
+          <span>30%</span>
+        </div>
+        <div class="progress__bar-track">
+          <div class="progress__bar-fill" data-width="30"></div>
+        </div>
+      </div>
+
     </div>
 
-  </div>
+  </section>
+  <!-- ========== FIM CARD DE PROGRESSO ========== -->
 
-</section>
-<!-- ========== FIM CARD DE PROGRESSO ========== -->
+  <!-- ========== CARD DE EVENTOS ========== -->
+  <section class="events-sidebar">
 
-<!-- ========== CARD DE EVENTOS ========== -->
-<section class="events-sidebar">
+    <div class="events-header">
+      <h3>Próximos eventos</h3>
+      <a href="#">Ver todos</a>
+    </div>
 
-  <div class="events-header">
-    <h3>Próximos eventos</h3>
-    <a href="#">Ver todos</a>
-  </div>
+    <div class="events-list">
 
-  <div class="events-list">
+      <article class="event-card">
+        <div class="event-date">
+          <span class="day">24</span>
+          <span class="month">MAI</span>
+        </div>
+        <div class="event-content">
+          <h4>Webinar: Reforma Tributária na Prática</h4>
+          <span>19:00 às 22:30</span>
+        </div>
+      </article>
 
-    <article class="event-card">
+      <article class="event-card">
+        <div class="event-date">
+          <span class="day">07</span>
+          <span class="month">JUN</span>
+        </div>
+        <div class="event-content">
+          <h4>Treinamento: Rotinas Fiscais</h4>
+          <span>18:00 às 21:30</span>
+        </div>
+      </article>
 
-      <div class="event-date">
-        <span class="day">24</span>
-        <span class="month">MAI</span>
-      </div>
+      <article class="event-card">
+        <div class="event-date">
+          <span class="day">15</span>
+          <span class="month">JUN</span>
+        </div>
+        <div class="event-content">
+          <h4>Workshop de Gestão Empresarial</h4>
+          <span>14:00 às 17:00</span>
+        </div>
+      </article>
 
-      <div class="event-content">
-        <h4>Webinar: Reforma Tributária na Prática</h4>
-        <span>19:00 às 22:30</span>
-      </div>
+    </div>
 
-      <i class="fa-regular fa-calendar"></i>
+    <a href="#" class="events-link">
+      Ver calendário completo
+      <i class="fa-solid fa-arrow-right"></i>
+    </a>
 
-    </article>
+  </section>
+  <!-- ========== FIM CARD DE EVENTOS ========== -->
 
-    <article class="event-card">
+</aside>
+<!-- ========== FIM PAINEL LATERAL DIREITO ========== -->
 
-      <div class="event-date">
-        <span class="day">07</span>
-        <span class="month">JUN</span>
-      </div>
-
-      <div class="event-content">
-        <h4>Treinamento: Rotinas Fiscais</h4>
-        <span>18:00 às 21:30</span>
-      </div>
-
-      <i class="fa-regular fa-calendar"></i>
-
-    </article>
-
-    <article class="event-card">
-
-      <div class="event-date">
-        <span class="day">15</span>
-        <span class="month">JUN</span>
-      </div>
-
-      <div class="event-content">
-        <h4>Workshop de Gestão Empresarial</h4>
-        <span>14:00 às 17:00</span>
-      </div>
-
-      <i class="fa-regular fa-calendar"></i>
-
-    </article>
-
-  </div>
-
-  <a href="#" class="events-link">
-    Ver calendário completo
-    <i class="fa-solid fa-arrow-right"></i>
-  </a>
-
-</section>
-<!-- ========== FIM CARD DE EVENTOS ========== -->
-
-  <!-- Overlay mobile -->
+<!-- Overlay mobile -->
   <div class="sidebar__overlay" id="sidebarOverlay"></div>
 
+  <script src="../i18n.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
+  <script src="../search.js"></script>
 </body>
 </html>

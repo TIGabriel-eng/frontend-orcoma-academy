@@ -61,6 +61,8 @@ body{
 
 .logo-big{
     width:350px;
+    height:auto;
+    image-rendering:auto;
 }
 
 
@@ -135,9 +137,19 @@ body{
 .input-group{
     display:flex;
     flex-direction:column;
-
     gap:8px;
     margin-bottom:20px;
+    flex:1;
+}
+
+.input-row{
+    display:flex;
+    gap:12px;
+    margin-bottom:12px;
+}
+
+.input-row .input-group{
+    margin-bottom:0;
 }
 
 
@@ -169,6 +181,19 @@ body{
     padding:0 16px;
 }
 
+
+/* ==================================================
+   MENSAGEM DE ERRO
+================================================== */
+
+.erro-login{
+    display:block;
+    color:#ff4444;
+    font-size:0.85rem;
+    text-align:center;
+    margin-top:10px;
+    min-height:20px;
+}
 
 /* ==================================================
    BOTÃO DE LOGIN
@@ -307,163 +332,6 @@ button{
 }
 
 
-/* RESET GLOBAL */
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-    min-height:100vh;
-    font-family:'DM Sans',sans-serif;
-    background:#050b16;
-    color:white;
-}
-
-/* CONTAINER PRINCIPAL */
-.login-page {
-    min-height:100vh;
-    display:grid;
-    grid-template-columns:1fr 500px;
-}
-
-/* COLUNA ESQUERDA */
-.login-left {
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:60px;
-}
-
-.logo-big { width:350px; }
-
-.login-left h1 {
-    margin-top:30px;
-    font-family:'Sora',sans-serif;
-    font-size:40px;
-    max-width:600px;
-}
-
-.login-left p {
-    margin-top:15px;
-    color:#8b9ab5;
-    font-size:18px;
-}
-
-/* COLUNA DIREITA */
-.login-right {
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    border-left:1px solid rgba(255,255,255,.08);
-}
-
-/* CARD */
-.login-card { width:380px; }
-.login-card h2 { margin-bottom:30px; font-size:32px; }
-
-/* INPUTS */
-.input-group {
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    margin-bottom:20px;
-}
-.input-group label { font-size:14px; }
-.input-group input {
-    height:52px;
-    background:#091528;
-    border:1px solid #1e2d45;
-    border-radius:12px;
-    color:white;
-    padding:0 16px;
-}
-
-/* BOTÃO */
-button {
-    width:100%;
-    height:52px;
-    border:none;
-    border-radius:12px;
-    background:#002b86;
-    color:white;
-    font-weight:700;
-    margin-top:10px;
-    cursor:pointer;
-}
-
-/* ESQUECI MINHA SENHA */
-.forgot-password { margin-top:20px; text-align:center; }
-.forgot-password a {
-    color:#4f7cff;
-    text-decoration:none;
-    font-size:14px;
-    transition:.3s;
-}
-.forgot-password a:hover { color:#79a0ff; }
-
-/* MODAL RECUPERAÇÃO */
-.recovery-modal {
-    position:fixed; inset:0;
-    background:rgba(0,0,0,.75);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-}
-.recovery-modal.active { display:flex; }
-
-.recovery-box {
-    width:420px;
-    background:#081426;
-    border:1px solid rgba(37,99,235,.35);
-    border-radius:20px;
-    padding:35px;
-    position:relative;
-    animation:fadeUp .3s ease;
-}
-.recovery-box h2 { color:#fff; margin-bottom:12px; }
-.recovery-box p  { color:#8b9ab5; margin-bottom:20px; line-height:1.5; }
-
-.recovery-input {
-    width:100%; height:50px;
-    border-radius:12px;
-    border:1px solid #1e3a8a;
-    background:#06111f;
-    color:#fff;
-    padding:0 15px;
-    margin-bottom:15px;
-}
-.recovery-btn {
-    width:100%; height:50px;
-    border:none; border-radius:12px;
-    background:#2563eb;
-    color:#fff; font-weight:700;
-    cursor:pointer;
-}
-.recovery-btn:hover { background:#1d4ed8; }
-
-.recovery-box small {
-    display:block;
-    margin-top:15px;
-    color:#7a8ca7;
-    line-height:1.4;
-}
-
-.close-modal {
-    position:absolute;
-    right:15px; top:15px;
-    color:#fff;
-    font-size:18px;
-    background:none;
-    border:none;
-    cursor:pointer;
-}
-
-@keyframes fadeUp {
-    from { opacity:0; transform:translateY(20px); }
-    to   { opacity:1; transform:translateY(0); }
-}
-
 /* DIVISOR / CADASTRO */
 .login-divider {
     display:flex;
@@ -523,11 +391,11 @@ button {
 
 button:hover {
     background: #0038b8;
-    transform: translateY(-1px); /* sobe levemente no hover */
+    transform: translateY(-1px);
 }
 
 button:active {
-    transform: scale(0.98); /* aperta levemente ao clicar */
+    transform: scale(0.98);
 }
 
 

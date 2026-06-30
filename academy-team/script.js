@@ -11,81 +11,6 @@
    ============================================================ */
 
 
-/* ============================================================
-   1. PROTEÇÃO CONTRA DEVTOOLS E INJECT
-   ============================================================ */
-
-/**
- * Detecta abertura do DevTools monitorando a diferença entre
- * o tamanho interno e externo da janela.
- * Quando detectado, redireciona para página de aviso.
- */
-(function protectDevTools() {
-  "use strict";
-
-  /* Limpa o console periodicamente */
-  const consoleClearInterval = setInterval(function () {
-    console.clear();
-  }, 1000);
-
-  /* Sobrescreve os métodos do console para bloquear outputs */
-  const noop = function () {};
-  const consoleMethods = ["log", "warn", "error", "info", "debug", "table", "dir"];
-  consoleMethods.forEach(function (method) {
-    console[method] = noop;
-  });
-
-  /* Detecta abertura do DevTools pela diferença de tamanho da janela */
-  const THRESHOLD = 160; /* pixels de diferença que indicam painel aberto */
-
-  function checkDevTools() {
-    const widthDiff  = window.outerWidth  - window.innerWidth;
-    const heightDiff = window.outerHeight - window.innerHeight;
-
-    if (widthDiff > THRESHOLD || heightDiff > THRESHOLD) {
-      /* Redireciona para uma página de aviso ou em branco */
-      document.body.innerHTML =
-        "<div style=\"display:flex;align-items:center;justify-content:center;" +
-        "height:100vh;background:#0a0e1a;color:#f5a623;font-family:sans-serif;" +
-        "font-size:1.2rem;text-align:center;\">" +
-        "<p>⚠️ Acesso não autorizado.<br>Feche o DevTools para continuar.</p></div>";
-    }
-  }
-
-  /* Verifica a cada 800ms */
-  setInterval(checkDevTools, 800);
-
-  /* Bloqueia atalhos de teclado comuns do DevTools */
-  document.addEventListener("keydown", function (event) {
-    const blockedKeys = [
-      { key: "F12" },                                    /* F12 */
-      { key: "I", ctrlKey: true, shiftKey: true },       /* Ctrl+Shift+I */
-      { key: "J", ctrlKey: true, shiftKey: true },       /* Ctrl+Shift+J */
-      { key: "C", ctrlKey: true, shiftKey: true },       /* Ctrl+Shift+C */
-      { key: "U", ctrlKey: true },                       /* Ctrl+U (View Source) */
-    ];
-
-    const isBlocked = blockedKeys.some(function (combo) {
-      return (
-        event.key === combo.key &&
-        (combo.ctrlKey  === undefined || event.ctrlKey  === combo.ctrlKey)  &&
-        (combo.shiftKey === undefined || event.shiftKey === combo.shiftKey)
-      );
-    });
-
-    if (isBlocked) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  });
-
-  /* Bloqueia clique direito (menu de contexto) */
-  document.addEventListener("contextmenu", function (event) {
-    event.preventDefault();
-  });
-
-}()); /* Execução imediata para proteção antes do DOM */
-
 
 /* ============================================================
    2. SIDEBAR MOBILE
@@ -141,13 +66,36 @@ function initSidebarNav() {
 
   navItems.forEach(function (item) {
     item.addEventListener("click", function () {
-      /* Remove o estado ativo de todos */
-      navItems.forEach(function (i) {
-        i.classList.remove("active");
-      });
+      var page = item.getAttribute("data-page");
+      if (page === "sair") {
+        sessionStorage.clear();
+        window.location.href = "../Login/index.html";
+        return;
+      }
 
-      /* Adiciona ao clicado */
-      item.classList.add("active");
+      var url = null;
+      if (page === "inicio") url = "../orcoma-business/index.html";
+      else if (page === "meu-perfil") url = "../meu-perfil/index.html";
+      else if (page === "cursos") url = "../meuscursos/index.html";
+      else if (page === "continuar") url = "../continuarassistindo/index.html";
+      else if (page === "concluidos") url = "../cursos-concluidos/index.html";
+      else if (page === "certificados") url = "../certificados/index.html";
+      else if (page === "trilhas") url = "../trilhasdeaprendizagem/index.html";
+      else if (page === "favoritos") url = "../favoritos/index.html";
+      else if (page === "suporte") url = "../suporte/index.html";
+      else if (page === "config") url = "../configuracoes/index.html";
+
+      if (!url) {
+        navItems.forEach(function (i) { i.classList.remove("active"); });
+        item.classList.add("active");
+        return;
+      }
+
+      item.classList.add("clicked");
+
+      setTimeout(function () {
+        window.location.href = url;
+      }, 200);
     });
   });
 }
@@ -305,30 +253,19 @@ document.addEventListener("DOMContentLoaded", function () {
   initStatsCounters();
 
   const planoMap = {
+  'admin':              'Administrador',
   'cliente_orcoma':     'Cliente Orcoma',
   'colaborador_orcoma': 'Colaborador Orcoma',
   'gestor_orcoma':      'Orcoma Business',
-  'equipe_cliente':     'Orcoma Team'
+  'equipe_cliente':     'Orcoma Team',
+  'visitor':            'Visitante'
     };  /* Atualiza o plano do usuário no sidebar de progresso */
 
-    const tipoUsuario = 'colaborador_orcoma';
+    const tipoUsuario = sessionStorage.getItem('orcoma_user_role') || 'visitor';
 
     const planLabel = document.querySelector('.progress-sidebar__plan');
         if (planLabel) {
-         planLabel.textContent = planoMap[tipoUsuario] ?? 'Colaborador Orcoma';
-    }
-
-    /* Avatar: usa foto do usuário ou fallback para avatar-icon.jpg */
-    const avatarEl = document.getElementById('userAvatar');
-    const fotoUsuario = null; // substitua por ex: usuario.foto_url vindo do backend
-
-        if (avatarEl) {
-        if (fotoUsuario) {
-                avatarEl.src = fotoUsuario;
-            } 
-        else {
-                avatarEl.src = 'assets/images/avatar-icon.jpg';
-        }
+         planLabel.textContent = planoMap[tipoUsuario] ?? planoMap['visitor'];
     }
 
     /* Atalho de teclado: Ctrl + K para focar no input de busca */
@@ -409,13 +346,20 @@ customer_team
 colaborador_orcoma
 */
 
-const tipoUsuario = 'cliente_orcoma';
+const tipoUsuario = sessionStorage.getItem('orcoma_user_role') || 'visitor';
 
 /* ==========================================================
    MÓDULOS LIBERADOS POR PERFIL
 ========================================================== */
 
 const permissoes = {
+
+    admin: [
+        'academy_contabil',
+        'academy_empresarial',
+        'academy_time',
+        'academy_orcomakers'
+    ],
 
     cliente_orcoma: [
         'academy_contabil',

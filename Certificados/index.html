@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certificados — Orcoma Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-header { display: flex; flex-direction: column; gap: var(--spacing-xs); }
+    .page-header h1 { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--color-accent); }
+    .page-header p { color: var(--color-text-secondary); font-size: 15px; }
+    .cert-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
+    .cert-item { display: flex; align-items: center; gap: var(--spacing-md); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--spacing-md); transition: border-color var(--transition-fast); }
+    .cert-item:hover { border-color: var(--color-accent-2); }
+    .cert-item__icon { width: 48px; height: 48px; border-radius: var(--radius-md); background: linear-gradient(135deg,var(--color-accent),var(--color-accent-hover)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cert-item__icon i { font-size: 22px; color: #000; }
+    .cert-item__info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+    .cert-item__info h3 { font-family: var(--font-display); font-size: 15px; font-weight: 600; }
+    .cert-item__info span { font-size: 12px; color: var(--color-text-muted); }
+    .cert-item__btn { display: flex; align-items: center; gap: var(--spacing-xs); background: transparent; border: 1px solid var(--color-accent); color: var(--color-accent); font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: var(--radius-md); transition: background var(--transition-fast),color var(--transition-fast); flex-shrink: 0; }
+    .cert-item__btn:hover { background: var(--color-accent); color: #000; }
+    @media (max-width:768px) { .cert-item { flex-wrap: wrap; } }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__logo">
+      <img src="../assets/images/LOGO ORCOMA ACADEMY.png" alt="Orcoma Academy" class="sidebar__logo-img" />
+    </div>
+    <nav class="sidebar__nav">
+      <ul>
+        <li class="nav-item" data-page="inicio"><i class="fa-solid fa-house"></i><span data-i18n="nav.inicio">Início</span></li>
+        <li class="nav-item" data-page="meu-perfil"><i class="fa-regular fa-user"></i><span data-i18n="nav.perfil">Meu Perfil</span></li>
+        <li class="nav-item" data-page="cursos"><i class="fa-solid fa-graduation-cap"></i><span data-i18n="nav.cursos">Meus cursos</span></li>
+        <li class="nav-item" data-page="continuar"><i class="fa-solid fa-play"></i><span data-i18n="nav.continuar">Continuar assistindo</span></li>
+        <li class="nav-item" data-page="concluidos"><i class="fa-solid fa-circle-check"></i><span data-i18n="nav.concluidos">Cursos concluídos</span></li>
+        <li class="nav-item active" data-page="certificados"><i class="fa-solid fa-certificate"></i><span data-i18n="nav.certificados">Certificados</span></li>
+        <li class="nav-item" data-page="trilhas"><i class="fa-solid fa-route"></i><span data-i18n="nav.trilhas">Trilhas de aprendizagem</span></li>
+        <li class="nav-item" data-page="favoritos"><i class="fa-regular fa-heart"></i><span data-i18n="nav.favoritos">Favoritos</span></li>
+        <li class="nav-item" data-page="suporte"><i class="fa-regular fa-circle-question"></i><span data-i18n="nav.suporte">Suporte</span></li>
+        <li class="nav-item" data-page="config"><i class="fa-solid fa-gear"></i><span data-i18n="nav.config">Configurações</span></li>
+        <li class="nav-item nav-item--logout" data-page="sair"><i class="fa-solid fa-right-from-bracket"></i><span data-i18n="nav.sair">Sair</span></li>
+      </ul>
+    </nav>
+    <div class="sidebar__env">
+      <p class="sidebar__env-label" data-i18n="sidebar.env.label">AMBIENTE ATIVO</p>
+      <div class="sidebar__env-selector">
+        <i class="fa-solid fa-building"></i><span>Academy Contábil</span><i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </div>
+    <div class="sidebar__premium">
+      <i class="fa-solid fa-crown"></i>
+      <div>
+        <p class="premium__title" data-i18n="sidebar.premium.title">Seja Premium</p>
+        <p class="premium__desc" data-i18n="sidebar.premium.desc">Tenha acesso a todos os cursos, trilhas e certificados.</p>
+      </div>
+      <button class="btn-premium" data-i18n="sidebar.premium.btn">Assinar agora <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="topbar__menu-btn" id="menuToggle" aria-label="Abrir menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="topbar__actions">
+        <button class="topbar__icon-btn">
+          <i class="fa-regular fa-bell"></i>
+          <span class="topbar__notif-dot"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="page-header">
+      <h1 data-i18n="certificados.title">Certificados</h1>
+      <p data-i18n="certificados.subtitle">Baixe seus certificados de conclusão</p>
+    </div>
+
+    <div class="cert-list">
+      <div class="cert-item">
+        <div class="cert-item__icon"><i class="fa-solid fa-certificate"></i></div>
+        <div class="cert-item__info">
+          <h3>Introdução à Contabilidade</h3>
+          <span>Concluído em 15/04/2026 — 20 horas</span>
+        </div>
+        <button class="cert-item__btn" data-i18n="certificados.download"><i class="fa-solid fa-download"></i> Baixar PDF</button>
+      </div>
+      <div class="cert-item">
+        <div class="cert-item__icon"><i class="fa-solid fa-certificate"></i></div>
+        <div class="cert-item__info">
+          <h3>LGPD para Contadores</h3>
+          <span>Concluído em 02/03/2026 — 12 horas</span>
+        </div>
+        <button class="cert-item__btn" data-i18n="certificados.download"><i class="fa-solid fa-download"></i> Baixar PDF</button>
+      </div>
+      <div class="cert-item">
+        <div class="cert-item__icon"><i class="fa-solid fa-certificate"></i></div>
+        <div class="cert-item__info">
+          <h3>SPED Fiscal</h3>
+          <span>Concluído em 18/01/2026 — 30 horas</span>
+        </div>
+        <button class="cert-item__btn" data-i18n="certificados.download"><i class="fa-solid fa-download"></i> Baixar PDF</button>
+      </div>
+    </div>
+  </main>
+
+  <div class="sidebar__overlay" id="sidebarOverlay"></div>
+  <script src="../i18n.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>

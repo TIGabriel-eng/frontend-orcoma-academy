@@ -23,67 +23,63 @@
 
     <!-- Logo -->
     <div class="sidebar__logo">
-      <img src="../assets/images/orcoma-academy.png" alt="Orcoma Academy" class="sidebar__logo-img" />
+      <img src="../assets/images/LOGO ORCOMA ACADEMY.png" alt="Orcoma Academy" class="sidebar__logo-img" />
     </div>
 
     <!-- Navegação principal -->
     <nav class="sidebar__nav">
       <ul>
-        <li class="nav-item">
-          <a href="../orcoma-business/index.html">
-              <i class="fa-solid fa-house"></i>
-                <span>Início</span>
-          </a>
+        <li class="nav-item" data-page="inicio" onclick="window.location.href='../orcoma-business/index.html'">
+          <i class="fa-solid fa-house"></i>
+          <span data-i18n="nav.inicio">Início</span>
         </li>
 
-        <li class="nav-item active">
-          <a href="../meu-perfil/index.html">
-                <i class="fa-regular fa-user"></i>
-                <span>Meu Perfil</span>
-          </a>
+        <li class="nav-item active" data-page="meu-perfil">
+          <i class="fa-regular fa-user"></i>
+          <span data-i18n="nav.perfil">Meu Perfil</span>
         </li>
         <li class="nav-item" data-page="cursos">
           <i class="fa-solid fa-graduation-cap"></i>
-          <span>Meus cursos</span>
+          <span data-i18n="nav.cursos">Meus cursos</span>
         </li>
         <li class="nav-item" data-page="continuar">
           <i class="fa-solid fa-play"></i>
-          <span>Continuar assistindo</span>
+          <span data-i18n="nav.continuar">Continuar assistindo</span>
         </li>
         <li class="nav-item" data-page="concluidos">
           <i class="fa-solid fa-circle-check"></i>
-          <span>Cursos concluídos</span>
+          <span data-i18n="nav.concluidos">Cursos concluídos</span>
         </li>
         <li class="nav-item" data-page="certificados">
           <i class="fa-solid fa-certificate"></i>
-          <span>Certificados</span>
+          <span data-i18n="nav.certificados">Certificados</span>
         </li>
         <li class="nav-item" data-page="trilhas">
           <i class="fa-solid fa-route"></i>
-          <span>Trilhas de aprendizagem</span>
+          <span data-i18n="nav.trilhas">Trilhas de aprendizagem</span>
         </li>
         <li class="nav-item" data-page="favoritos">
           <i class="fa-regular fa-heart"></i>
-          <span>Favoritos</span>
+          <span data-i18n="nav.favoritos">Favoritos</span>
         </li>
         <li class="nav-item" data-page="suporte">
           <i class="fa-regular fa-circle-question"></i>
-          <span>Suporte</span>
+          <span data-i18n="nav.suporte">Suporte</span>
         </li>
         <li class="nav-item" data-page="config">
           <i class="fa-solid fa-gear"></i>
-          <span>Configurações</span>
+          <span data-i18n="nav.config">Configurações</span>
         </li>
         <li class="nav-item nav-item--logout" data-page="sair">
           <i class="fa-solid fa-right-from-bracket"></i>
-          <span>Sair</span>
+          <span data-i18n="nav.sair">Sair</span>
         </li>
       </ul>
     </nav>
 
     <!-- Ambiente ativo -->
     <div class="sidebar__env">
-      <p class="sidebar__env-label">AMBIENTE ATIVO</p>
+       <p class="sidebar__env-label" data-i18n="sidebar.env.label">AMBIENTE ATIVO</p>
       <div class="sidebar__env-selector">
         <i class="fa-solid fa-building"></i>
         <span>Academy Business</span>
@@ -95,10 +91,10 @@
     <div class="sidebar__premium">
       <i class="fa-solid fa-crown"></i>
       <div>
-        <p class="premium__title">Seja Premium</p>
-        <p class="premium__desc">Tenha acesso a todos os cursos, trilhas e certificados.</p>
+        <p class="premium__title" data-i18n="sidebar.premium.title">Seja Premium</p>
+        <p class="premium__desc" data-i18n="sidebar.premium.desc">Tenha acesso a todos os cursos, trilhas e certificados.</p>
       </div>
-      <button class="btn-premium">Assinar agora <i class="fa-solid fa-arrow-right"></i></button>
+      <button class="btn-premium" data-i18n="sidebar.premium.btn">Assinar agora <i class="fa-solid fa-arrow-right"></i></button>
     </div>
 
   </aside>
@@ -113,413 +109,316 @@
       <button class="topbar__menu-btn" id="menuToggle" aria-label="Abrir menu">
         <i class="fa-solid fa-bars"></i>
       </button>
-      <div class="topbar__search">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" placeholder="Buscar cursos, trilhas ou conteúdos..." />
-        <kbd>Ctrl K</kbd>
-      </div>
     </header>
     <!-- ===== FIM TOPBAR ===== -->
-    <!--Inicio Conteúdo Principal-->
 
-<section class="profile-card">
+    <div class="profile-row">
+      <section class="profile-card">
+        <div class="profile-card__avatar-wrap">
+          <div class="profile-card__avatar" id="profileAvatar">
+            GA
+          </div>
+          <label for="avatarInput" class="profile-card__avatar-overlay" title="Alterar foto">
+            <i class="fa-solid fa-camera"></i>
+          </label>
+          <input type="file" id="avatarInput" accept="image/png,image/jpeg,image/webp" hidden />
+        </div>
+        <h1 class="profile-card__name">Carregando...</h1>
+        <span class="profile-card__badge">—</span>
+        <span class="profile-card__formacao" id="profileFormacao"></span>
 
-  <div class="profile-card__header">
+        <div class="profile-card__divider"></div>
 
-    <div class="profile-avatar">
-      GA
-      <button class="profile-avatar__edit">
-        <i class="fa-solid fa-camera"></i>
-      </button>
-    </div>
-
-    <div class="profile-info">
-
-      <h1>Gabriel Anacleto</h1>
-
-      <span class="profile-badge">
-        <i class="fa-regular fa-star"></i>
-        Cliente Orcoma
-      </span>
-
-      <div class="profile-meta">
-
-        <span>
-          <i class="fa-regular fa-envelope"></i>
-          gabriel.ti.@orcoma.com.br
-        </span>
-
-        <span>
-          <i class="fa-solid fa-building"></i>
-          Orcoma
-        </span>
-
-        <span>
-          <i class="fa-regular fa-calendar"></i>
-          Membro desde Jan 2024
-        </span>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section class="profile-stats">
-
-  <div class="stat-card">
-    <span class="stat-number">127h</span>
-    <span class="stat-label">Horas estudadas</span>
-  </div>
-
-  <div class="stat-card">
-    <span class="stat-number">8</span>
-    <span class="stat-label">Cursos concluídos</span>
-  </div>
-
-  <div class="stat-card">
-    <span class="stat-number">3</span>
-    <span class="stat-label">Em andamento</span>
-  </div>
-
-</section>
-
-<section class="dashboard-sidepanel">
-
-    <!-- TAXA DE CONCLUSÃO -->
-    <div class="panel-card">
-
-        <div class="panel-card__title">
-            <span></span>
-            TAXA DE CONCLUSÃO
+        <div class="profile-card__info">
+          <span><i class="fa-regular fa-envelope"></i> —</span>
+          <span><i class="fa-solid fa-building"></i> —</span>
+          <span><i class="fa-regular fa-calendar"></i> Membro desde —</span>
         </div>
 
-        <div class="completion-score">
+        <div class="profile-card__divider"></div>
 
-            <div class="completion-circle">
-                <span>72%</span>
+        <div class="profile-card__section">
+          <span class="profile-card__section-title">Orcoma Insígnias</span>
+          <div class="insignias-grid" id="insigniasGrid">
+            <div class="insignia-card" data-insignia="admin" data-icon="shield-halved" onclick="abrirInsignia(this)">
+              <div class="insignia-card__icon">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <span class="insignia-card__name pill-admin">Administrador</span>
             </div>
-
-            <div>
-                <h3>Excelente</h3>
-                <p>86 de 120 cursos concluídos</p>
-            </div>
-
+          </div>
         </div>
 
-    </div>
+        <div class="profile-card__divider"></div>
 
-    <!-- PRÓXIMO RECOMENDADO -->
-    <div class="panel-card">
-
-        <div class="panel-card__title">
-            <span></span>
-            PRÓXIMO RECOMENDADO
+        <div class="profile-card__section">
+          <span class="profile-card__section-title">Plano & Assinatura</span>
+          <div class="plan-row">
+            <div class="plan-row__info">
+              <strong id="planName" class="pill-admin">Administrador</strong>
+              <span id="planStatus">Plano ativo</span>
+            </div>
+            <span class="plan-badge plan-badge--active" id="planBadge">Ativo</span>
+          </div>
         </div>
+      </section>
 
-        <div class="recommended-course">
+      <div class="profile-col-right">
+        <section class="settings-card sobre-card">
+          <div class="settings-card__header">
+            <span class="settings-card__title-bar"></span>
+            Sobre
+          </div>
+          <div class="settings-card__body">
+            <p class="sobre-card__text" id="sobreTexto">Nenhuma descrição</p>
 
-            <div class="recommended-icon">
-                <i class="fa-solid fa-calendar-days"></i>
+            <div class="sobre-card__composer" id="sobreComposer">
+              <textarea class="sobre-card__textarea" id="sobreTextarea" maxlength="6000" placeholder="Escreva sua descrição..."></textarea>
+              <div class="sobre-card__footer">
+                <span class="sobre-card__counter" id="sobreCounter">0/6000</span>
+                <div class="sobre-card__actions">
+                  <button class="sobre-card__btn sobre-card__btn--cancel" id="sobreCancel">Cancelar</button>
+                  <button class="sobre-card__btn sobre-card__btn--save" id="sobreSave">Salvar</button>
+                </div>
+              </div>
             </div>
 
-            <h4>Análise de Dados Financeiros</h4>
+            <span class="sobre-card__pill" id="sobrePill" onclick="abrirComposer()">+ Adicionar descrição</span>
+          </div>
+        </section>
 
-            <p>
-                Contábil • 45 conteúdos
-            </p>
-
-            <button>
-                Começar agora
-                <i class="fa-solid fa-arrow-right"></i>
+        <section class="settings-card">
+          <div class="settings-card__header">
+            <span class="settings-card__title-bar"></span>
+            Formação Acadêmica
+          </div>
+          <div class="settings-card__body">
+            <div class="formacao-lista" id="formacaoLista">
+              <p class="formacao-empty">Nenhuma formação adicionada</p>
+            </div>
+            <button class="formacao-btn" onclick="abrirFormacaoModal()">
+              <i class="fa-solid fa-plus"></i> Adicionar Formação
             </button>
+          </div>
+        </section>
 
-        </div>
-
-    </div>
-
-    <!-- PROGRESSO DOS CURSOS -->
-    <div class="panel-card">
-
-        <div class="panel-card__title">
-            <span></span>
-            PROGRESSO DOS CURSOS
-        </div>
-
-        <div class="course-progress-list">
-
-            <div class="mini-progress">
-                <div class="mini-progress__header">
-                    <span>Reforma Tributária</span>
-                    <span>75%</span>
-                </div>
-                <div class="mini-progress__bar">
-                    <div style="width:75%"></div>
-                </div>
+        <section class="settings-card">
+          <div class="settings-card__header">
+            <span class="settings-card__title-bar"></span>
+            Habilidades
+          </div>
+          <div class="settings-card__body">
+            <div class="habilidades-lista" id="habilidadesLista">
+              <p class="formacao-empty">Nenhuma habilidade adicionada</p>
             </div>
-
-            <div class="mini-progress">
-                <div class="mini-progress__header">
-                    <span>Gestão Financeira</span>
-                    <span>60%</span>
-                </div>
-                <div class="mini-progress__bar">
-                    <div style="width:60%"></div>
-                </div>
-            </div>
-
-            <div class="mini-progress">
-                <div class="mini-progress__header">
-                    <span>Planejamento Estratégico</span>
-                    <span>45%</span>
-                </div>
-                <div class="mini-progress__bar">
-                    <div style="width:45%"></div>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- ATIVIDADE RECENTE -->
-    <div class="panel-card">
-
-        <div class="panel-card__title">
-            <span></span>
-            ATIVIDADE RECENTE
-        </div>
-
-        <ul class="activity-list">
-
-            <li>
-                <span class="activity-dot"></span>
-                Reforma Tributária - Módulo 3
-            </li>
-
-            <li>
-                <span class="activity-dot"></span>
-                Gestão Financeira - Aula 7
-            </li>
-
-            <li>
-                <span class="activity-dot"></span>
-                Planejamento Estratégico
-            </li>
-
-        </ul>
-
-    </div>
-
-    <!-- TRILHAS -->
-    <div class="panel-card">
-
-        <div class="panel-card__title">
-            <span></span>
-            TRILHAS CONQUISTADAS
-        </div>
-
-        <div class="trail-card">
-            <h4>Contabilidade Essencial</h4>
-            <span>Concluída</span>
-        </div>
-
-        <div class="trail-card">
-            <h4>Gestão Empresarial</h4>
-            <span>Em andamento</span>
-        </div>
-
-    </div>
-
-    <!-- FAVORITOS -->
-    <div class="panel-card">
-
-        <div class="panel-card__title">
-            <span></span>
-            MEUS FAVORITOS
-        </div>
-
-        <ul class="favorites-list">
-
-            <li>
-                Tributação para MEI
-                <i class="fa-regular fa-heart"></i>
-            </li>
-
-            <li>
-                Fluxo de Caixa
-                <i class="fa-regular fa-heart"></i>
-            </li>
-
-            <li>
-                Fiscal Completo
-                <i class="fa-regular fa-heart"></i>
-            </li>
-
-        </ul>
-
-    </div>
-
-</section>
-
-<section class="account-panel">
-
-    <!-- CONFIGURAÇÕES DA CONTA -->
-    <div class="account-card">
-
-        <div class="account-card__title">
-            <span></span>
-            CONFIGURAÇÕES DA CONTA
-        </div>
-
-        <div class="form-group">
-            <label>Nome Completo</label>
-            <div class="input-readonly">
-                Gabriel Anacleto
-                <i class="fa-solid fa-pen"></i>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>E-mail</label>
-            <div class="input-readonly">
-                gabriel@orcoma.com.br
-                <i class="fa-solid fa-pen"></i>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Telefone</label>
-            <div class="input-readonly">
-                (11) 98765-4321
-                <i class="fa-solid fa-pen"></i>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Empresa</label>
-            <div class="input-readonly locked">
-                Orcoma
-                <i class="fa-solid fa-lock"></i>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Plano</label>
-            <div class="input-readonly locked">
-                Premium
-                <i class="fa-solid fa-lock"></i>
-            </div>
-        </div>
-
-        <div class="language-selector">
-
-            <label>Idioma de preferência</label>
-
-            <div class="language-options">
-
-                <button class="active">
-                    🇧🇷 Português
-                </button>
-
-                <button>
-                    🇺🇸 Inglês
-                </button>
-
-                <button>
-                    🇪🇸 Espanhol
-                </button>
-
-            </div>
-
-        </div>
-
-        <button class="save-btn">
-            Salvar alterações
-        </button>
-
-    </div>
-
-    <!-- ASSINATURA -->
-    <div class="account-card">
-
-        <div class="account-card__title">
-            <span></span>
-            PLANO & ASSINATURA
-        </div>
-
-        <div class="subscription-box">
-
-            <div class="subscription-header">
-                <div>
-                    <h4>Premium Access</h4>
-                    <small>Acesso completo</small>
-                </div>
-
-                <span class="subscription-badge">
-                    Ativo
-                </span>
-            </div>
-
-            <div class="renew-info">
-                Renovação automática em
-                <strong>15 ago 2026</strong>
-            </div>
-
-            <button class="subscription-btn">
-                Gerenciar Assinatura
+            <button class="formacao-btn" onclick="abrirHabilidadeModal()">
+              <i class="fa-solid fa-plus"></i> Adicionar Habilidade
             </button>
+          </div>
+        </section>
 
-        </div>
-        
-</section>
-
-
-    <!-- ===== STATS ===== -->
-    <section class="stats-bar">
-
-      <div class="stat-item">
-        <i class="fa-solid fa-play-circle"></i>
-        <div>
-          <span class="stat-item__number" data-target="120">0</span><span>+</span>
-          <p>Cursos disponíveis</p>
-        </div>
+        <section class="settings-card">
+          <div class="settings-card__header">
+            <span class="settings-card__title-bar"></span>
+            Certificados
+          </div>
+          <div class="settings-card__body">
+            <div class="cert-card">
+              <div class="cert-card__icon">
+                <img src="../assets/images/certificado.png" alt="Certificado" style="width:48px;height:48px;object-fit:contain;" />
+              </div>
+              <div class="cert-card__count">
+                <span class="cert-card__number" id="certCount">0</span>
+                <span class="cert-card__label">certificados</span>
+              </div>
+            </div>
+            <span class="cert-card__pill" onclick="consultarCatalogos()">Consultar Catálogos</span>
+          </div>
+        </section>
       </div>
-
-      <div class="stat-item">
-        <i class="fa-solid fa-users"></i>
-        <div>
-          <span class="stat-item__number" data-target="15000">0</span><span>+</span>
-          <p>Alunos ativos</p>
-        </div>
-      </div>
-
-      <div class="stat-item">
-        <i class="fa-solid fa-id-card"></i>
-        <div>
-          <span class="stat-item__number" data-target="3200">0</span><span>+</span>
-          <p>Certificados emitidos</p>
-        </div>
-      </div>
-
-      <div class="stat-item">
-        <i class="fa-solid fa-star"></i>
-        <div>
-          <span class="stat-item__number" data-target="98">0</span><span>%</span>
-          <p>Satisfação dos alunos</p>
-        </div>
-      </div>
-
-    </section>
-    <!-- ===== FIM STATS ===== -->
+    </div>
 
   </main>
 
   <!-- Overlay mobile -->
   <div class="sidebar__overlay" id="sidebarOverlay"></div>
+
+  <!-- Modal formação acadêmica -->
+  <div class="insignia-modal" id="formacaoModal">
+    <div class="insignia-modal__overlay" onclick="fecharFormacaoModal()"></div>
+    <div class="insignia-modal__content insignia-modal__content--wide">
+      <button class="insignia-modal__close" onclick="fecharFormacaoModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h2 style="font-size:18px;font-weight:700;color:#fff;margin-bottom:20px;font-family:'Sora',sans-serif;width:100%;text-align:left;">Adicionar Formação</h2>
+
+      <form id="formacaoForm" style="width:100%;display:flex;flex-direction:column;gap:14px;">
+        <div class="settings-field">
+          <label class="settings-field__label">Instituição de Ensino *</label>
+          <input class="settings-field__input" id="formacaoInstituicao" placeholder="Ex: Faculdade de Contabilidade" required />
+        </div>
+        <div class="settings-field">
+          <label class="settings-field__label">Nível de Escolaridade *</label>
+          <select class="settings-field__input" id="formacaoNivel" required>
+            <option value="">Selecione...</option>
+            <option value="Técnico">Técnico</option>
+            <option value="Tecnólogo">Tecnólogo</option>
+            <option value="Bacharel">Bacharel</option>
+            <option value="Pós-graduado">Pós-graduado</option>
+            <option value="Mestre">Mestre</option>
+            <option value="Doutor">Doutor</option>
+          </select>
+        </div>
+        <div class="settings-field">
+          <label class="settings-field__label">Área de Estudo *</label>
+          <input class="settings-field__input" id="formacaoArea" placeholder="Ex: Contabilidade" required />
+        </div>
+        <div class="settings-field">
+          <label class="settings-field__label">Data de Início *</label>
+          <div style="display:flex;gap:8px;">
+            <select class="settings-field__input" id="formacaoInicioMes" style="flex:1;" required>
+              <option value="">Mês</option>
+              <option value="Janeiro">Janeiro</option>
+              <option value="Fevereiro">Fevereiro</option>
+              <option value="Março">Março</option>
+              <option value="Abril">Abril</option>
+              <option value="Maio">Maio</option>
+              <option value="Junho">Junho</option>
+              <option value="Julho">Julho</option>
+              <option value="Agosto">Agosto</option>
+              <option value="Setembro">Setembro</option>
+              <option value="Outubro">Outubro</option>
+              <option value="Novembro">Novembro</option>
+              <option value="Dezembro">Dezembro</option>
+            </select>
+            <select class="settings-field__input" id="formacaoInicioAno" style="flex:1;" required>
+              <option value="">Ano</option>
+            </select>
+          </div>
+        </div>
+        <div class="settings-field">
+          <label class="settings-field__label">Data de Término (ou prevista) *</label>
+          <div style="display:flex;gap:8px;">
+            <select class="settings-field__input" id="formacaoTerminoMes" style="flex:1;">
+              <option value="">Mês</option>
+              <option value="Janeiro">Janeiro</option>
+              <option value="Fevereiro">Fevereiro</option>
+              <option value="Março">Março</option>
+              <option value="Abril">Abril</option>
+              <option value="Maio">Maio</option>
+              <option value="Junho">Junho</option>
+              <option value="Julho">Julho</option>
+              <option value="Agosto">Agosto</option>
+              <option value="Setembro">Setembro</option>
+              <option value="Outubro">Outubro</option>
+              <option value="Novembro">Novembro</option>
+              <option value="Dezembro">Dezembro</option>
+            </select>
+            <select class="settings-field__input" id="formacaoTerminoAno" style="flex:1;">
+              <option value="">Ano</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="sobre-card__btn sobre-card__btn--cancel" type="button" onclick="fecharFormacaoModal()" style="flex:1;">Cancelar</button>
+          <button class="settings-card__btn" type="submit" style="flex:1;">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal habilidade -->
+  <div class="insignia-modal" id="habilidadeModal">
+    <div class="insignia-modal__overlay" onclick="fecharHabilidadeModal()"></div>
+    <div class="insignia-modal__content insignia-modal__content--wide">
+      <button class="insignia-modal__close" onclick="fecharHabilidadeModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <form id="habilidadeForm" style="width:100%;display:flex;flex-direction:column;gap:14px;">
+        <h2 style="font-size:18px;font-weight:700;color:#fff;margin-bottom:6px;font-family:'Sora',sans-serif;width:100%;text-align:left;">Adicionar Habilidade</h2>
+        <div class="settings-field">
+          <label class="settings-field__label">Habilidade *</label>
+          <input class="settings-field__input" id="habilidadeInput" placeholder="Ex: Excel avançado" required />
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="sobre-card__btn sobre-card__btn--cancel" type="button" onclick="fecharHabilidadeModal()" style="flex:1;">Cancelar</button>
+          <button class="settings-card__btn" type="submit" style="flex:1;">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal confirmação -->
+  <div class="confirm-modal" id="confirmModal">
+    <div class="confirm-modal__overlay" id="confirmModalOverlay"></div>
+    <div class="confirm-modal__content">
+      <div class="confirm-modal__icon">
+        <i class="fa-solid fa-circle-question"></i>
+      </div>
+      <p class="confirm-modal__message" id="confirmModalMessage">Tem certeza?</p>
+      <div class="confirm-modal__actions">
+        <button class="confirm-modal__btn confirm-modal__btn--cancel" id="confirmModalCancel">Cancelar</button>
+        <button class="confirm-modal__btn confirm-modal__btn--confirm" id="confirmModalConfirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal catálogos de certificados -->
+  <div class="insignia-modal" id="catalogoModal">
+    <div class="insignia-modal__overlay" onclick="fecharCatalogoModal()"></div>
+    <div class="insignia-modal__content" style="text-align:center;">
+      <button class="insignia-modal__close" onclick="fecharCatalogoModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div style="margin-bottom:16px;line-height:1;">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="40" r="38" stroke="#a0aec0" stroke-width="2" fill="none"/>
+          <circle cx="28" cy="34" r="3" fill="#a0aec0"/>
+          <circle cx="52" cy="34" r="3" fill="#a0aec0"/>
+          <path d="M28 54 Q40 44 52 54" stroke="#a0aec0" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p style="font-size:15px;color:#a0aec0;margin:0 0 20px;line-height:1.4;">
+        Não há catalogo de certificados disponíveis no momento
+      </p>
+      <button onclick="fecharCatalogoModal()" style="background:#c9a84c;color:#fff;border:none;padding:10px 36px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;">OK</button>
+    </div>
+  </div>
+
+  <!-- Modal insígnia -->
+  <div class="insignia-modal" id="insigniaModal">
+    <div class="insignia-modal__overlay" id="insigniaModalOverlay"></div>
+    <div class="insignia-modal__content">
+      <button class="insignia-modal__close" id="insigniaModalClose">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="insignia-modal__icon" id="insigniaModalIcon">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h2 class="insignia-modal__name pill-admin" id="insigniaModalName">Administrador</h2>
+      <p class="insignia-modal__desc" id="insigniaModalDesc">Insígnia concedida a administradores da plataforma.</p>
+    </div>
+  </div>
+
+  <script>
+    /* Função definida inline pra não depender de script externo */
+    window.composerSobreAtual = "";
+    window.abrirComposer = function () {
+      var pill = document.getElementById("sobrePill");
+      var composer = document.getElementById("sobreComposer");
+      var textarea = document.getElementById("sobreTextarea");
+      var counter = document.getElementById("sobreCounter");
+      var textEl = document.getElementById("sobreTexto");
+      if (!composer || !textarea || !counter || !textEl) return;
+      textarea.value = window.composerSobreAtual || "";
+      counter.textContent = (window.composerSobreAtual || "").length + "/6000";
+      if (textEl) textEl.style.display = "none";
+      if (pill) pill.style.display = "none";
+      composer.classList.add("is-active");
+      textarea.focus();
+    };
+  </script>
+  <script src="../i18n.js"></script>
 
   <script src="script.js"></script>
 </body>

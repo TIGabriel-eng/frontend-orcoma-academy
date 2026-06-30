@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trilhas de Aprendizagem — Orcoma Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__logo">
+      <img src="../assets/images/LOGO ORCOMA ACADEMY.png" alt="Orcoma Academy" class="sidebar__logo-img" />
+    </div>
+    <nav class="sidebar__nav">
+      <ul>
+        <li class="nav-item" data-page="inicio"><i class="fa-solid fa-house"></i><span data-i18n="nav.inicio">Início</span></li>
+        <li class="nav-item" data-page="meu-perfil"><i class="fa-regular fa-user"></i><span data-i18n="nav.perfil">Meu Perfil</span></li>
+        <li class="nav-item" data-page="cursos"><i class="fa-solid fa-graduation-cap"></i><span data-i18n="nav.cursos">Meus cursos</span></li>
+        <li class="nav-item" data-page="continuar"><i class="fa-solid fa-play"></i><span data-i18n="nav.continuar">Continuar assistindo</span></li>
+        <li class="nav-item" data-page="concluidos"><i class="fa-solid fa-circle-check"></i><span data-i18n="nav.concluidos">Cursos concluídos</span></li>
+        <li class="nav-item" data-page="certificados"><i class="fa-solid fa-certificate"></i><span data-i18n="nav.certificados">Certificados</span></li>
+        <li class="nav-item active" data-page="trilhas"><i class="fa-solid fa-route"></i><span data-i18n="nav.trilhas">Trilhas de aprendizagem</span></li>
+        <li class="nav-item" data-page="favoritos"><i class="fa-regular fa-heart"></i><span data-i18n="nav.favoritos">Favoritos</span></li>
+        <li class="nav-item" data-page="suporte"><i class="fa-regular fa-circle-question"></i><span data-i18n="nav.suporte">Suporte</span></li>
+        <li class="nav-item" data-page="config"><i class="fa-solid fa-gear"></i><span data-i18n="nav.config">Configurações</span></li>
+        <li class="nav-item nav-item--logout" data-page="sair"><i class="fa-solid fa-right-from-bracket"></i><span data-i18n="nav.sair">Sair</span></li>
+      </ul>
+    </nav>
+    <div class="sidebar__env">
+      <p class="sidebar__env-label" data-i18n="sidebar.env.label">AMBIENTE ATIVO</p>
+      <div class="sidebar__env-selector">
+        <i class="fa-solid fa-building"></i><span>Academy Contábil</span><i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </div>
+    <div class="sidebar__premium">
+      <i class="fa-solid fa-crown"></i>
+      <div>
+        <p class="premium__title" data-i18n="sidebar.premium.title">Seja Premium</p>
+        <p class="premium__desc" data-i18n="sidebar.premium.desc">Tenha acesso a todos os cursos, trilhas e certificados.</p>
+      </div>
+      <button class="btn-premium" data-i18n="sidebar.premium.btn">Assinar agora <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="topbar__menu-btn" id="menuToggle" aria-label="Abrir menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="topbar__actions">
+        <button class="topbar__icon-btn">
+          <i class="fa-regular fa-bell"></i>
+          <span class="topbar__notif-dot"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="page-header">
+      <h1 data-i18n="trilhas.title">Trilhas de Aprendizagem</h1>
+      <p data-i18n="trilhas.subtitle">Percurssos completos para dominar cada área</p>
+    </div>
+
+    <div class="trilhas-grid">
+      <div class="trilha-card">
+        <div class="trilha-card__banner"><i class="fa-solid fa-calculator"></i></div>
+        <div class="trilha-card__body">
+          <h3 data-i18n="trilhas.card1.title">Contabilidade Completa</h3>
+          <p data-i18n="trilhas.card1.desc">Do básico ao avançado: balanços, DRE, tributos e muito mais.</p>
+          <div class="trilha-card__meta">
+            <span><i class="fa-solid fa-book-open"></i> 8 cursos</span>
+            <span><i class="fa-regular fa-clock"></i> 120 horas</span>
+          </div>
+          <div class="trilha-card__progress">
+            <div class="progress__bar-track"><div class="progress__bar-fill" style="width:45%"></div></div>
+            <span>45%</span>
+          </div>
+          <button class="trilha-card__btn" data-i18n="trilhas.cta">Ver trilha <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div class="sidebar__overlay" id="sidebarOverlay"></div>
+  <script src="../i18n.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>

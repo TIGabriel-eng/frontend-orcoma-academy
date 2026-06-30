@@ -11,67 +11,6 @@
    ============================================================ */
 
 
-/* ============================================================
-   1. PROTEÇÃO CONTRA DEVTOOLS E INJECT
-   ============================================================ */
-
-/**
- * Detecta abertura do DevTools monitorando a diferença entre
- * o tamanho interno e externo da janela.
- * Quando detectado, redireciona para página de aviso.
- */
-(function protectDevTools() {
-  "use strict";
-
-  /* Limpa o console periodicamente */
-  const consoleClearInterval = setInterval(function () {
-    console.clear();
-  }, 1000);
-
-  /* Sobrescreve os métodos do console para bloquear outputs */
-  const noop = function () {};
-  const consoleMethods = ["log", "warn", "error", "info", "debug", "table", "dir"];
-  consoleMethods.forEach(function (method) {
-    console[method] = noop;
-  });
-
-  /* Detecta abertura do DevTools pela diferença de tamanho da janela */
-  const THRESHOLD = 160; /* pixels de diferença que indicam painel aberto */
-
-  /* Verifica a cada 800ms */
-  setInterval(checkDevTools, 800);
-
-  /* Bloqueia atalhos de teclado comuns do DevTools */
-  document.addEventListener("keydown", function (event) {
-    const blockedKeys = [
-      { key: "F12" },                                    /* F12 */
-      { key: "I", ctrlKey: true, shiftKey: true },       /* Ctrl+Shift+I */
-      { key: "J", ctrlKey: true, shiftKey: true },       /* Ctrl+Shift+J */
-      { key: "C", ctrlKey: true, shiftKey: true },       /* Ctrl+Shift+C */
-      { key: "U", ctrlKey: true },                       /* Ctrl+U (View Source) */
-    ];
-
-    const isBlocked = blockedKeys.some(function (combo) {
-      return (
-        event.key === combo.key &&
-        (combo.ctrlKey  === undefined || event.ctrlKey  === combo.ctrlKey)  &&
-        (combo.shiftKey === undefined || event.shiftKey === combo.shiftKey)
-      );
-    });
-
-    if (isBlocked) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  });
-
-  /* Bloqueia clique direito (menu de contexto) */
-  document.addEventListener("contextmenu", function (event) {
-    event.preventDefault();
-  });
-
-}()); /* Execução imediata para proteção antes do DOM */
-
 
 /* ============================================================
    2. SIDEBAR MOBILE
@@ -122,18 +61,48 @@ function initSidebarMobile() {
 /**
  * Marca o item clicado como ativo e remove dos demais.
  */
+function navigateWithAnimation(url) {
+  if (!url) return;
+  window.location.href = url;
+}
+
 function initSidebarNav() {
   const navItems = document.querySelectorAll(".nav-item");
 
   navItems.forEach(function (item) {
     item.addEventListener("click", function () {
-      /* Remove o estado ativo de todos */
-      navItems.forEach(function (i) {
-        i.classList.remove("active");
-      });
+      var page = item.getAttribute("data-page");
+      if (page === "sair") {
+        sessionStorage.clear();
+        window.location.href = "../Login/index.html";
+        return;
+      }
 
-      /* Adiciona ao clicado */
-      item.classList.add("active");
+      var url = null;
+      if (page === "inicio") url = "../orcoma-business/index.html";
+      else if (page === "meu-perfil") url = "../meu-perfil/index.html";
+      else if (page === "cursos") url = "../meuscursos/index.html";
+      else if (page === "continuar") url = "../continuarassistindo/index.html";
+      else if (page === "concluidos") url = "../cursos-concluidos/index.html";
+      else if (page === "certificados") url = "../certificados/index.html";
+      else if (page === "trilhas") url = "../trilhasdeaprendizagem/index.html";
+      else if (page === "favoritos") url = "../favoritos/index.html";
+      else if (page === "suporte") url = "../suporte/index.html";
+      else if (page === "config") url = "../configuracoes/index.html";
+
+      if (!url) {
+        navItems.forEach(function (i) { i.classList.remove("active"); });
+        item.classList.add("active");
+        return;
+      }
+
+      /* Add click animation */
+      item.classList.add("clicked");
+
+      /* Delay navigation for visual feedback */
+      setTimeout(function () {
+        navigateWithAnimation(url);
+      }, 200);
     });
   });
 }
@@ -265,6 +234,9 @@ function initStatsCounters() {
 }
 
 
+
+
+
 /* ============================================================
    7. INICIALIZAÇÃO
    ============================================================ */
@@ -290,30 +262,80 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Inicia os contadores de estatísticas */
   initStatsCounters();
 
+  /* Role do usuário */
+  const userRole = sessionStorage.getItem('orcoma_user_role') || 'visitor';
+
+  /* Bloqueio dos pills por role */
+  const envCards = document.querySelectorAll('.module-pill');
+  envCards.forEach(function (card) {
+    const allowedRoles = (card.getAttribute('data-roles') || '').split(',');
+    if (!allowedRoles.includes(userRole)) {
+      card.classList.add('locked');
+    }
+  });
+
   const planoMap = {
   'cliente_orcoma':     'Cliente Orcoma',
   'colaborador_orcoma': 'Orcoma Team',
   'gestor_orcoma':      'Orcoma Business',
-    };  /* Atualiza o plano do usuário no sidebar de progresso */
+  'admin':              'Administrador',
+  'empresario':         'Empresário',
+  'visitor':            'Visitante'
+    };
 
-    const tipoUsuario = 'cliente_orcoma';
+    const tipoUsuario = userRole;
 
     const planLabel = document.querySelector('.progress-sidebar__plan');
         if (planLabel) {
-         planLabel.textContent = planoMap[tipoUsuario] ?? 'Cliente Orcoma';
+         planLabel.textContent = planoMap[tipoUsuario] ?? 'Visitante';
+         planLabel.classList.remove('pill-admin', 'pill-cliente', 'pill-visitor');
+         if (userRole === 'admin') {
+           planLabel.classList.add('pill-admin');
+         } else if (userRole === 'visitor') {
+           planLabel.classList.add('pill-visitor');
+         } else {
+           planLabel.classList.add('pill-cliente');
+         }
     }
 
-    /* Avatar: usa foto do usuário ou fallback para avatar-icon.jpg */
-    const avatarEl = document.getElementById('userAvatar');
-    const fotoUsuario = null; // substitua por ex: usuario.foto_url vindo do backend
+    /* Dropdown do perfil */
+    const chevron = document.getElementById('profileChevron');
+    const dropdown = document.getElementById('profileDropdown');
+    if (chevron && dropdown) {
+      chevron.addEventListener('click', function (e) {
+        e.stopPropagation();
+        chevron.classList.toggle('is-open');
+        dropdown.classList.toggle('is-visible');
+      });
+      document.addEventListener('click', function () {
+        chevron.classList.remove('is-open');
+        dropdown.classList.remove('is-visible');
+      });
+      dropdown.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+    }
 
-        if (avatarEl) {
-        if (fotoUsuario) {
-                avatarEl.src = fotoUsuario;
-            } 
-        else {
-                avatarEl.src = 'assets/images/avatar-icon.jpg';
+    /* Dropdown do admin pill (hover) */
+    if (userRole === 'admin') {
+      const adminPill = document.getElementById('adminPill');
+      const adminDropdown = document.getElementById('adminDropdown');
+      if (adminPill && adminDropdown) {
+        var adminDropdownTimeout;
+        function showAdminDropdown() {
+          clearTimeout(adminDropdownTimeout);
+          adminDropdown.classList.add('is-visible');
         }
+        function hideAdminDropdown() {
+          adminDropdownTimeout = setTimeout(function () {
+            adminDropdown.classList.remove('is-visible');
+          }, 150);
+        }
+        adminPill.addEventListener('mouseenter', showAdminDropdown);
+        adminPill.addEventListener('mouseleave', hideAdminDropdown);
+        adminDropdown.addEventListener('mouseenter', showAdminDropdown);
+        adminDropdown.addEventListener('mouseleave', hideAdminDropdown);
+      }
     }
 
     /* Atalho de teclado: Ctrl + K para focar no input de busca */
@@ -346,8 +368,8 @@ if (slider) {
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
   const trilhasSlider = document.getElementById("trilhasSlider");
-  const trilhasPrev   = document.querySelector(".trilhas-prev");
-  const trilhasNext   = document.querySelector(".trilhas-next");
+  const trilhasPrev   = document.querySelector(".trilhas-prev-btn");
+  const trilhasNext   = document.querySelector(".trilhas-next-btn");
 
   if (trilhasSlider && trilhasNext) {
     trilhasNext.addEventListener("click", () => {

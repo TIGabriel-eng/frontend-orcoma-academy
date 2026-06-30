@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suporte — Orcoma Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-header { display: flex; flex-direction: column; gap: var(--spacing-xs); }
+    .page-header h1 { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--color-accent); }
+    .page-header p { color: var(--color-text-secondary); font-size: 15px; }
+    .suporte-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); align-items: start; }
+    @media (max-width:768px) { .suporte-grid { grid-template-columns: 1fr; } }
+    .card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--spacing-lg); display: flex; flex-direction: column; gap: var(--spacing-md); }
+    .card h2 { font-family: var(--font-display); font-size: 18px; font-weight: 600; }
+    .faq-item { border-bottom: 1px solid var(--color-border); padding: var(--spacing-sm) 0; }
+    .faq-question { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-sm) 0; cursor: pointer; color: var(--color-text-primary); font-size: 14px; font-weight: 500; }
+    .faq-question i { color: var(--color-text-muted); font-size: 12px; transition: transform var(--transition-fast); }
+    .faq-question.open i { transform: rotate(180deg); }
+    .faq-answer { display: none; font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; padding: 0 0 var(--spacing-sm) 0; }
+    .faq-answer.open { display: block; }
+    .form-group { display: flex; flex-direction: column; gap: var(--spacing-xs); }
+    .form-group label { font-size: 13px; color: var(--color-text-secondary); }
+    .form-group input, .form-group select, .form-group textarea { background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 10px 12px; color: var(--color-text-primary); font-family: var(--font-body); font-size: 13px; outline: none; transition: border-color var(--transition-fast); }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--color-accent-2); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .btn-submit { background: var(--color-accent-2); color: #fff; font-weight: 600; font-size: 14px; padding: 10px; border-radius: var(--radius-md); transition: opacity var(--transition-fast); margin-top: auto; }
+    .btn-submit:hover { opacity: .85; }
+    .btn-whatsapp { display: flex; align-items: center; justify-content: center; gap: var(--spacing-sm); background: #25d366; color: #fff; font-weight: 600; font-size: 14px; padding: 12px; border-radius: var(--radius-md); transition: opacity var(--transition-fast); }
+    .btn-whatsapp:hover { opacity: .85; }
+    .full-width { grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__logo">
+      <img src="../assets/images/LOGO ORCOMA ACADEMY.png" alt="Orcoma Academy" class="sidebar__logo-img" />
+    </div>
+    <nav class="sidebar__nav">
+      <ul>
+        <li class="nav-item" data-page="inicio"><i class="fa-solid fa-house"></i><span data-i18n="nav.inicio">Início</span></li>
+        <li class="nav-item" data-page="meu-perfil"><i class="fa-regular fa-user"></i><span data-i18n="nav.perfil">Meu Perfil</span></li>
+        <li class="nav-item" data-page="cursos"><i class="fa-solid fa-graduation-cap"></i><span data-i18n="nav.cursos">Meus cursos</span></li>
+        <li class="nav-item" data-page="continuar"><i class="fa-solid fa-play"></i><span data-i18n="nav.continuar">Continuar assistindo</span></li>
+        <li class="nav-item" data-page="concluidos"><i class="fa-solid fa-circle-check"></i><span data-i18n="nav.concluidos">Cursos concluídos</span></li>
+        <li class="nav-item" data-page="certificados"><i class="fa-solid fa-certificate"></i><span data-i18n="nav.certificados">Certificados</span></li>
+        <li class="nav-item" data-page="trilhas"><i class="fa-solid fa-route"></i><span data-i18n="nav.trilhas">Trilhas de aprendizagem</span></li>
+        <li class="nav-item" data-page="favoritos"><i class="fa-regular fa-heart"></i><span data-i18n="nav.favoritos">Favoritos</span></li>
+        <li class="nav-item active" data-page="suporte"><i class="fa-regular fa-circle-question"></i><span data-i18n="nav.suporte">Suporte</span></li>
+        <li class="nav-item" data-page="config"><i class="fa-solid fa-gear"></i><span data-i18n="nav.config">Configurações</span></li>
+        <li class="nav-item nav-item--logout" data-page="sair"><i class="fa-solid fa-right-from-bracket"></i><span data-i18n="nav.sair">Sair</span></li>
+      </ul>
+    </nav>
+    <div class="sidebar__env">
+      <p class="sidebar__env-label" data-i18n="sidebar.env.label">AMBIENTE ATIVO</p>
+      <div class="sidebar__env-selector">
+        <i class="fa-solid fa-building"></i><span>Academy Contábil</span><i class="fa-solid fa-chevron-down"></i>
+      </div>
+    </div>
+    <div class="sidebar__premium">
+      <i class="fa-solid fa-crown"></i>
+      <div>
+        <p class="premium__title" data-i18n="sidebar.premium.title">Seja Premium</p>
+        <p class="premium__desc" data-i18n="sidebar.premium.desc">Tenha acesso a todos os cursos, trilhas e certificados.</p>
+      </div>
+      <button class="btn-premium" data-i18n="sidebar.premium.btn">Assinar agora <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <button class="topbar__menu-btn" id="menuToggle" aria-label="Abrir menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="topbar__actions">
+        <button class="topbar__icon-btn">
+          <i class="fa-regular fa-bell"></i>
+          <span class="topbar__notif-dot"></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="page-header">
+      <h1 data-i18n="suporte.title">Suporte</h1>
+      <p data-i18n="suporte.subtitle">Estamos aqui para ajudar</p>
+    </div>
+
+    <div class="suporte-grid">
+      <div class="card full-width">
+        <h2 data-i18n="suporte.faq.title">Perguntas Frequentes</h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span data-i18n="suporte.faq.q1">Como acessar meus certificados?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer" data-i18n="suporte.faq.a1">Acesse a página "Certificados" no menu lateral. Lá você encontra todos os certificados emitidos e pode baixá-los em PDF.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span data-i18n="suporte.faq.q2">Como recuperar minha senha?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer" data-i18n="suporte.faq.a2">Na tela de login, clique em "Esqueci minha senha" e siga as instruções enviadas para seu e-mail cadastrado.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span data-i18n="suporte.faq.q3">O plano Premium realmente dá acesso ilimitado?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer" data-i18n="suporte.faq.a3">Sim! Com o plano Premium você tem acesso a todos os cursos, trilhas de aprendizagem e certificados da plataforma.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span data-i18n="suporte.faq.q4">Como alterar meus dados de perfil?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer" data-i18n="suporte.faq.a4">Vá em "Meu Perfil" no menu lateral. Lá você pode editar suas informações pessoais, formação e habilidades.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Tem alguma dúvida diferente?</h2>
+        <form onsubmit="event.preventDefault(); alert('Mensagem enviada com sucesso!');" style="display:flex;flex-direction:column;gap:var(--spacing-md);flex:1;">
+          <div class="form-group">
+            <label data-i18n="suporte.contact.subject">Assunto</label>
+            <select>
+              <option data-i18n="suporte.subject.opt1">Dúvida sobre curso</option>
+              <option data-i18n="suporte.subject.opt2">Problema técnico</option>
+              <option data-i18n="suporte.subject.opt3">Sugestão</option>
+              <option data-i18n="suporte.subject.opt4">Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-i18n="suporte.contact.message">Mensagem</label>
+            <textarea placeholder="Descreva sua dúvida ou problema..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit" data-i18n="suporte.contact.submit">Enviar mensagem</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2 data-i18n="suporte.chat.title">Fale conosco</h2>
+        <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6;" data-i18n="suporte.chat.desc">Preferir falar diretamente? Nosso time de suporte está disponível no WhatsApp.</p>
+        <a href="https://wa.me/5511999999999" target="_blank" class="btn-whatsapp" data-i18n="suporte.chat.btn">
+          <i class="fa-brands fa-whatsapp"></i> Falar no WhatsApp
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <div class="sidebar__overlay" id="sidebarOverlay"></div>
+  <script>
+    function toggleFaq(el) {
+      el.classList.toggle("open");
+      var answer = el.nextElementSibling;
+      if (answer) answer.classList.toggle("open");
+    }
+  </script>
+  <script src="../i18n.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>

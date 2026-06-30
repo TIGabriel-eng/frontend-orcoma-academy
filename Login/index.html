@@ -22,6 +22,12 @@
 
 <body>
 
+<!--PERMISSÕES DE LOGIN-->
+
+<script src="./script.js"></script>
+
+<!---END PERMISSÕES DE LOGIN-->
+
 <div class="login-page">
 
     <!-- LADO ESQUERDO -->
@@ -29,7 +35,7 @@
 
         <div class="logo-wrapper">
             <img
-                src="../assets/images/orcoma-academy.png"
+                src="../assets/images/LOGO ORCOMA ACADEMY.png"
                 alt="Orcoma Academy"
                 class="logo-big"
             >
@@ -52,12 +58,13 @@
 
             <h2>Entrar</h2>
     
-            <form>
+            <form id="formLogin">
 
                 <div class="input-group">
                     <label>E-mail</label>
-                    <input
+                      <input
                         type="email"
+                        id="loginEmail"
                         placeholder="Digite seu e-mail"
                     >
                 </div>
@@ -66,6 +73,7 @@
                     <label>Senha</label>
                     <input
                         type="password"
+                        id="loginSenha"
                         placeholder="Digite sua senha"
                     >
                 </div>
@@ -76,7 +84,9 @@
             Esqueci a minha senha
         </a>
     </p>
-                <button type="submit">
+                <span class="erro-login" id="erroLogin"></span>
+
+                <button type="submit" id="btnLogin">
                     Entrar
                 </button>
 
@@ -101,57 +111,40 @@
     <!-- CADASTRO -->
         <div id="cadastro-form" class="login-card hidden">
 
-            <h2>Cadastro</h2>
+            <h2>Criar Conta</h2>
 
             <form>
-                <div class="input-group">
-                    <label>Nome Completo</label>
-                    <input type="text" placeholder="Digite seu nome" autocomplete="name" required maxlength="100">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Nome</label>
+                        <input type="text" id="cadNome" placeholder="Digite" autocomplete="given-name" required maxlength="50">
+                    </div>
+                    <div class="input-group">
+                        <label>Sobrenome</label>
+                        <input type="text" id="cadSobrenome" placeholder="Digite" autocomplete="family-name" required maxlength="100">
+                    </div>
                 </div>
 
                 <div class="input-group">
                     <label>E-mail</label>
-                    <input type="email" placeholder="Digite seu e-mail" autocomplete="email" required maxlength="255">
+                    <input type="email" id="cadEmail" placeholder="Digite seu e-mail" autocomplete="email" required maxlength="255">
                 </div>
-
-        <div class="input-group">
-
-            <label>Senha</label>
-
-        <div class="password-wrapper">
-
-            <input
-                type="password"
-                id="senha"
-                placeholder="Deve ter no mínimo 8 caracteres">
-        </div>
-
-        </div>
-
-        <div class="input-group">
-
-            <label>Confirme a sua senha</label>
-
-        <div class="password-wrapper">
-
-        <input
-            type="password"
-            id="confirmarSenha"
-            placeholder="Deve ter no mínimo 8 caracteres"
-            autocomplete="new-password"
-            required
-            maxlength="255">
-
-        </div>
-
-        </div>
 
                 <div class="input-group">
-                    <label>Empresa <span style="color:#8b9ab5;font-weight:400">(opcional)</span></label>
-                    <input type="text" placeholder="Digite a sua empresa (caso seja para uma empresa)" autocomplete="organization" maxlength="120">
+                    <label>Nova Senha</label>
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="cadSenha"
+                            placeholder="Mínimo 8 caracteres"
+                            autocomplete="new-password"
+                            required
+                            maxlength="255">
+                    </div>
                 </div>
-                    
-                
+
+                <span class="erro-login" id="erroCadastro"></span>
+
         <p class="termos-texto">
             Ao se cadastrar, você aceita nossos
 
@@ -166,7 +159,7 @@
         </a>.
         </p>
                 
-                <button type="submit">Cadastrar</button>
+                <button type="submit">Criar Conta</button>
 
                 <div class="login-divider"><span>ou</span></div>
 
@@ -181,9 +174,6 @@
     </div>
 
 </div>
-
-</body>
-</html>
 
 <!-- =========================================
      MODAL RECUPERAR SENHA
@@ -221,39 +211,5 @@
     </div>
 
 </div>
-
-<script>
-        // MODAL RECUPERAR SENHA
-        const openRecovery  = document.getElementById("openRecovery");
-        const closeRecovery = document.getElementById("closeRecovery");
-        const recoveryModal = document.getElementById("recoveryModal");
-
-        openRecovery.addEventListener("click", (e) => {
-            e.preventDefault();
-            recoveryModal.classList.add("active");
-        });
-
-        closeRecovery.addEventListener("click", () => {
-            recoveryModal.classList.remove("active");
-        });
-
-        recoveryModal.addEventListener("click", (e) => {
-            if (e.target === recoveryModal) {
-                recoveryModal.classList.remove("active");
-            }
-        });
-
-        // ALTERNÂNCIA LOGIN / CADASTRO
-        function mostrarCadastro() {
-            document.getElementById('login-form').classList.add('hidden');
-            document.getElementById('cadastro-form').classList.remove('hidden');
-        }
-
-        function mostrarLogin() {
-            document.getElementById('cadastro-form').classList.add('hidden');
-            document.getElementById('login-form').classList.remove('hidden');
-        }
-    </script>
-
 </body>
 </html>

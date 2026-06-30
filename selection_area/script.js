@@ -1,14 +1,36 @@
 /* ==========================================================
-   BOTÕES DE SELEÇÃO
+   CONTROLE DE ACESSO — POR ROLE
 ========================================================== */
 
-const botoes = document.querySelectorAll(".btn-plano");
+document.addEventListener("DOMContentLoaded", () => {
 
-/*
-   Cada botão recebe um evento de clique.
-   Futuramente você pode redirecionar o usuário
-   para outra página ou salvar a escolha no Supabase.
-*/
+    const role =
+        sessionStorage.getItem('orcoma_user_role');
+
+    if (role === null) return;
+
+    const ehAdmin = role === 'admin';
+
+    const todosCards = document.querySelectorAll('.plano-card');
+
+    todosCards.forEach(card => {
+        const titulo =
+            card.querySelector("h2").textContent;
+
+        if (titulo === "ADMIN ORCOMA") {
+            if (!ehAdmin) {
+                card.style.display = 'none';
+            }
+        }
+    });
+
+});
+
+/* ==========================================================
+   BOTÕES DE SELEÇÃO
+========================================================= */
+
+const botoes = document.querySelectorAll(".btn-plano");
 
 botoes.forEach(botao => {
 
@@ -22,26 +44,27 @@ botoes.forEach(botao => {
 
         console.log("Plano selecionado:", plano);
 
-        /*
-           Exemplo futuro:
-
-           localStorage.setItem("plano", plano);
-
-           ou
-
-           window.location.href = "dashboard.html";
-        */
+        if (plano === "ADMIN ORCOMA") {
+            window.location.href = "../orcoma-business/index.html";
+        } else if (plano === "Plano Team") {
+            window.location.href = "../plano-team/index.html";
+        }
 
     });
 
 });
 
+/* Redirecionamento dos planos */
 
-/* efeito pramium nos cards */
+function acessarBusiness() {
+    window.location.href = "../orcoma-business/index.html";
+}
 
-const cards = document.querySelectorAll('.plano-card');
+/* efeito premium nos cards */
 
-cards.forEach(card => {
+const cardsJS = document.querySelectorAll('.plano-card');
+
+cardsJS.forEach(card => {
 
     card.addEventListener('mousemove', (e) => {
 
@@ -73,14 +96,13 @@ cards.forEach(card => {
 
 });
 
-
 /* Cards entrando com efeito premium */
 
 window.addEventListener('load', () => {
 
-    const cards = document.querySelectorAll('.plano-card');
+    const cardsLoad = document.querySelectorAll('.plano-card');
 
-    cards.forEach((card,index) => {
+    cardsLoad.forEach((card,index) => {
 
         setTimeout(() => {
 

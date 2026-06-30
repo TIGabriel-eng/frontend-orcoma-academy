@@ -218,21 +218,36 @@ body {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  padding: 9px var(--spacing-md);
+  padding: 14px var(--spacing-md);
   border-radius: var(--radius-md);
   color: var(--color-text-secondary);
   font-size: 13px;
   cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
   position: relative;
   user-select: none;
+  opacity: 0;
+  animation: navItemEntrance 0.5s ease forwards;
 }
+
+.nav-item:nth-child(1) { animation-delay: 0.03s; }
+.nav-item:nth-child(2) { animation-delay: 0.06s; }
+.nav-item:nth-child(3) { animation-delay: 0.09s; }
+.nav-item:nth-child(4) { animation-delay: 0.12s; }
+.nav-item:nth-child(5) { animation-delay: 0.15s; }
+.nav-item:nth-child(6) { animation-delay: 0.18s; }
+.nav-item:nth-child(7) { animation-delay: 0.21s; }
+.nav-item:nth-child(8) { animation-delay: 0.24s; }
+.nav-item:nth-child(9) { animation-delay: 0.27s; }
+.nav-item:nth-child(10) { animation-delay: 0.30s; }
+.nav-item:nth-child(11) { animation-delay: 0.33s; }
 
 .nav-item i {
   width: 16px;
   text-align: center;
   font-size: 13px;
   flex-shrink: 0;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .nav-item:hover {
@@ -240,10 +255,33 @@ body {
   color: var(--color-text-primary);
 }
 
+.nav-item:hover i {
+  transform: scale(1.2);
+}
+
 .nav-item.active {
   background-color: var(--sidebar-item-active);
   color: var(--color-text-primary);
   font-weight: 600;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--color-accent);
+  border-radius: 0 3px 3px 0;
+  animation: slideInIndicator 0.3s ease;
+}
+
+.nav-item.clicked {
+  background-color: var(--sidebar-item-hover);
+  box-shadow: inset 0 0 0 1px var(--color-accent-2);
+  transform: scale(0.97);
 }
 
 /* Badge de notificação */
@@ -524,22 +562,21 @@ body {
 
 .hero{
 display:grid;
-grid-template-columns: 320px 400px;  /* Colunas fixas */
-gap: var(--spacing-lg);
-align-items:end;
+grid-template-columns: 1fr min-content;
+gap: -1px;
+align-items:start;
 background:#000c20;
 background-size:cover;
 background-position:center;
 background-repeat:no-repeat;
-min-height:220px;
+min-height:140px;
 border:1px solid var(--color-border);
 border-radius:var(--radius-xl);
-padding:var(--spacing-xl);
+padding:16px;
 position:relative;
 overflow:hidden;
-min-height: 220px;
-width: fit-content;   /* ← Hero só ocupa o espaço necessário */
-max-width: 100%;      /* ← Mas nunca ultrapassa a tela */
+width: 700px;
+max-width: 100%;
 }
 
 /* Glow decorativo */
@@ -563,30 +600,25 @@ z-index:2;
 
 /* Logo */
 .hero__brand-logo-img{
-width:220px;
+width:120px;
 height:auto;
 object-fit:contain;
-
-
-margin-bottom:20px;
-
+margin-bottom:var(--spacing-sm);
 }
 
 .hero__brand-logo-img--large{
-width:260px;
+width:160px;
+margin-bottom:var(--spacing-sm);
+margin-top:-4px;
 }
 
 /* Subtítulo */
 .hero__brand-sub{
-font-size:11px;
-letter-spacing:.15em;
+font-size:10px;
+letter-spacing:0.12em;
 text-transform:uppercase;
-
-
 color:var(--color-text-muted);
-
-margin-bottom:8px;
-
+margin-bottom:4px;
 }
 
 /* Nome da marca */
@@ -606,11 +638,9 @@ color:var(--color-accent);
 /* Chamada principal */
 .hero__tagline{
 font-family:var(--font-display);
-font-size:20px;
-line-height:1.5;
-margin-bottom:14px;
-
-color:#ffffff;
+font-size:13px;
+line-height:1.4;
+margin-bottom:4px;
 }
 
 .hero__tagline strong{
@@ -619,14 +649,11 @@ color:var(--color-accent);
 
 /* Descrição */
 .hero__desc{
-font-size:13px;
-line-height:1.8;
+font-size:11px;
+line-height:1.5;
 color:var(--color-text-secondary);
-
-max-width:540px;
-
-margin-bottom:28px;
-
+max-width:450px;
+margin-bottom:var(--spacing-sm);
 }
 
 /* Ambiente */
@@ -674,6 +701,95 @@ transform:translateY(-2px);
 box-shadow:
     0 10px 30px rgba(255,157,0,.25);
 
+}
+
+/* ============================================================
+PILLS DOS MÓDULOS
+============================================================ */
+
+.hero__pills {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.module-pill {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #050c17;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 4px 10px;
+  transition: all 0.35s ease;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.module-pill:hover {
+  border-radius: 12px;
+  background: #0f1d35;
+  border-color: var(--color-accent-2);
+}
+
+.module-pill__inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.module-pill__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.module-pill__header i {
+  color: var(--color-accent-2);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.module-pill__name {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.module-pill__body {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.35s ease, margin 0.35s ease;
+}
+
+.module-pill:hover .module-pill__body {
+  max-height: 100px;
+  opacity: 1;
+}
+
+.module-pill__desc {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  margin-top: 6px;
+}
+
+.module-pill__cta {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  transition: gap 0.25s ease;
+}
+
+.module-pill:hover .module-pill__cta {
+  gap: 8px;
 }
 
 /* ============================================================
@@ -745,7 +861,7 @@ transition:.3s;
 }
 
 .env-card__link:hover{
-gap:10px;
+  gap:10px;
 }
 
 /* ============================================================
@@ -771,7 +887,7 @@ RESPONSIVO
 
 
 .hero{
-    padding:24px;
+    padding:16px;
 }
 
 .hero__cards{
@@ -779,209 +895,16 @@ RESPONSIVO
 }
 
 .hero__brand-logo-img{
-    width:180px;
+    width:120px;
 }
 
 .hero__tagline{
-    font-size:18px;
+    font-size:13px;
 }
 
 }
 
 
-
-/* ============================================================
-   7. PROGRESSO (CÍRCULO + BARRAS)
-   ============================================================ */
-
-/* Painel de progresso no hero */
-.hero__progress {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-md);
-  width: 240px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-/* Ajusta a altura da progress sidebar para não ultrapassar a tela */
-.main-content {
-  margin-left: var(--sidebar-width);
-  margin-right: 260px;
-  flex: 1;
-  min-height: 100vh;
-  padding: var(--spacing-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xl);
-}
-
-/* Header do painel de progresso */
-.progress__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Título "Progresso" no header do painel */
-.progress__header span {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-/* Link "Ver detalhes" no header do progresso */
-.progress__header a {
-  font-size: 11px;
-  color: var(--color-accent-2);
-  transition: opacity var(--transition-fast);
-}
-
-/* Hover no link "Ver detalhes" */
-.progress__header a:hover {
-  opacity: 0.7;
-}
-
-/* Círculo SVG */
-.progress__circle-wrap {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  margin: 0 auto;
-}
-
-/* O SVG do círculo de progresso é rotacionado -90 graus para que o início da animação comece no topo (12 horas) em vez da direita (3 horas) */
-.progress__ring-bg {
-  fill: none;
-  stroke: rgba(255,255,255,0.08);
-  stroke-width: 10;
-}
-
-/* Parte preenchida do círculo, animada via JS ajustando stroke-dashoffset para criar o efeito de progresso */
-.progress__ring-fill {
-  fill: none;
-  stroke: #2563EB;
-  stroke-width: 10;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 8px rgba(255,255,255,0.35));
-  stroke-dasharray: 314;
-  stroke-dashoffset: 314;
-  transition: stroke-dashoffset 1.2s ease;
-}
-
-
-/* O SVG do círculo de progresso é rotacionado -90 graus para que o início da animação comece no topo (12 horas) em vez da direita (3 horas) */
-.progress__ring {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-/* Fundo do círculo */
-.progress__ring-bg {
-  fill: none;
-  stroke: rgba(255,255,255,0.08);
-  stroke-width: 8;
-}
-
-/* Parte preenchida do círculo, animada via JS ajustando stroke-dashoffset para criar o efeito de progresso */
-.progress__ring-fill {
-  fill: none;
-  stroke: #002a85;
-  filter: drop-shadow(0 0 6px rgba(255,255,255,0.15));
-  stroke-width: 8;
-  stroke-linecap: round;
-  stroke-dasharray: 314;
-  stroke-dashoffset: 314; /* Começa zerado, animado via JS */
-  transition: stroke-dashoffset 1.2s ease;
-}
-
-/* Texto central do círculo */
-.progress__circle-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Label abaixo do percentual no círculo */
-.progress__label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-/* Subtítulo ou descrição adicional abaixo do label no círculo */
-.progress__sub {
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  line-height: 1.4;
-}
-
-/* Barras de progresso */
-.progress__bars {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-/* Cada item de barra de progresso, contendo header (título + percentual) e a barra em si */
-.progress__bar-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* Header de cada barra, com título do curso ou módulo e percentual alinhados nas extremidades */
-.progress__bar-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: var(--color-text-secondary);
-}
-
-/* Título do curso ou módulo na barra de progresso */
-.progress__bar-track {
-  width: 100%;
-  height: 5px;
-  background-color: var(--color-border);
-  border-radius: var(--radius-full);
-  overflow: hidden;
-}
-
-/* Parte preenchida da barra de progresso, animada via JS ajustando a largura (width) para criar o efeito de progresso */
-.progress__bar-fill {
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    #001b3b,
-    #0073ff
-  );
-  border-radius: var(--radius-full);
-}
-
-
-.progress__summary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-}
-
-.progress__info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.progress__percent {
-  font-size: 26px;
-  font-weight: 800;
-  color: #ffffff
-}
 
 /* ============================================================
    8. SEÇÕES GENÉRICAS
@@ -1089,16 +1012,19 @@ RESPONSIVO
 
 /* Cores de badge por status */
 .badge--em-andamento {
-  background-color: #0057FF;
+  background-color: #3b82f6;
   color: #fff;
 }
 
 .badge--concluido {
-  background-color: #22C55E;
+  background-color: #22c55e;
   color: #fff;
 }
 
-.badge--
+.badge--nao-iniciado {
+  background-color: #fff;
+  color: #000;
+}
 
 /* ============================================================
    14.SCROLLBAR CUSTOMIZADA
@@ -1122,48 +1048,20 @@ RESPONSIVO
 }
 
 /* ============================================================
-   16. EVENTS SIDEBAR — barra fixa lateral direita
+   15. PERFIL FLUTUANTE
    ============================================================ */
 
 .progress-profile-bar {
-  position: absolute;
+  position: fixed;
   top: 0;
-  right: 0;
-  width: 260px; /* mesma largura da sidebar */
-  height: 70px;
+  right: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 20px;
+  padding: 8px 16px 8px 12px;
   background: none;
+  border: none;
   z-index: 99999;
-}
-
-/* Sidebar de progresso fixa à direita */
-.progress-sidebar {
-  position: absolute;
-  top: 100px;
-  right: 20px;
-  width: 250px;
-  height: calc(100vh - 40px);
-  background: linear-gradient(
-    180deg,
-    #000c20 0%,
-    #091528 100%
-  );
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 24px;
-  padding: 24px;
-  overflow-y: auto;
-  z-index: 100;
-}
-
-/* Perfil do usuário no topo da progress sidebar */
-.progress-sidebar__profile {
-  display: absolute;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: var(--spacing-md);
   cursor: pointer;
 }
 
@@ -1181,6 +1079,7 @@ RESPONSIVO
   flex-direction: column;
   gap: 2px;
   flex: 1;
+  position: relative;
 }
 
 .progress-sidebar__username {
@@ -1189,6 +1088,9 @@ RESPONSIVO
   font-weight: 700;
   color: var(--color-text-primary);
   line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .progress-sidebar__plan {
@@ -1198,118 +1100,117 @@ RESPONSIVO
   background-color: rgba(245, 166, 35, 0.1);
   padding: 2px 10px;
   border-radius: var(--radius-full);
+  transition: all .3s ease;
+}
+
+.progress-sidebar__plan.pill-admin {
+  color: #ff4444;
+  background-color: rgba(139, 0, 0, 0.15);
+  border: 1px solid rgba(139, 0, 0, 0.3);
+}
+
+.progress-sidebar__plan.pill-visitor {
+  color: #8b9ab5;
+  background-color: rgba(139, 154, 181, 0.1);
 }
 
 .progress-sidebar__chevron {
   color: var(--color-text-muted);
   font-size: 10px;
   flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.25s ease;
 }
 
-/* ============================================================
-   16. EVENTS SIDEBAR — barra fixa lateral direita
-   ============================================================ */
-
-.events-sidebar {
+.admin-dropdown {
+  display: none;
   position: absolute;
-  top: 710px; /* abaixo do card de progresso */
-  right: 20px;
-  width: 250px;
-  background: linear-gradient(
-    180deg,
-    #000c20 0%,
-    #091528 100%
-  );
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 24px;
-  padding: 20px;
-  z-index: 999;
-  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  top: calc(100% + 4px);
+  left: 0;
+  background: #0d1b2e;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 6px;
+  z-index: 60;
+  min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-.events-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+.admin-dropdown.is-visible {
+  display: block;
 }
 
-.events-header h3 {
-  font-size: 14px;
-  color: #fff;
-  font-weight: 700;
-}
-
-.events-header a {
-  color: #2563eb;
-  font-size: 12px;
-}
-
-.event-card {
+.admin-dropdown__item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: #071733;
-  border: 1px solid #102550;
-  border-radius: 14px;
-  padding: 12px;
-  margin-bottom: 12px;
-  transition: .3s;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
 }
 
-.event-card:hover {
-  background: #0b2048;
-  border-color: #1d4ed8;
+.admin-dropdown__item:hover {
+  background: var(--sidebar-item-hover);
+  color: var(--color-text-primary);
 }
 
-.event-date {
-  width: 48px;
-  height: 58px;
-  border-radius: 10px;
-  background: #0c2a63;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.admin-dropdown__item i {
+  width: 16px;
+  text-align: center;
+  font-size: 13px;
   flex-shrink: 0;
 }
 
-.event-date .day {
-  color: #fff;
-  font-size: 18px;
-  font-weight: 700;
+.progress-sidebar__chevron.is-open {
+  transform: rotate(180deg);
 }
 
-.event-date .month {
-  color: #7ea6ff;
-  font-size: 10px;
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #0d1b2e;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 50;
+  margin-top: 6px;
 }
 
-.event-content {
-  flex: 1;
+.profile-dropdown.is-visible {
+  display: flex;
 }
 
-.event-content h4 {
-  color: #fff;
-  font-size: 12px;
-  line-height: 1.4;
-  margin-bottom: 4px;
+.profile-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
 }
 
-.event-content span {
-  color: #7c8fb4;
-  font-size: 11px;
+.profile-dropdown__item:hover {
+  background: var(--sidebar-item-hover);
+  color: var(--color-text-primary);
 }
 
-.event-card i {
-  color: #7c8fb4;
-}
-
-.events-link {
-  display: inline-block;
-  margin-top: 10px;
-  color: #2563eb;
-  font-size: 12px;
+.profile-dropdown__item i {
+  width: 16px;
+  text-align: center;
+  font-size: 13px;
+  flex-shrink: 0;
 }
 
 /* =========================
@@ -1433,7 +1334,7 @@ RESPONSIVO
 
 .cursos-disponiveis{
     margin-top:32px;
-    width: 810px   /*esse controla o tamanho dos cards dos cursos do Cursos Disponíveis*/
+    width: 700px   /*esse controla o tamanho dos cards dos cursos do Cursos Disponíveis*/
 }
 
 .curso-card{
@@ -1690,6 +1591,22 @@ RESPONSIVO
     animation: fadeUp 1.1s ease;
 }
 
+@keyframes navItemEntrance {
+  from {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInIndicator {
+  from { height: 0; opacity: 0; }
+  to { height: 60%; opacity: 1; }
+}
+
 @keyframes fadeUp{
 
     from{
@@ -1702,4 +1619,87 @@ RESPONSIVO
         transform:translateY(0);
     }
 
+}
+
+/* =========================
+    SEARCH DROPDOWN
+========================= */
+
+.search-dropdown {
+  position: fixed;
+  background: #0d1b2e;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  z-index: 999999;
+  max-height: 400px;
+  overflow-y: auto;
+  display: none;
+}
+
+.search-dropdown__group-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  padding: 8px 12px 4px;
+}
+
+.search-dropdown__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  transition: background 0.15s, color 0.15s;
+  cursor: pointer;
+  outline: none;
+}
+
+.search-dropdown__item:hover,
+.search-dropdown__item:focus {
+  background: var(--sidebar-item-hover);
+  color: var(--color-text-primary);
+}
+
+.search-dropdown__item i {
+  font-size: 14px;
+  color: var(--color-accent-2);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.search-dropdown__item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.search-dropdown__item-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.search-dropdown__item-desc {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.search-highlight {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.search-dropdown__empty {
+  padding: 20px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-muted);
 }
