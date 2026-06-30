@@ -133,6 +133,71 @@ document.addEventListener('dragstart', function (e) { e.preventDefault(); });
 
 updateModuleLocks();
 
+/* Streak Modal */
+(function initStreakModal() {
+  var overlay = document.getElementById('streakOverlay');
+  if (!overlay) return;
+
+  var closeBtn = overlay.querySelector('.close-x');
+  var continueBtn = overlay.querySelector('.continue-btn');
+  var streakNumEl = overlay.querySelector('.streak-number');
+
+  function getToday() {
+    var d = new Date();
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+
+  function isYesterday(dateStr) {
+    var d = new Date();
+    d.setDate(d.getDate() - 1);
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return dateStr === y + '-' + m + '-' + day;
+  }
+
+  function isToday(dateStr) {
+    return dateStr === getToday();
+  }
+
+  var today = getToday();
+  var lastVisit = localStorage.getItem('orcoma_streak_last_visit') || '';
+  var streakDay = parseInt(localStorage.getItem('orcoma_streak_day') || '0', 10);
+  var day = 1;
+  var newDay = false;
+
+  if (!lastVisit) {
+    day = 1;
+    newDay = true;
+  } else if (isYesterday(lastVisit)) {
+    day = streakDay + 1;
+    newDay = true;
+  } else if (!isToday(lastVisit)) {
+    day = 1;
+    newDay = true;
+  }
+
+  if (newDay) {
+    streakNumEl.textContent = day;
+    localStorage.setItem('orcoma_streak_day', String(day));
+    localStorage.setItem('orcoma_streak_last_visit', today);
+    overlay.classList.add('show');
+  }
+
+  function hideStreak() {
+    overlay.classList.remove('show');
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', hideStreak);
+  if (continueBtn) continueBtn.addEventListener('click', hideStreak);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) hideStreak();
+  });
+})();
+
 /* Widget Checklist - pulsar */
 (function initChecklist() {
   var icon = document.getElementById('checklistIcon');
