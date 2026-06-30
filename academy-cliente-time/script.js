@@ -1,13 +1,10 @@
 /* ============================================================
    ORCOMA ACADEMY — JavaScript
    Organização:
-   1. Proteção contra DevTools / console injection
-   2. Sidebar mobile (abrir/fechar)
-   3. Navegação da sidebar (item ativo)
-   4. Animação do círculo de progresso
-   5. Animação das barras de progresso
-   6. Animação dos contadores de estatísticas (stats)
-   7. Inicialização (chamada na carga do DOM)
+   1. Sidebar mobile (abrir/fechar)
+   2. Navegação da sidebar (item ativo)
+   3. Animação dos contadores de estatísticas (stats)
+   4. Inicialização (chamada na carga do DOM)
    ============================================================ */
 
 
@@ -74,7 +71,7 @@ function initSidebarNav() {
       }
 
       var url = null;
-      if (page === "inicio") url = "../orcoma-business/index.html";
+      if (page === "inicio") url = "../academy-cliente-time/index.html";
       else if (page === "meu-perfil") url = "../meu-perfil/index.html";
       else if (page === "cursos") url = "../meuscursos/index.html";
       else if (page === "continuar") url = "../continuarassistindo/index.html";
@@ -94,82 +91,18 @@ function initSidebarNav() {
       item.classList.add("clicked");
 
       setTimeout(function () {
-        window.location.href = url;
+        Router.navigate(url);
       }, 200);
     });
   });
 }
 
 
-/* ============================================================
-   4. ANIMAÇÃO DO CÍRCULO DE PROGRESSO
-   ============================================================ */
 
-/**
- * Anima o círculo SVG de progresso de 0 até o valor alvo.
- * Usa stroke-dashoffset para controlar o preenchimento.
- *
- * @param {number} targetPercent - Percentual alvo (0 a 100)
- */
-function animateProgressCircle(targetPercent) {
-  const ring          = document.getElementById("progressRing");
-  const percentLabel  = document.getElementById("progressPercent");
-
-  if (!ring || !percentLabel) return;
-
-  const circumference = 2 * Math.PI * 50; /* r=50, conforme o SVG */
-  const targetOffset  = circumference - (targetPercent / 100) * circumference;
-
-  /* Força reflow para a transição CSS funcionar do início */
-  ring.style.strokeDasharray  = circumference;
-  ring.style.strokeDashoffset = circumference;
-
-  /* Aguarda 1 frame e inicia a animação */
-  requestAnimationFrame(function () {
-    requestAnimationFrame(function () {
-      ring.style.strokeDashoffset = targetOffset;
-    });
-  });
-
-  /* Anima o número no centro do círculo */
-  let currentValue = 0;
-  const step       = targetPercent / 60; /* ~60 passos */
-  const counter    = setInterval(function () {
-    currentValue += step;
-    if (currentValue >= targetPercent) {
-      currentValue = targetPercent;
-      clearInterval(counter);
-    }
-    percentLabel.textContent = Math.round(currentValue) + "%";
-  }, 20);
-}
 
 
 /* ============================================================
-   5. ANIMAÇÃO DAS BARRAS DE PROGRESSO
-   ============================================================ */
-
-/**
- * Percorre todos os elementos com classe 'progress__bar-fill'
- * e aplica a largura definida em data-width após um pequeno delay.
- */
-function animateProgressBars() {
-  const bars = document.querySelectorAll(".progress__bar-fill");
-
-  bars.forEach(function (bar) {
-    const targetWidth = bar.getAttribute("data-width");
-    if (!targetWidth) return;
-
-    /* Pequeno delay para garantir que o CSS transition funcione */
-    setTimeout(function () {
-      bar.style.width = targetWidth + "%";
-    }, 300);
-  });
-}
-
-
-/* ============================================================
-   6. ANIMAÇÃO DOS CONTADORES DE ESTATÍSTICAS
+   3. ANIMAÇÃO DOS CONTADORES DE ESTATÍSTICAS
    ============================================================ */
 
 /**
@@ -230,7 +163,7 @@ function initStatsCounters() {
 
 
 /* ============================================================
-   7. INICIALIZAÇÃO
+   4. INICIALIZAÇÃO
    ============================================================ */
 
 /**
@@ -245,32 +178,73 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Inicializa abertura/fechamento da sidebar no mobile */
   initSidebarMobile();
 
-  /* Anima o círculo de progresso geral (72%) */
-  animateProgressCircle(72);
-
-  /* Anima todas as barras de progresso */
-  animateProgressBars();
-
   /* Inicia os contadores de estatísticas */
   initStatsCounters();
 
   const planoMap = {
-  'admin':              'Administrador',
-  'cliente_orcoma':     'Cliente Orcoma',
-  'colaborador_orcoma': 'Colaborador Orcoma',
-  'gestor_orcoma':      'Orcoma Business',
-  'equipe_cliente':     'Orcoma Team',
-  'visitor':            'Visitante'
-    };  /* Atualiza o plano do usuário no sidebar de progresso */
+    'admin':              'Administrador',
+    'cliente_orcoma':     'Cliente Orcoma',
+    'colaborador_orcoma': 'Orcoma Team',
+    'gestor_orcoma':      'Orcoma Business',
+    'visitor':            'Visitante'
+  };
 
-    const tipoUsuario = sessionStorage.getItem('orcoma_user_role') || 'visitor';
+  const tipoUsuario = sessionStorage.getItem('orcoma_user_role') || 'visitor';
 
-    const planLabel = document.querySelector('.progress-sidebar__plan');
-        if (planLabel) {
-         planLabel.textContent = planoMap[tipoUsuario] ?? 'Colaborador Orcoma';
+  const planLabel = document.querySelector('.progress-sidebar__plan');
+  if (planLabel) {
+    planLabel.textContent = planoMap[tipoUsuario] ?? 'Cliente Orcoma';
+    planLabel.classList.remove('pill-admin', 'pill-cliente', 'pill-visitor');
+    if (tipoUsuario === 'admin') {
+      planLabel.classList.add('pill-admin');
+    } else if (tipoUsuario === 'visitor') {
+      planLabel.classList.add('pill-visitor');
+    } else {
+      planLabel.classList.add('pill-cliente');
     }
+  }
 
-    /* Atalho de teclado: Ctrl + K para focar no input de busca */
+  /* Dropdown do perfil */
+  const chevron = document.getElementById('profileChevron');
+  const dropdown = document.getElementById('profileDropdown');
+  if (chevron && dropdown) {
+    chevron.addEventListener('click', function (e) {
+      e.stopPropagation();
+      chevron.classList.toggle('is-open');
+      dropdown.classList.toggle('is-visible');
+    });
+    document.addEventListener('click', function () {
+      chevron.classList.remove('is-open');
+      dropdown.classList.remove('is-visible');
+    });
+    dropdown.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+  }
+
+  /* Dropdown do admin pill (hover) */
+  if (tipoUsuario === 'admin') {
+    const adminPill = document.getElementById('adminPill');
+    const adminDropdown = document.getElementById('adminDropdown');
+    if (adminPill && adminDropdown) {
+      var adminDropdownTimeout;
+      function showAdminDropdown() {
+        clearTimeout(adminDropdownTimeout);
+        adminDropdown.classList.add('is-visible');
+      }
+      function hideAdminDropdown() {
+        adminDropdownTimeout = setTimeout(function () {
+          adminDropdown.classList.remove('is-visible');
+        }, 150);
+      }
+      adminPill.addEventListener('mouseenter', showAdminDropdown);
+      adminPill.addEventListener('mouseleave', hideAdminDropdown);
+      adminDropdown.addEventListener('mouseenter', showAdminDropdown);
+      adminDropdown.addEventListener('mouseleave', hideAdminDropdown);
+    }
+  }
+
+  /* Atalho de teclado: Ctrl + K para focar no input de busca */
     document.addEventListener('keydown', function(e) {
   if (e.ctrlKey && e.key === 'k') {
     e.preventDefault();
@@ -280,31 +254,66 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 });
 
-// ===============================
-// 9 . RENDERIZAR TRILHAS
-// ===============================
-function renderTrilhas() {
-  const container = document.querySelector(".trilhas-grid");
+/* Anti Copy */
+document.addEventListener('copy', function (e) { e.preventDefault(); });
+document.addEventListener('cut', function (e) { e.preventDefault(); });
+document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+document.addEventListener('dragstart', function (e) { e.preventDefault(); });
 
-  container.innerHTML = trilhas.map(trilha => `
-    <div class="trilha-card">
-      <div class="trilha-card__image">
-        <img src="${trilha.imagem}" alt="${trilha.titulo}">
-      </div>
+/* Widget Checklist - pulsar */
+(function initChecklist() {
+  var icon = document.getElementById('checklistIcon');
+  var panel = document.getElementById('checklistPanel');
+  var closeBtn = document.getElementById('checklistClose');
+  if (!icon || !panel) return;
 
-      <div class="trilha-card__content">
-        <h4>${trilha.titulo}</h4>
-        <span>${trilha.cursos} cursos</span>
-      </div>
+  var jumping = true;
 
-      <i class="fa-solid fa-chevron-right trilha-card__arrow"></i>
-    </div>
-  `).join("");
-}
+  function pulse() {
+    if (!jumping) return;
+    icon.style.transition = 'transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1)';
+    icon.style.transform = 'translateY(-16px) scale(1.15)';
+    icon.style.boxShadow = '0 8px 32px rgba(255, 157, 0, 0.7)';
+    setTimeout(function () {
+      icon.style.transform = 'translateY(0) scale(1)';
+      icon.style.boxShadow = '0 4px 20px rgba(255, 157, 0, 0.4)';
+    }, 250);
+    setTimeout(pulse, 600);
+  }
 
-// ===============================
-// 10 . INICIAR
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-  renderTrilhas();
-});
+  pulse();
+
+  icon.onclick = function () {
+    jumping = false;
+    icon.style.transition = 'none';
+    icon.style.transform = 'none';
+    icon.style.boxShadow = '0 4px 20px rgba(255, 157, 0, 0.4)';
+    panel.classList.toggle('is-visible');
+  };
+
+  if (closeBtn) {
+    closeBtn.onclick = function (e) {
+      e.stopPropagation();
+      panel.classList.remove('is-visible');
+    };
+  }
+
+  document.addEventListener('click', function (e) {
+    if (panel.classList.contains('is-visible') && !e.target.closest('.checklist-widget')) {
+      panel.classList.remove('is-visible');
+    }
+  });
+
+  /* Auto-check itens com delay */
+  var ckIds = ['ck1', 'ck2', 'ck3', 'ck4'];
+  var delays = [2000, 5000, 8000, 11000];
+  for (var i = 0; i < ckIds.length; i++) {
+    (function (id, delay) {
+      setTimeout(function () {
+        var el = document.getElementById(id);
+        if (el) el.checked = true;
+      }, delay);
+    })(ckIds[i], delays[i]);
+  }
+})();
+

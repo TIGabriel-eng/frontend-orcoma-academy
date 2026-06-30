@@ -517,3 +517,22 @@ button:active {
     color:#f7a63b;
     text-decoration:underline;
 }
+
+/* Anti Copy */
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  cursor: default;
+}
+
+a, button, input, textarea, select, [contenteditable], label, [role="button"], .clickable {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  cursor: auto;
+}
+
+

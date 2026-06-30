@@ -45,9 +45,9 @@ botoes.forEach(botao => {
         console.log("Plano selecionado:", plano);
 
         if (plano === "ADMIN ORCOMA") {
-            window.location.href = "../orcoma-business/index.html";
+            Router.navigate("../orcoma-business/index.html");
         } else if (plano === "Plano Team") {
-            window.location.href = "../plano-team/index.html";
+            Router.navigate("../plano-team/index.html");
         }
 
     });
@@ -57,7 +57,7 @@ botoes.forEach(botao => {
 /* Redirecionamento dos planos */
 
 function acessarBusiness() {
-    window.location.href = "../orcoma-business/index.html";
+    Router.navigate("../orcoma-business/index.html");
 }
 
 /* efeito premium nos cards */
@@ -113,3 +113,11 @@ window.addEventListener('load', () => {
     });
 
 });
+
+/* Anti Copy */
+document.addEventListener('copy', function (e) { e.preventDefault(); });
+document.addEventListener('cut', function (e) { e.preventDefault(); });
+document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+document.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
+

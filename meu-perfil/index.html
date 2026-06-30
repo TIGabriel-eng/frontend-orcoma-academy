@@ -29,7 +29,7 @@
     <!-- Navegação principal -->
     <nav class="sidebar__nav">
       <ul>
-        <li class="nav-item" data-page="inicio" onclick="window.location.href='../orcoma-business/index.html'">
+        <li class="nav-item" data-page="inicio" onclick="Router.navigate(Router.getHomeUrl()); return false;">
           <i class="fa-solid fa-house"></i>
           <span data-i18n="nav.inicio">Início</span>
         </li>
@@ -80,18 +80,25 @@
     <!-- Ambiente ativo -->
     <div class="sidebar__env">
        <p class="sidebar__env-label" data-i18n="sidebar.env.label">AMBIENTE ATIVO</p>
-      <div class="sidebar__env-selector">
+      <div class="sidebar__env-selector" id="envSelectorToggle">
         <i class="fa-solid fa-building"></i>
-        <span>Academy Business</span>
-        <i class="fa-solid fa-chevron-down"></i>
+        <span id="currentEnvName">Academy Business</span>
+        <i class="fa-solid fa-chevron-down" id="envChevron"></i>
+      </div>
+      <div class="env-dropdown" id="envDropdown">
+        <a href="../orcoma-business/index.html" class="env-dropdown__item" data-env="business">
+          <i class="fa-solid fa-building"></i> Academy Business
+        </a>
+        <a href="../academy-team/index.html" class="env-dropdown__item" data-env="team">
+          <i class="fa-solid fa-users"></i> Academy Team
+        </a>
       </div>
     </div>
 
     <!-- Card Premium -->
     <div class="sidebar__premium">
-      <i class="fa-solid fa-crown"></i>
       <div>
-        <p class="premium__title" data-i18n="sidebar.premium.title">Seja Premium</p>
+        <p class="premium__title" data-i18n="sidebar.premium.title"><i class="fa-solid fa-crown"></i> Seja Premium</p>
         <p class="premium__desc" data-i18n="sidebar.premium.desc">Tenha acesso a todos os cursos, trilhas e certificados.</p>
       </div>
       <button class="btn-premium" data-i18n="sidebar.premium.btn">Assinar agora <i class="fa-solid fa-arrow-right"></i></button>
@@ -400,6 +407,36 @@
     </div>
   </div>
 
+  <!-- Widget Checklist -->
+  <div class="checklist-widget" id="checklistWidget">
+    <div class="checklist-widget__icon" id="checklistIcon">
+      <i class="fa-regular fa-lightbulb"></i>
+    </div>
+    <div class="checklist-widget__panel" id="checklistPanel">
+      <div class="checklist-widget__panel-header">
+        <h4><i class="fa-regular fa-lightbulb"></i> Metas do Dia</h4>
+        <button class="checklist-widget__close" id="checklistClose">&times;</button>
+      </div>
+      <div class="checklist-widget__list">
+        <div class="checklist-widget__item">
+          <input type="checkbox" id="ck1" disabled />
+          <label for="ck1">Assista uma aula completa</label>
+        </div>
+        <div class="checklist-widget__item">
+          <input type="checkbox" id="ck2" disabled />
+          <label for="ck2">Baixe 1 material de apoio</label>
+        </div>
+        <div class="checklist-widget__item">
+          <input type="checkbox" id="ck3" disabled />
+          <label for="ck3">Responda ao fórum da aula</label>
+        </div>
+        <div class="checklist-widget__item">
+          <input type="checkbox" id="ck4" disabled />
+          <label for="ck4">Marque 1 curso como favorito</label>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
     /* Função definida inline pra não depender de script externo */
     window.composerSobreAtual = "";
@@ -420,6 +457,7 @@
   </script>
   <script src="../i18n.js"></script>
 
-  <script src="script.js"></script>
+  <script src="../router.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

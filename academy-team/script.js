@@ -61,6 +61,11 @@ function initSidebarMobile() {
 /**
  * Marca o item clicado como ativo e remove dos demais.
  */
+function navigateWithAnimation(url) {
+  if (!url) return;
+  Router.navigate(url);
+}
+
 function initSidebarNav() {
   const navItems = document.querySelectorAll(".nav-item");
 
@@ -74,7 +79,7 @@ function initSidebarNav() {
       }
 
       var url = null;
-      if (page === "inicio") url = "../orcoma-business/index.html";
+      if (page === "inicio") url = "../academy-team/index.html";
       else if (page === "meu-perfil") url = "../meu-perfil/index.html";
       else if (page === "cursos") url = "../meuscursos/index.html";
       else if (page === "continuar") url = "../continuarassistindo/index.html";
@@ -91,10 +96,12 @@ function initSidebarNav() {
         return;
       }
 
+      /* Add click animation */
       item.classList.add("clicked");
 
+      /* Delay navigation for visual feedback */
       setTimeout(function () {
-        window.location.href = url;
+        navigateWithAnimation(url);
       }, 200);
     });
   });
@@ -227,6 +234,9 @@ function initStatsCounters() {
 }
 
 
+
+
+
 /* ============================================================
    7. INICIALIZAÇÃO
    ============================================================ */
@@ -252,20 +262,112 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Inicia os contadores de estatísticas */
   initStatsCounters();
 
-  const planoMap = {
-  'admin':              'Administrador',
-  'cliente_orcoma':     'Cliente Orcoma',
-  'colaborador_orcoma': 'Colaborador Orcoma',
-  'gestor_orcoma':      'Orcoma Business',
-  'equipe_cliente':     'Orcoma Team',
-  'visitor':            'Visitante'
-    };  /* Atualiza o plano do usuário no sidebar de progresso */
+  /* Role do usuário */
+  const userRole = sessionStorage.getItem('orcoma_user_role') || 'visitor';
 
-    const tipoUsuario = sessionStorage.getItem('orcoma_user_role') || 'visitor';
+  /* Bloqueio dos pills por role */
+  const envCards = document.querySelectorAll('.module-pill');
+  envCards.forEach(function (card) {
+    const allowedRoles = (card.getAttribute('data-roles') || '').split(',');
+    if (!allowedRoles.includes(userRole)) {
+      card.classList.add('locked');
+    }
+  });
+
+  const planoMap = {
+  'cliente_orcoma':     'Cliente Orcoma',
+  'colaborador_orcoma': 'Orcoma Team',
+  'gestor_orcoma':      'Orcoma Business',
+  'admin':              'Administrador',
+  'empresario':         'Empresário',
+  'visitor':            'Visitante'
+    };
+
+    const tipoUsuario = userRole;
 
     const planLabel = document.querySelector('.progress-sidebar__plan');
         if (planLabel) {
-         planLabel.textContent = planoMap[tipoUsuario] ?? planoMap['visitor'];
+         planLabel.textContent = planoMap[tipoUsuario] ?? 'Visitante';
+         planLabel.classList.remove('pill-admin', 'pill-cliente', 'pill-visitor');
+         if (userRole === 'admin') {
+           planLabel.classList.add('pill-admin');
+         } else if (userRole === 'visitor') {
+           planLabel.classList.add('pill-visitor');
+         } else {
+           planLabel.classList.add('pill-cliente');
+         }
+    }
+
+    /* Dropdown do perfil */
+    const chevron = document.getElementById('profileChevron');
+    const dropdown = document.getElementById('profileDropdown');
+    if (chevron && dropdown) {
+      chevron.addEventListener('click', function (e) {
+        e.stopPropagation();
+        chevron.classList.toggle('is-open');
+        dropdown.classList.toggle('is-visible');
+      });
+      document.addEventListener('click', function () {
+        chevron.classList.remove('is-open');
+        dropdown.classList.remove('is-visible');
+      });
+      dropdown.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+    }
+
+    /* Dropdown de seleção de ambiente (Academy Business / Academy Team) */
+    const envToggle = document.getElementById('envSelectorToggle');
+    const envDropdown = document.getElementById('envDropdown');
+    const envChevron = document.getElementById('envChevron');
+    const currentEnvName = document.getElementById('currentEnvName');
+    if (envToggle && envDropdown) {
+      envToggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        envDropdown.classList.toggle('is-visible');
+        if (envChevron) envChevron.classList.toggle('is-open');
+      });
+      document.addEventListener('click', function () {
+        envDropdown.classList.remove('is-visible');
+        if (envChevron) envChevron.classList.remove('is-open');
+      });
+      envDropdown.addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      const currentPath = window.location.pathname;
+      const envItems = envDropdown.querySelectorAll('.env-dropdown__item');
+      envItems.forEach(function (item) {
+        item.classList.remove('active');
+        if (currentPath.includes(item.getAttribute('href'))) {
+          item.classList.add('active');
+          if (currentEnvName) {
+            currentEnvName.textContent = item.textContent.trim();
+          }
+        }
+      });
+    }
+
+    /* Dropdown do admin pill (hover) */
+    if (userRole === 'admin') {
+      const adminPill = document.getElementById('adminPill');
+      const adminDropdown = document.getElementById('adminDropdown');
+      if (adminPill && adminDropdown) {
+        var adminDropdownTimeout;
+        function showAdminDropdown() {
+          clearTimeout(adminDropdownTimeout);
+          adminDropdown.classList.add('is-visible');
+        }
+        function hideAdminDropdown() {
+          adminDropdownTimeout = setTimeout(function () {
+            adminDropdown.classList.remove('is-visible');
+          }, 150);
+        }
+        adminPill.addEventListener('mouseenter', showAdminDropdown);
+        adminPill.addEventListener('mouseleave', hideAdminDropdown);
+        adminDropdown.addEventListener('mouseenter', showAdminDropdown);
+        adminDropdown.addEventListener('mouseleave', hideAdminDropdown);
+      }
     }
 
     /* Atalho de teclado: Ctrl + K para focar no input de busca */
@@ -278,162 +380,185 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 });
 
+/* Modal Premium */
+(function checkPremium() {
+  var plano = sessionStorage.getItem('orcoma_plano_nome') || '';
+  var planosPremium = ['Administrador', 'Premium', 'Empresarial'];
+  /* if (planosPremium.indexOf(plano) !== -1) return; */
+
+  var modal = document.getElementById('premiumModal');
+  var btnAssinar = document.getElementById('btnAssinar');
+  var btnDepois = document.getElementById('btnDepois');
+  if (!modal) return;
+
+  modal.classList.add('is-visible');
+
+  btnDepois.addEventListener('click', function () {
+    modal.classList.remove('is-visible');
+  });
+
+  btnAssinar.addEventListener('click', function () {
+    modal.classList.remove('is-visible');
+    var assinarModal = document.getElementById('assinarModal');
+    if (assinarModal) assinarModal.classList.add('is-visible');
+  });
+
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) {
+      modal.classList.remove('is-visible');
+    }
+  });
+
+  /* Modal Assinar */
+  var assinarModal = document.getElementById('assinarModal');
+  var btnCancelarAssinar = document.getElementById('btnCancelarAssinar');
+  if (assinarModal) {
+    assinarModal.addEventListener('click', function (e) {
+      if (e.target === assinarModal) {
+        assinarModal.classList.remove('is-visible');
+      }
+    });
+    if (btnCancelarAssinar) {
+      btnCancelarAssinar.addEventListener('click', function () {
+        assinarModal.classList.remove('is-visible');
+      });
+    }
+  }
+})();
+
 // ===============================
-// 9 . RENDERIZAR TRILHAS
+// 9. SLIDER DE CURSOS
 // ===============================
-function renderTrilhas() {
-  const container = document.querySelector(".trilhas-grid");
-
-  container.innerHTML = trilhas.map(trilha => `
-    <div class="trilha-card">
-      <div class="trilha-card__image">
-        <img src="${trilha.imagem}" alt="${trilha.titulo}">
-      </div>
-
-      <div class="trilha-card__content">
-        <h4>${trilha.titulo}</h4>
-        <span>${trilha.cursos} cursos</span>
-      </div>
-
-      <i class="fa-solid fa-chevron-right trilha-card__arrow"></i>
-    </div>
-  `).join("");
-}
-
-// ===============================
-// 10 . INICIAR
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-  renderTrilhas();
-});
-
-// ===================================
-// 11 . ANIMAÇÃO CARROSSEL CURSOS
-// ===================================
-
 const slider = document.getElementById("coursesSlider");
 
-document
-  .querySelector(".slider-btn--next")
-  .addEventListener("click", () => {
-    slider.scrollBy({
-      left: 320,
-      behavior: "smooth"
-    });
+if (slider) {
+  document.querySelector(".slider-btn--next")?.addEventListener("click", () => {
+    slider.scrollBy({ left: 320, behavior: "smooth" });
   });
 
-document
-  .querySelector(".slider-btn--prev")
-  .addEventListener("click", () => {
-    slider.scrollBy({
-      left: -320,
-      behavior: "smooth"
-    });
+  document.querySelector(".slider-btn--prev")?.addEventListener("click", () => {
+    slider.scrollBy({ left: -320, behavior: "smooth" });
   });
-
-
-
-/* ==========================================================
-   12. CONTROLE DE PERMISSÕES
-========================================================== */
-
-/*
-Perfis disponíveis:
-
-cliente_orcoma
-businessperson
-customer_team
-colaborador_orcoma
-*/
-
-const tipoUsuario = sessionStorage.getItem('orcoma_user_role') || 'visitor';
-
-/* ==========================================================
-   MÓDULOS LIBERADOS POR PERFIL
-========================================================== */
-
-const permissoes = {
-
-    admin: [
-        'academy_contabil',
-        'academy_empresarial',
-        'academy_time',
-        'academy_orcomakers'
-    ],
-
-    cliente_orcoma: [
-        'academy_contabil',
-        'academy_empresarial'
-    ],
-
-    businessperson: [
-        'academy_empresarial'
-    ],
-
-    customer_team: [
-        'academy_time'
-    ],
-
-    colaborador_orcoma: [
-        'academy_orcomakers'
-    ]
-
-};
-
-/* ==========================================================
-   FUNÇÃO DE VALIDAÇÃO
-========================================================== */
-
-function temPermissao(modulo) {
-
-    return permissoes[tipoUsuario]?.includes(modulo);
-
 }
 
-/* ==========================================================
-   BLOQUEIO VISUAL DOS CARDS
-========================================================== */
+// ===============================
+// 10. SLIDER DAS TRILHAS
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+  const trilhasSlider = document.getElementById("trilhasSlider");
+  const trilhasPrev   = document.querySelector(".trilhas-prev-btn");
+  const trilhasNext   = document.querySelector(".trilhas-next-btn");
 
-document.querySelectorAll('[data-module]').forEach(card => {
+  if (trilhasSlider && trilhasNext) {
+    trilhasNext.addEventListener("click", () => {
+      trilhasSlider.scrollBy({ left: 260, behavior: "smooth" });
+    });
+  }
 
-    const modulo = card.dataset.module;
-
-    if (!temPermissao(modulo)) {
-
-        card.classList.add('card-bloqueado');
-
-        const link = card.querySelector('.env-card__link');
-
-        if (link) {
-
-            link.innerHTML = `
-                <i class="fa-solid fa-lock"></i>
-                Acesso restrito
-            `;
-
-            link.removeAttribute('href');
-        }
-
-        card.addEventListener('click', function (e) {
-
-            e.preventDefault();
-
-        });
-
-    }
-
+  if (trilhasSlider && trilhasPrev) {
+    trilhasPrev.addEventListener("click", () => {
+      trilhasSlider.scrollBy({ left: -260, behavior: "smooth" });
+    });
+  }
 });
 
-/* ==========================================================
-   BLOQUEIO DE PÁGINA
-========================================================== */
 
-function protegerPagina(moduloNecessario) {
+// carrocel dos cursos //
 
-    if (!temPermissao(moduloNecessario)) {
+const cards = document.querySelectorAll('.course-card');
 
-        window.location.href = '../403.html';
+let current = 0;
 
-    }
+function showCard(index){
 
+  cards.forEach(card => {
+    card.classList.remove('active');
+  });
+
+  cards[index].classList.add('active');
 }
+
+document.getElementById('nextBtn').addEventListener('click', () => {
+
+  current++;
+
+  if(current >= cards.length){
+    current = 0;
+  }
+
+  showCard(current);
+});
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+
+  current--;
+
+  if(current < 0){
+    current = cards.length - 1;
+  }
+
+  showCard(current);
+});
+
+/* Anti Copy */
+document.addEventListener('copy', function (e) { e.preventDefault(); });
+document.addEventListener('cut', function (e) { e.preventDefault(); });
+document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+document.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
+/* Widget Checklist - pulsar */
+(function initChecklist() {
+  var icon = document.getElementById('checklistIcon');
+  var panel = document.getElementById('checklistPanel');
+  var closeBtn = document.getElementById('checklistClose');
+  if (!icon || !panel) return;
+
+  var jumping = true;
+
+  function pulse() {
+    if (!jumping) return;
+    icon.style.transition = 'transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1)';
+    icon.style.transform = 'translateY(-16px) scale(1.15)';
+    icon.style.boxShadow = '0 8px 32px rgba(255, 157, 0, 0.7)';
+    setTimeout(function () {
+      icon.style.transform = 'translateY(0) scale(1)';
+      icon.style.boxShadow = '0 4px 20px rgba(255, 157, 0, 0.4)';
+    }, 250);
+    setTimeout(pulse, 600);
+  }
+
+  pulse();
+
+  icon.onclick = function () {
+    jumping = false;
+    icon.style.transition = 'none';
+    icon.style.transform = 'none';
+    icon.style.boxShadow = '0 4px 20px rgba(255, 157, 0, 0.4)';
+    panel.classList.toggle('is-visible');
+  };
+
+  if (closeBtn) {
+    closeBtn.onclick = function (e) {
+      e.stopPropagation();
+      panel.classList.remove('is-visible');
+    };
+  }
+
+  document.addEventListener('click', function (e) {
+    if (panel.classList.contains('is-visible') && !e.target.closest('.checklist-widget')) {
+      panel.classList.remove('is-visible');
+    }
+  });
+
+  /* Auto-check itens com delay */
+  var ckIds = ['ck1', 'ck2', 'ck3', 'ck4'];
+  var delays = [2000, 5000, 8000, 11000];
+  for (var i = 0; i < ckIds.length; i++) {
+    (function (id, delay) {
+      setTimeout(function () {
+        var el = document.getElementById(id);
+        if (el) el.checked = true;
+      }, delay);
+    })(ckIds[i], delays[i]);
+  }
+})();

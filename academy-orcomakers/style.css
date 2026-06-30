@@ -147,7 +147,6 @@ body {
 
 .main-content {
   margin-left: var(--sidebar-width);
-  margin-right: 260px;
   flex: 1;
   min-height: 100vh;
   padding: var(--spacing-lg);
@@ -171,8 +170,8 @@ body {
 }
 
 .sidebar__logo-img {
-  width: 180px;        /* Ajuste conforme o tamanho da sua logo */
-  height: auto;        /* Mantém a proporção original */
+  width: 150px;
+  height: auto;
   object-fit: contain;
 }
 
@@ -373,31 +372,44 @@ body {
 /* Card Premium */
 .sidebar__premium {
   margin: var(--spacing-md);
-  padding: var(--spacing-md);
-  background: linear-gradient(135deg, #1a2e4a, #0f1e35);
-  border: 1px solid #2a4a6a;
+  padding: var(--spacing-lg) var(--spacing-md);
+  background: linear-gradient(145deg, #1e3355 0%, #0f1e35 100%);
+  border: 1px solid rgba(255, 157, 0, 0.25);
   border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: var(--spacing-sm);
+  text-align: center;
+  box-shadow: 0 0 30px rgba(255, 157, 0, 0.08), inset 0 1px 0 rgba(255, 157, 0, 0.1);
+  transition: box-shadow var(--transition-normal), border-color var(--transition-normal), transform var(--transition-normal);
 }
 
-.sidebar__premium > i {
-  color: var(--color-accent);
-  font-size: 18px;
+.sidebar__premium:hover {
+  border-color: rgba(255, 157, 0, 0.45);
+  box-shadow: 0 0 40px rgba(255, 157, 0, 0.15), inset 0 1px 0 rgba(255, 157, 0, 0.15);
+  transform: translateY(-1px);
 }
 
 .premium__title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--color-text-primary);
+  text-align: center;
+}
+
+.premium__title i {
+  color: var(--color-accent);
+  margin-right: 6px;
+  font-size: 18px;
 }
 
 .premium__desc {
   font-size: 11px;
   color: var(--color-text-secondary);
-  line-height: 1.5;
+  line-height: 1.6;
+  text-align: center;
 }
 
 .btn-premium {
@@ -406,18 +418,20 @@ body {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 12px;
-  padding: 8px var(--spacing-md);
+  padding: 10px var(--spacing-lg);
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
   justify-content: center;
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
   margin-top: var(--spacing-xs);
+  width: 100%;
 }
 
 .btn-premium:hover {
-  opacity: 0.85;
+  opacity: 0.9;
+  transform: scale(1.02);
 }
 
 /* Overlay mobile (escurece o fundo quando sidebar aberta) */
@@ -576,7 +590,7 @@ border-radius:var(--radius-xl);
 padding:16px;
 position:relative;
 overflow:hidden;
-width: 100%;
+width: 700px;
 max-width: 100%;
 }
 
@@ -705,6 +719,95 @@ box-shadow:
 }
 
 /* ============================================================
+PILLS DOS MÓDULOS
+============================================================ */
+
+.hero__pills {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.module-pill {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #050c17;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 4px 10px;
+  transition: all 0.35s ease;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.module-pill:hover {
+  border-radius: 12px;
+  background: #0f1d35;
+  border-color: var(--color-accent-2);
+}
+
+.module-pill__inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.module-pill__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.module-pill__header i {
+  color: var(--color-accent-2);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.module-pill__name {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.module-pill__body {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.35s ease, margin 0.35s ease;
+}
+
+.module-pill:hover .module-pill__body {
+  max-height: 100px;
+  opacity: 1;
+}
+
+.module-pill__desc {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  margin-top: 6px;
+}
+
+.module-pill__cta {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  transition: gap 0.25s ease;
+}
+
+.module-pill:hover .module-pill__cta {
+  gap: 8px;
+}
+
+/* ============================================================
 CARDS DE AMBIENTE
 ============================================================ */
 
@@ -773,7 +876,7 @@ transition:.3s;
 }
 
 .env-card__link:hover{
-gap:10px;
+  gap:10px;
 }
 
 /* ============================================================
@@ -817,199 +920,6 @@ RESPONSIVO
 }
 
 
-
-/* ============================================================
-   7. PROGRESSO (CÍRCULO + BARRAS)
-   ============================================================ */
-
-/* Painel de progresso no hero */
-.hero__progress {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-md);
-  width: 240px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-/* Ajusta a altura da progress sidebar para não ultrapassar a tela */
-.main-content {
-  margin-left: var(--sidebar-width);
-  margin-right: 260px;
-  flex: 1;
-  min-height: 100vh;
-  padding: var(--spacing-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xl);
-}
-
-/* Header do painel de progresso */
-.progress__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Título "Progresso" no header do painel */
-.progress__header span {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-/* Link "Ver detalhes" no header do progresso */
-.progress__header a {
-  font-size: 11px;
-  color: var(--color-accent-2);
-  transition: opacity var(--transition-fast);
-}
-
-/* Hover no link "Ver detalhes" */
-.progress__header a:hover {
-  opacity: 0.7;
-}
-
-/* Círculo SVG */
-.progress__circle-wrap {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  margin: 0 auto;
-}
-
-/* O SVG do círculo de progresso é rotacionado -90 graus para que o início da animação comece no topo (12 horas) em vez da direita (3 horas) */
-.progress__ring-bg {
-  fill: none;
-  stroke: rgba(255,255,255,0.08);
-  stroke-width: 10;
-}
-
-/* Parte preenchida do círculo, animada via JS ajustando stroke-dashoffset para criar o efeito de progresso */
-.progress__ring-fill {
-  fill: none;
-  stroke: #2563EB;
-  stroke-width: 10;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 8px rgba(255,255,255,0.35));
-  stroke-dasharray: 314;
-  stroke-dashoffset: 314;
-  transition: stroke-dashoffset 1.2s ease;
-}
-
-
-/* O SVG do círculo de progresso é rotacionado -90 graus para que o início da animação comece no topo (12 horas) em vez da direita (3 horas) */
-.progress__ring {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-/* Fundo do círculo */
-.progress__ring-bg {
-  fill: none;
-  stroke: rgba(255,255,255,0.08);
-  stroke-width: 8;
-}
-
-/* Parte preenchida do círculo, animada via JS ajustando stroke-dashoffset para criar o efeito de progresso */
-.progress__ring-fill {
-  fill: none;
-  stroke: #002a85;
-  filter: drop-shadow(0 0 6px rgba(255,255,255,0.15));
-  stroke-width: 8;
-  stroke-linecap: round;
-  stroke-dasharray: 314;
-  stroke-dashoffset: 314; /* Começa zerado, animado via JS */
-  transition: stroke-dashoffset 1.2s ease;
-}
-
-/* Texto central do círculo */
-.progress__circle-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Label abaixo do percentual no círculo */
-.progress__label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-/* Subtítulo ou descrição adicional abaixo do label no círculo */
-.progress__sub {
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  line-height: 1.4;
-}
-
-/* Barras de progresso */
-.progress__bars {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-/* Cada item de barra de progresso, contendo header (título + percentual) e a barra em si */
-.progress__bar-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* Header de cada barra, com título do curso ou módulo e percentual alinhados nas extremidades */
-.progress__bar-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: var(--color-text-secondary);
-}
-
-/* Título do curso ou módulo na barra de progresso */
-.progress__bar-track {
-  width: 100%;
-  height: 5px;
-  background-color: var(--color-border);
-  border-radius: var(--radius-full);
-  overflow: hidden;
-}
-
-/* Parte preenchida da barra de progresso, animada via JS ajustando a largura (width) para criar o efeito de progresso */
-.progress__bar-fill {
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    #001b3b,
-    #0073ff
-  );
-  border-radius: var(--radius-full);
-}
-
-
-.progress__summary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-}
-
-.progress__info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.progress__percent {
-  font-size: 26px;
-  font-weight: 800;
-  color: #ffffff
-}
 
 /* ============================================================
    8. SEÇÕES GENÉRICAS
@@ -1153,48 +1063,20 @@ RESPONSIVO
 }
 
 /* ============================================================
-   16. EVENTS SIDEBAR — barra fixa lateral direita
+   15. PERFIL FLUTUANTE
    ============================================================ */
 
 .progress-profile-bar {
-  position: absolute;
+  position: fixed;
   top: 0;
-  right: 0;
-  width: 260px; /* mesma largura da sidebar */
-  height: 70px;
+  right: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 20px;
+  padding: 8px 16px 8px 12px;
   background: none;
+  border: none;
   z-index: 99999;
-}
-
-/* Sidebar de progresso fixa à direita */
-.progress-sidebar {
-  position: absolute;
-  top: 100px;
-  right: 20px;
-  width: 250px;
-  height: calc(100vh - 40px);
-  background: linear-gradient(
-    180deg,
-    #000c20 0%,
-    #091528 100%
-  );
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 24px;
-  padding: 30px 24px;
-  overflow-y: auto;
-  z-index: 100;
-}
-
-/* Perfil do usuário no topo da progress sidebar */
-.progress-sidebar__profile {
-  display: absolute;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: var(--spacing-md);
   cursor: pointer;
 }
 
@@ -1212,6 +1094,7 @@ RESPONSIVO
   flex-direction: column;
   gap: 2px;
   flex: 1;
+  position: relative;
 }
 
 .progress-sidebar__username {
@@ -1254,114 +1137,95 @@ RESPONSIVO
   transition: transform 0.25s ease;
 }
 
+.admin-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: #0d1b2e;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 6px;
+  z-index: 60;
+  min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.admin-dropdown.is-visible {
+  display: block;
+}
+
+.admin-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.admin-dropdown__item:hover {
+  background: var(--sidebar-item-hover);
+  color: var(--color-text-primary);
+}
+
+.admin-dropdown__item i {
+  width: 16px;
+  text-align: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
 .progress-sidebar__chevron.is-open {
   transform: rotate(180deg);
 }
 
-/* ============================================================
-   16. EVENTS SIDEBAR — barra fixa lateral direita
-   ============================================================ */
-
-.events-sidebar {
+.profile-dropdown {
   position: absolute;
-  top: 710px; /* abaixo do card de progresso */
-  right: 20px;
-  width: 250px;
-  background: linear-gradient(
-    180deg,
-    #000c20 0%,
-    #091528 100%
-  );
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 24px;
-  padding: 20px;
-  z-index: 999;
-  box-shadow: 0 10px 30px rgba(0,0,0,.35);
-}
-
-.events-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.events-header h3 {
-  font-size: 14px;
-  color: #fff;
-  font-weight: 700;
-}
-
-.events-header a {
-  color: #2563eb;
-  font-size: 12px;
-}
-
-.event-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #071733;
-  border: 1px solid #102550;
-  border-radius: 14px;
-  padding: 12px;
-  margin-bottom: 12px;
-  transition: .3s;
-}
-
-.event-card:hover {
-  background: #0b2048;
-  border-color: #1d4ed8;
-}
-
-.event-date {
-  width: 48px;
-  height: 58px;
-  border-radius: 10px;
-  background: #0c2a63;
-  display: flex;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #0d1b2e;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 6px;
+  display: none;
   flex-direction: column;
-  justify-content: center;
+  gap: 2px;
+  z-index: 50;
+  margin-top: 6px;
+}
+
+.profile-dropdown.is-visible {
+  display: flex;
+}
+
+.profile-dropdown__item {
+  display: flex;
   align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.profile-dropdown__item:hover {
+  background: var(--sidebar-item-hover);
+  color: var(--color-text-primary);
+}
+
+.profile-dropdown__item i {
+  width: 16px;
+  text-align: center;
+  font-size: 13px;
   flex-shrink: 0;
-}
-
-.event-date .day {
-  color: #fff;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.event-date .month {
-  color: #7ea6ff;
-  font-size: 10px;
-}
-
-.event-content {
-  flex: 1;
-}
-
-.event-content h4 {
-  color: #fff;
-  font-size: 12px;
-  line-height: 1.4;
-  margin-bottom: 4px;
-}
-
-.event-content span {
-  color: #7c8fb4;
-  font-size: 11px;
-}
-
-.event-card i {
-  color: #7c8fb4;
-}
-
-.events-link {
-  display: inline-block;
-  margin-top: 10px;
-  color: #2563eb;
-  font-size: 12px;
 }
 
 /* =========================
@@ -1485,7 +1349,7 @@ RESPONSIVO
 
 .cursos-disponiveis{
     margin-top:32px;
-    width: 810px   /*esse controla o tamanho dos cards dos cursos do Cursos Disponíveis*/
+    width: 700px   /*esse controla o tamanho dos cards dos cursos do Cursos Disponíveis*/
 }
 
 .curso-card{
@@ -1495,7 +1359,7 @@ RESPONSIVO
     min-height:92px;
     padding:16px;
     margin-bottom:14px;
-    background: #050c17;
+    background:rgba(8,20,45,.9);
     border:1px solid rgba(255,255,255,.08);
     border-radius:16px;
     transition: all .3s ease;
@@ -1852,5 +1716,166 @@ RESPONSIVO
   padding: 20px 16px;
   text-align: center;
   font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+/* Anti Copy */
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  cursor: default;
+}
+
+a, button, input, textarea, select, [contenteditable], label, [role="button"], .clickable {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  cursor: auto;
+}
+
+/* Widget Checklist */
+.checklist-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.checklist-widget__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffcc00, #ff8800);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer !important;
+  box-shadow: 0 4px 20px rgba(255, 157, 0, 0.4);
+  transition: transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.25s ease;
+  position: relative;
+  z-index: 10000;
+  pointer-events: auto;
+}
+
+.checklist-widget__icon i {
+  font-size: 20px;
+  color: #1a1200;
+  filter: drop-shadow(0 0 4px rgba(255, 200, 0, 0.6));
+  pointer-events: none;
+}
+
+.checklist-widget__icon::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: rgba(255, 157, 0, 0.15);
+  animation: widgetPulseGlow 1.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes widgetPulseGlow {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.25); opacity: 0; }
+}
+
+/* Panel */
+.checklist-widget__panel {
+  display: none;
+  position: absolute;
+  bottom: 56px;
+  right: 0;
+  z-index: 9999;
+  background: #0f1e35;
+  border: 1px solid rgba(255, 157, 0, 0.25);
+  border-radius: var(--radius-lg);
+  width: 280px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: panelSlideIn 0.3s ease;
+}
+
+@keyframes panelSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.checklist-widget__panel.is-visible {
+  display: block;
+}
+
+.checklist-widget__panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-md) var(--spacing-xs);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.checklist-widget__panel-header h4 {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.checklist-widget__panel-header h4 i {
+  font-size: 15px;
+}
+
+.checklist-widget__close {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color var(--transition-fast);
+}
+
+.checklist-widget__close:hover {
+  color: #fff;
+}
+
+.checklist-widget__list {
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+}
+
+.checklist-widget__item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 6px 0;
+}
+
+.checklist-widget__item input[type="checkbox"] {
+  accent-color: var(--color-accent);
+}
+
+.checklist-widget__item label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  cursor: default;
+  transition: color var(--transition-fast), text-decoration var(--transition-fast);
+}
+
+.checklist-widget__item input[type="checkbox"]:checked + label {
+  text-decoration: line-through;
   color: var(--color-text-muted);
 }
