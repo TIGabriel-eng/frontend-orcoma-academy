@@ -1,0 +1,212 @@
+/* ============================================================
+   Responsivo Mobile
+   Compartilhado entre todas as páginas
+   ============================================================ */
+
+/* Tablet (até 1024px) */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: clamp(220px, 15vw, 320px);
+  }
+
+  .main-content {
+    margin-left: 80px;
+  }
+
+  .stats-bar,
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .course-card {
+    flex: 0 0 calc((100% - var(--spacing-md)) / 2);
+  }
+
+  .right-panel {
+    display: none;
+  }
+}
+
+/* Mobile (até 768px) */
+@media (max-width: 768px) {
+  /* ── Sidebar overlay ── */
+  .sidebar {
+    transform: translateX(-100%);
+    width: var(--sidebar-width);
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .sidebar__overlay.is-visible {
+    display: block;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: var(--spacing-md);
+  }
+
+  /* ── Topbar ── */
+  .topbar__menu-btn {
+    display: block;
+  }
+
+  .topbar__search {
+    max-width: none;
+  }
+
+  .topbar__search kbd {
+    display: none;
+  }
+
+  .topbar__actions {
+    gap: var(--spacing-xs);
+  }
+
+  /* ── Grids / Cards ── */
+  .stats-bar,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .course-card {
+    flex: 0 0 100%;
+  }
+
+  .courses-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .course-highlight {
+    flex-direction: column;
+  }
+
+  /* ── Hero ── */
+  .hero__pills {
+    flex-direction: column;
+  }
+
+  .hero__cards {
+    flex-direction: column;
+  }
+
+  .hero__brand-logo-img {
+    width: 120px;
+  }
+
+  .hero__tagline {
+    font-size: 13px;
+  }
+
+  .hero {
+    padding: var(--spacing-md);
+  }
+
+  /* ── Page header ── */
+  .page-header h1 {
+    font-size: 22px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  /* ── Right panel ── */
+  .right-panel {
+    display: none;
+  }
+
+  /* ── Premium card ── */
+  .sidebar__premium {
+    display: none;
+  }
+
+  /* ── Progress ── */
+  .progress-section {
+    flex-direction: column;
+  }
+
+  .stats-circles {
+    justify-content: center;
+  }
+
+  /* ── Tables ── */
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  /* ── General cards ── */
+  .card {
+    padding: var(--spacing-md);
+  }
+
+  /* ── Modal ── */
+  .premium-modal__content {
+    padding: var(--spacing-lg);
+    max-width: 95%;
+  }
+
+  /* ── Certificates / Courses list ── */
+  .certificates-grid,
+  .courses-list {
+    grid-template-columns: 1fr;
+  }
+
+  /* ── Course cards grid ── */
+  .cards-wrapper {
+    flex-direction: column;
+  }
+
+  /* ── Nav items ── */
+  .sidebar__nav ul {
+    gap: 2px;
+  }
+
+  /* ── Environment selector ── */
+  .sidebar__env {
+    display: none;
+  }
+}
+
+/* Mobile pequeno (até 480px) */
+@media (max-width: 480px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+
+  .topbar__search {
+    order: 3;
+    width: 100%;
+  }
+
+  .page-header h1 {
+    font-size: 18px;
+  }
+
+  .stats-bar,
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+
+  .hero__brand-logo-img {
+    width: 90px;
+  }
+
+  .course-card {
+    flex: 0 0 100%;
+  }
+
+  .sidebar__premium,
+  .sidebar__env {
+    display: none;
+  }
+
+  body {
+    font-size: 14px;
+  }
+}
