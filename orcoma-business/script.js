@@ -84,7 +84,7 @@ function initSidebarNav() {
       else if (page === "cursos") url = "../meuscursos/index.html";
       else if (page === "continuar") url = "../continuarassistindo/index.html";
       else if (page === "concluidos") url = "../cursos-concluidos/index.html";
-      else if (page === "certificados") url = "../certificados/index.html";
+      else if (page === "certificados") url = "/Certificados/index.html";
       else if (page === "trilhas") url = "../trilhasdeaprendizagem/index.html";
       else if (page === "favoritos") url = "../favoritos/index.html";
       else if (page === "suporte") url = "../suporte/index.html";
