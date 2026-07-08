@@ -518,6 +518,39 @@ button:active {
     text-decoration:underline;
 }
 
+/* Admin Access */
+.admin-access {
+  text-align: center;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.admin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: background 0.2s, transform 0.15s;
+  border: 2px solid #000;
+}
+
+.admin-pill:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.admin-pill:active {
+  transform: scale(0.97);
+}
+
 /* Anti Copy */
 body {
   user-select: none;

@@ -62,11 +62,11 @@
             <form id="formLogin">
 
                 <div class="input-group">
-                    <label>E-mail</label>
+                    <label>Usuário</label>
                       <input
-                        type="email"
-                        id="loginEmail"
-                        placeholder="Digite seu e-mail"
+                        type="text"
+                        id="loginUser"
+                        placeholder="Digite seu usuário"
                     >
                 </div>
 
@@ -90,6 +90,12 @@
                 <button type="submit" id="btnLogin">
                     Entrar
                 </button>
+
+                <div class="admin-access">
+                    <a href="http://localhost:8000/admin/login/" target="_blank" class="admin-pill">
+                        <i class="fa-solid fa-shield-halved"></i> Acessar Painel Administrativo
+                    </a>
+                </div>
 
                 <div class="login-divider">
                     <span>ou</span>

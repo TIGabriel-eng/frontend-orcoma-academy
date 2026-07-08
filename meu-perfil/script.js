@@ -129,14 +129,42 @@ let profileOriginal = {};
 ============================================================ */
 
 async function carregarPerfil() {
-  return {
-    nome: "Gabriel Anacleto",
-    email: "gabriel@orcoma.com",
-    role: "admin",
-    empresa: "Orcoma",
-    plano_nome: "Administrador",
-    sobre: localStorage.getItem("perfil_sobre") || ""
-  };
+  var token = sessionStorage.getItem('access_token');
+  if (!token) {
+    return {
+      nome: "Visitante",
+      email: "",
+      role: "visitor",
+      empresa: "",
+      plano_nome: "Visitante",
+      sobre: ""
+    };
+  }
+  try {
+    var res = await fetch('http://localhost:8000/api/me/', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!res.ok) throw new Error('Falha ao carregar perfil');
+    var data = await res.json();
+    return {
+      nome: data.nome || data.username,
+      email: data.email || "",
+      role: data.role || "visitor",
+      empresa: data.perfil ? (data.perfil.empresa || "") : "",
+      plano_nome: data.plano_nome || "Visitante",
+      sobre: data.perfil ? (data.perfil.bio || "") : "",
+      created_at: data.date_joined || null
+    };
+  } catch (err) {
+    return {
+      nome: "Usuário",
+      email: sessionStorage.getItem('orcoma_user_email') || "",
+      role: sessionStorage.getItem('orcoma_user_role') || "visitor",
+      empresa: "",
+      plano_nome: "Visitante",
+      sobre: localStorage.getItem("perfil_sobre") || ""
+    };
+  }
 }
 
 /* ============================================================

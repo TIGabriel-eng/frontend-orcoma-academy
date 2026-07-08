@@ -60,24 +60,52 @@ function togglePassword(inputId, button){
 }
 
 /* ===============================================
-   LOGIN — ENTRAR
+   LOGIN — ENTRAR (via Django API)
 =============================================== */
 
+const API_URL = 'http://localhost:8000/api';
 const formLogin = document.getElementById("formLogin");
+const erroLogin = document.getElementById("erroLogin");
 
 if (!formLogin) return;
 
-formLogin.addEventListener("submit", function (e) {
+formLogin.addEventListener("submit", async function (e) {
 
     e.preventDefault();
+    erroLogin.textContent = "";
 
-    sessionStorage.clear();
-    sessionStorage.setItem('orcoma_user_role', 'admin');
-    sessionStorage.setItem('orcoma_user_id', '1');
-    sessionStorage.setItem('orcoma_user_email', 'gabriel@orcoma.com');
-    sessionStorage.setItem('orcoma_plano_nome', 'Administrador');
+    const username = document.getElementById("loginUser").value.trim();
+    const password = document.getElementById("loginSenha").value;
 
-    window.location.href = '../selection_area/index.html';
+    if (!username || !password) {
+        erroLogin.textContent = "Preencha todos os campos.";
+        return;
+    }
+
+    try {
+        const res = await fetch(API_URL + '/token/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            erroLogin.textContent = "Usuário ou senha inválidos.";
+            return;
+        }
+
+        sessionStorage.clear();
+        sessionStorage.setItem('access_token', data.access);
+        sessionStorage.setItem('refresh_token', data.refresh);
+        sessionStorage.setItem('orcoma_user_role', data.user && (data.user.role || 'visitor'));
+
+        window.location.href = '../selection_area/index.html';
+
+    } catch (err) {
+        erroLogin.textContent = "Erro ao conectar ao servidor. Verifique se o backend está rodando.";
+    }
 
 });
 
@@ -112,17 +140,41 @@ formCadastro.addEventListener("submit", async (e) => {
     }
 
     erroEl.textContent = "";
+    erroEl.style.color = "";
 
-    sessionStorage.setItem('orcoma_user_nome', nomeCompleto);
-    sessionStorage.setItem('orcoma_user_email', email);
+    var username = email.split('@')[0];
 
-    mostrarLogin();
+    try {
+        const res = await fetch(API_URL + '/register/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: username,
+                email: email,
+                password: senha,
+                first_name: nome,
+                last_name: sobrenome
+            })
+        });
 
-    var toast = document.createElement("div");
-    toast.id = "toastCadastro";
-    toast.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#111827;border:1px solid #1e2d45;border-radius:16px;padding:32px 40px;text-align:center;z-index:999;box-shadow:0 16px 48px rgba(0,0,0,0.5);animation:fadeIn 0.2s ease;";
-    toast.innerHTML = '<div style="width:56px;height:56px;border-radius:50%;background:rgba(59,130,246,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;color:#3b82f6;"><i class="fa-solid fa-check-circle"></i></div><p style="color:#fff;font-size:15px;font-weight:500;margin:20px 0;">Conta criada com sucesso!</p><button onclick="this.parentElement.remove()" style="padding:10px 40px;border-radius:8px;font-size:14px;font-weight:600;color:#fff;background:#3b82f6;border:none;cursor:pointer;">OK</button>';
-    document.body.appendChild(toast);
+        const data = await res.json();
+
+        if (!res.ok) {
+            erroEl.textContent = data.username ? data.username[0] : (data.email ? data.email[0] : "Erro ao criar conta.");
+            return;
+        }
+
+        mostrarLogin();
+
+        var toast = document.createElement("div");
+        toast.id = "toastCadastro";
+        toast.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#111827;border:1px solid #1e2d45;border-radius:16px;padding:32px 40px;text-align:center;z-index:999;box-shadow:0 16px 48px rgba(0,0,0,0.5);animation:fadeIn 0.2s ease;";
+        toast.innerHTML = '<div style="width:56px;height:56px;border-radius:50%;background:rgba(59,130,246,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;color:#3b82f6;"><i class="fa-solid fa-check-circle"></i></div><p style="color:#fff;font-size:15px;font-weight:500;margin:20px 0;">Conta criada com sucesso!</p><button onclick="this.parentElement.remove()" style="padding:10px 40px;border-radius:8px;font-size:14px;font-weight:600;color:#fff;background:#3b82f6;border:none;cursor:pointer;">OK</button>';
+        document.body.appendChild(toast);
+
+    } catch (err) {
+        erroEl.textContent = "Erro ao conectar ao servidor.";
+    }
 
 });
 

@@ -218,10 +218,38 @@
     });
   }
 
+  /* ========== EFEITO RIPPLE NOS BOTÕES ========== */
+  function initRippleEffect() {
+    var navItems = document.querySelectorAll(".nav-item");
+
+    navItems.forEach(function (item) {
+      item.addEventListener("click", function (e) {
+        var ripple = document.createElement("span");
+        ripple.className = "nav-item__ripple";
+
+        var rect = item.getBoundingClientRect();
+        var size = Math.max(rect.width, rect.height);
+        var x = e.clientX - rect.left - size / 2;
+        var y = e.clientY - rect.top - size / 2;
+
+        ripple.style.width = ripple.style.height = size + "px";
+        ripple.style.left = x + "px";
+        ripple.style.top = y + "px";
+
+        item.appendChild(ripple);
+
+        setTimeout(function () {
+          ripple.remove();
+        }, 600);
+      });
+    });
+  }
+
   /* ========== INICIALIZAÇÃO ========== */
   document.addEventListener("DOMContentLoaded", function () {
     initSidebarMobile();
     initSidebarNav();
+    initRippleEffect();
     initModal();
     initModalTrilha();
   });
