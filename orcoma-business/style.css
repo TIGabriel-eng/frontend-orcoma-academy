@@ -445,7 +445,7 @@ img {
 .sidebar__env {
   position: relative;
 }
-}
+
 
 /* Card Premium */
 .sidebar__premium {
@@ -1610,8 +1610,14 @@ img {
 }
 
 .learning-paths__header h3{
-    font-size:1rem;
-    font-weight:800;
+  font-size:1.6rem;
+  font-weight:800;
+}
+
+/* explicit class for titles used in HTML pages */
+.learning-paths__title{
+  font-size:1.6rem;
+  font-weight:800;
 }
 
 .learning-paths__header a{

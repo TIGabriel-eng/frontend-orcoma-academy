@@ -466,6 +466,15 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   }
+
+  var sidebarBtn = document.querySelector('.sidebar__premium .btn-premium');
+  if (sidebarBtn && assinarModal) {
+    sidebarBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      assinarModal.classList.add('is-visible');
+    });
+  }
+
 })();
 
 // ===============================
