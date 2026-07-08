@@ -63,7 +63,6 @@ function togglePassword(inputId, button){
    LOGIN — ENTRAR (via Django API)
 =============================================== */
 
-const API_URL = 'http://localhost:8000/api';
 const formLogin = document.getElementById("formLogin");
 const erroLogin = document.getElementById("erroLogin");
 
@@ -83,7 +82,7 @@ formLogin.addEventListener("submit", async function (e) {
     }
 
     try {
-        const res = await fetch(API_URL + '/token/', {
+        const res = await fetch(API.BASE_URL + '/api/token/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
@@ -99,7 +98,10 @@ formLogin.addEventListener("submit", async function (e) {
         sessionStorage.clear();
         sessionStorage.setItem('access_token', data.access);
         sessionStorage.setItem('refresh_token', data.refresh);
-        sessionStorage.setItem('orcoma_user_role', data.user && (data.user.role || 'visitor'));
+        var user = data.user || {};
+        sessionStorage.setItem('orcoma_user_role', user.role || 'visitor');
+        sessionStorage.setItem('orcoma_user_email', user.email || '');
+        sessionStorage.setItem('orcoma_user_name', (user.first_name + ' ' + user.last_name).trim() || user.username);
 
         window.location.href = '../selection_area/index.html';
 
@@ -145,7 +147,7 @@ formCadastro.addEventListener("submit", async (e) => {
     var username = email.split('@')[0];
 
     try {
-        const res = await fetch(API_URL + '/register/', {
+        const res = await fetch(API.BASE_URL + '/api/register/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

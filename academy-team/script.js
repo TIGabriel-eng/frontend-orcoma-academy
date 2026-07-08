@@ -1,25 +1,23 @@
 /* ============================================================
    ORCOMA ACADEMY — JavaScript
    Organização:
-   1. Proteção contra DevTools / console injection
-   2. Sidebar mobile (abrir/fechar)
-   3. Navegação da sidebar (item ativo)
-   4. Animação do círculo de progresso
-   5. Animação das barras de progresso
-   6. Animação dos contadores de estatísticas (stats)
-   7. Inicialização (chamada na carga do DOM)
+   1. Sidebar mobile (abrir/fechar)
+   2. Navegação da sidebar (item ativo)
+   3. Animação do círculo de progresso
+   4. Animação das barras de progresso
+   5. Animação dos contadores de estatísticas (stats)
+   6. Carregar dashboard da API
+   7. Carregar cursos da API
+   8. Carregar eventos da API
+   9. Carregar trilhas da API
+   10. Inicialização (chamada na carga do DOM)
    ============================================================ */
-
 
 
 /* ============================================================
    2. SIDEBAR MOBILE
    ============================================================ */
 
-/**
- * Abre e fecha a sidebar em telas pequenas.
- * Também fecha ao clicar no overlay escuro.
- */
 function initSidebarMobile() {
   const sidebar        = document.getElementById("sidebar");
   const menuToggleBtn  = document.getElementById("menuToggle");
@@ -27,18 +25,16 @@ function initSidebarMobile() {
 
   if (!sidebar || !menuToggleBtn || !overlay) return;
 
-  /* Abre a sidebar */
   function openSidebar() {
     sidebar.classList.add("is-open");
     overlay.classList.add("is-visible");
-    document.body.style.overflow = "hidden"; /* Trava scroll do body */
+    document.body.style.overflow = "hidden";
   }
 
-  /* Fecha a sidebar */
   function closeSidebar() {
     sidebar.classList.remove("is-open");
     overlay.classList.remove("is-visible");
-    document.body.style.overflow = ""; /* Libera scroll */
+    document.body.style.overflow = "";
   }
 
   menuToggleBtn.addEventListener("click", function () {
@@ -49,7 +45,6 @@ function initSidebarMobile() {
     }
   });
 
-  /* Fecha ao clicar no overlay */
   overlay.addEventListener("click", closeSidebar);
 }
 
@@ -58,9 +53,6 @@ function initSidebarMobile() {
    3. NAVEGAÇÃO DA SIDEBAR (ITEM ATIVO)
    ============================================================ */
 
-/**
- * Marca o item clicado como ativo e remove dos demais.
- */
 function navigateWithAnimation(url) {
   if (!url) return;
   Router.navigate(url);
@@ -96,10 +88,8 @@ function initSidebarNav() {
         return;
       }
 
-      /* Add click animation */
       item.classList.add("clicked");
 
-      /* Delay navigation for visual feedback */
       setTimeout(function () {
         navigateWithAnimation(url);
       }, 200);
@@ -112,35 +102,26 @@ function initSidebarNav() {
    4. ANIMAÇÃO DO CÍRCULO DE PROGRESSO
    ============================================================ */
 
-/**
- * Anima o círculo SVG de progresso de 0 até o valor alvo.
- * Usa stroke-dashoffset para controlar o preenchimento.
- *
- * @param {number} targetPercent - Percentual alvo (0 a 100)
- */
 function animateProgressCircle(targetPercent) {
   const ring          = document.getElementById("progressRing");
   const percentLabel  = document.getElementById("progressPercent");
 
   if (!ring || !percentLabel) return;
 
-  const circumference = 2 * Math.PI * 50; /* r=50, conforme o SVG */
+  const circumference = 2 * Math.PI * 50;
   const targetOffset  = circumference - (targetPercent / 100) * circumference;
 
-  /* Força reflow para a transição CSS funcionar do início */
   ring.style.strokeDasharray  = circumference;
   ring.style.strokeDashoffset = circumference;
 
-  /* Aguarda 1 frame e inicia a animação */
   requestAnimationFrame(function () {
     requestAnimationFrame(function () {
       ring.style.strokeDashoffset = targetOffset;
     });
   });
 
-  /* Anima o número no centro do círculo */
   let currentValue = 0;
-  const step       = targetPercent / 60; /* ~60 passos */
+  const step       = targetPercent / 60;
   const counter    = setInterval(function () {
     currentValue += step;
     if (currentValue >= targetPercent) {
@@ -156,16 +137,11 @@ function animateProgressCircle(targetPercent) {
    5. ANIMAÇÃO DAS BARRAS DE PROGRESSO
    ============================================================ */
 
-/**
- * Percorre todos os elementos com classe 'progress__bar-fill'
- * e aplica a largura definida em data-width após um pequeno delay.
- */
 function animateProgressBars() {
   const bars = document.querySelectorAll(".progress__bar-fill");
   bars.forEach(function (bar) {
     const targetWidth = bar.getAttribute("data-width");
     if (!targetWidth) return;
-    /* Pequeno delay para garantir que o CSS transition funcione */
     setTimeout(function () {
       bar.style.width = targetWidth + "%";
     }, 300);
@@ -177,16 +153,11 @@ function animateProgressBars() {
    6. ANIMAÇÃO DOS CONTADORES DE ESTATÍSTICAS
    ============================================================ */
 
-/**
- * Anima os números nas cards de estatísticas de 0 até o valor alvo.
- * Usa IntersectionObserver para iniciar apenas quando visível.
- */
 function initStatsCounters() {
   const statNumbers = document.querySelectorAll(".stat-item__number");
 
   if (!statNumbers.length) return;
 
-  /* Formata número com sufixos: 15000 → "15K" */
   function formatNumber(value) {
     if (value >= 1000) {
       return (value / 1000).toFixed(0) + "K";
@@ -194,17 +165,15 @@ function initStatsCounters() {
     return value.toString();
   }
 
-  /* Anima um único elemento contador */
   function animateCounter(element) {
     const target    = parseInt(element.getAttribute("data-target"), 10);
-    const duration  = 1500; /* ms */
+    const duration  = 1500;
     const startTime = performance.now();
 
     function update(currentTime) {
       const elapsed  = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      /* Easing: desacelera no final */
       const eased    = 1 - Math.pow(1 - progress, 3);
       const current  = Math.round(eased * target);
 
@@ -218,12 +187,11 @@ function initStatsCounters() {
     requestAnimationFrame(update);
   }
 
-  /* Usa IntersectionObserver: anima quando o elemento entra na tela */
   const observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
         animateCounter(entry.target);
-        observer.unobserve(entry.target); /* Anima uma única vez */
+        observer.unobserve(entry.target);
       }
     });
   }, { threshold: 0.5 });
@@ -234,38 +202,114 @@ function initStatsCounters() {
 }
 
 
+/* ============================================================
+   7. CARREGAR DASHBOARD DA API
+   ============================================================ */
 
+function carregarDashboard() {
+  API.get('/api/dashboard/').then(function (data) {
+    var metricas = data.metricas || {};
+    var statEls = document.querySelectorAll(".stat-item__number");
+    if (statEls.length >= 4 && metricas.cursos_ativos !== undefined) {
+      statEls[0].setAttribute("data-target", metricas.cursos_ativos || 0);
+      statEls[1].setAttribute("data-target", metricas.total_usuarios || 0);
+      statEls[2].setAttribute("data-target", metricas.certificados || metricas.total_usuarios || 0);
+      statEls[3].setAttribute("data-target", 98);
+    }
+    initStatsCounters();
+  }).catch(function () { initStatsCounters(); });
+}
 
 
 /* ============================================================
-   7. INICIALIZAÇÃO
+   8. CARREGAR CURSOS DA API
    ============================================================ */
 
-/**
- * Ponto de entrada principal.
- * Chamado quando o DOM está totalmente carregado.
- */
+function carregarCursos() {
+  API.get('/api/cursos/').then(function (cursos) {
+    var slider = document.getElementById("coursesSlider");
+    if (!slider || !cursos || cursos.length === 0) return;
+    slider.innerHTML = cursos.map(function (c) {
+      return '<div class="course-card">' +
+        '<img src="../assets/images/reforma-tributária.png" alt="' + c.titulo + '" class="curso-capa">' +
+        '<div class="course-card__thumb">' +
+        '<div class="course-card__body">' +
+        '<h3>' + c.titulo + '</h3>' +
+        '<span class="course-card__badge badge--em-andamento">' + (c.status === 'publicado' ? 'Publicado' : c.status) + '</span>' +
+        '</div>' +
+        '<div class="course-card__progress">' +
+        '<div class="progress__bar-track"><div class="progress__bar-fill" data-width="0"></div></div><span>0%</span>' +
+        '</div></div></div>';
+    }).join("");
+    animateProgressBars();
+  }).catch(function () {});
+}
+
+
+/* ============================================================
+   9. CARREGAR EVENTOS DA API
+   ============================================================ */
+
+function carregarEventos() {
+  API.get('/api/eventos/').then(function (eventos) {
+    var eventsList = document.querySelector(".events-list");
+    if (!eventsList || !eventos || eventos.length === 0) return;
+    eventsList.innerHTML = eventos.slice(0, 3).map(function (e) {
+      var d = new Date(e.data);
+      var day = d.getDate();
+      var months = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
+      var month = months[d.getMonth()];
+      var time = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+      return '<article class="event-card">' +
+        '<div class="event-date"><span class="day">' + day + '</span><span class="month">' + month + '</span></div>' +
+        '<div class="event-content"><h4>' + e.titulo + '</h4><span>' + time + '</span></div>' +
+        '</article>';
+    }).join("");
+  }).catch(function () {});
+}
+
+
+/* ============================================================
+   10. CARREGAR TRILHAS DA API
+   ============================================================ */
+
+function carregarTrilhas() {
+  API.get('/api/trilhas/').then(function (trilhas) {
+    var slider = document.getElementById("trilhasSlider");
+    if (!slider || !trilhas || trilhas.length === 0) return;
+    slider.innerHTML = trilhas.map(function (t) {
+      return '<div class="trail-card">' +
+        '<div class="trail-card__icon"><i class="fas fa-route"></i></div>' +
+        '<div><h3>' + t.nome + '</h3><span>' + (t.ambiente_nome || '') + '</span></div></div>';
+    }).join("");
+  }).catch(function () {});
+}
+
+
+/* ============================================================
+   11. INICIALIZAÇÃO
+   ============================================================ */
+
 document.addEventListener("DOMContentLoaded", function () {
 
-  /* Inicializa módulo de navegação da sidebar */
   initSidebarNav();
 
-  /* Inicializa abertura/fechamento da sidebar no mobile */
   initSidebarMobile();
 
-  /* Anima o círculo de progresso geral (72%) */
+  carregarDashboard();
+
+  carregarCursos();
+
+  carregarEventos();
+
+  carregarTrilhas();
+
   animateProgressCircle(72);
 
-  /* Anima todas as barras de progresso */
   animateProgressBars();
 
-  /* Inicia os contadores de estatísticas */
-  initStatsCounters();
-
-  /* Role do usuário */
   const userRole = sessionStorage.getItem('orcoma_user_role') || 'visitor';
 
-  /* Bloqueio dos pills por role */
   const envCards = document.querySelectorAll('.module-pill');
   envCards.forEach(function (card) {
     const allowedRoles = (card.getAttribute('data-roles') || '').split(',');
@@ -298,7 +342,6 @@ document.addEventListener("DOMContentLoaded", function () {
          }
     }
 
-    /* Dropdown do perfil */
     const chevron = document.getElementById('profileChevron');
     const dropdown = document.getElementById('profileDropdown');
     if (chevron && dropdown) {
@@ -316,7 +359,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    /* Dropdown de seleção de ambiente (Academy Business / Academy Team) */
     const envToggle = document.getElementById('envSelectorToggle');
     const envDropdown = document.getElementById('envDropdown');
     const envChevron = document.getElementById('envChevron');
@@ -348,7 +390,6 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    /* Dropdown do admin pill (hover) */
     if (userRole === 'admin') {
       const adminPill = document.getElementById('adminPill');
       const adminDropdown = document.getElementById('adminDropdown');
@@ -370,7 +411,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    /* Atalho de teclado: Ctrl + K para focar no input de busca */
     document.addEventListener('keydown', function(e) {
   if (e.ctrlKey && e.key === 'k') {
     e.preventDefault();
@@ -378,13 +418,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (input) input.focus();
   }
 });
+
+  const userName = sessionStorage.getItem('orcoma_user_name') || 'Usuário';
+  const usernameEl = document.querySelector('.progress-sidebar__username');
+  if (usernameEl) usernameEl.textContent = userName;
 });
 
 /* Modal Premium */
 (function checkPremium() {
   var plano = sessionStorage.getItem('orcoma_plano_nome') || '';
   var planosPremium = ['Administrador', 'Premium', 'Empresarial'];
-  /* if (planosPremium.indexOf(plano) !== -1) return; */
 
   var modal = document.getElementById('premiumModal');
   var btnAssinar = document.getElementById('btnAssinar');
@@ -409,7 +452,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  /* Modal Assinar */
   var assinarModal = document.getElementById('assinarModal');
   var btnCancelarAssinar = document.getElementById('btnCancelarAssinar');
   if (assinarModal) {
@@ -427,7 +469,7 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 
 // ===============================
-// 9. SLIDER DE CURSOS
+// SLIDER DE CURSOS
 // ===============================
 const slider = document.getElementById("coursesSlider");
 
@@ -442,7 +484,7 @@ if (slider) {
 }
 
 // ===============================
-// 10. SLIDER DAS TRILHAS
+// SLIDER DAS TRILHAS
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
   const trilhasSlider = document.getElementById("trilhasSlider");
@@ -463,40 +505,32 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// carrocel dos cursos //
+// CARROCEL DOS CURSOS //
 
 const cards = document.querySelectorAll('.course-card');
 
 let current = 0;
 
 function showCard(index){
-
   cards.forEach(card => {
     card.classList.remove('active');
   });
-
   cards[index].classList.add('active');
 }
 
 document.getElementById('nextBtn').addEventListener('click', () => {
-
   current++;
-
   if(current >= cards.length){
     current = 0;
   }
-
   showCard(current);
 });
 
 document.getElementById('prevBtn').addEventListener('click', () => {
-
   current--;
-
   if(current < 0){
     current = cards.length - 1;
   }
-
   showCard(current);
 });
 

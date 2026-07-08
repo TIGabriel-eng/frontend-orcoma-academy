@@ -4,7 +4,8 @@
    1. Sidebar mobile (abrir/fechar)
    2. Navegação da sidebar (item ativo)
    3. Animação dos contadores de estatísticas (stats)
-   4. Inicialização (chamada na carga do DOM)
+   4. Carregar stats da API
+   5. Inicialização (chamada na carga do DOM)
    ============================================================ */
 
 
@@ -98,6 +99,9 @@ function initSidebarNav() {
 }
 
 
+
+
+
 /* ============================================================
    3. ANIMAÇÃO DOS CONTADORES DE ESTATÍSTICAS
    ============================================================ */
@@ -160,7 +164,26 @@ function initStatsCounters() {
 
 
 /* ============================================================
-   4. INICIALIZAÇÃO
+   4. CARREGAR STATS DA API
+   ============================================================ */
+
+function carregarStats() {
+  API.get('/api/dashboard/').then(function (data) {
+    var metricas = data.metricas || {};
+    var statEls = document.querySelectorAll(".stat-item__number");
+    if (statEls.length >= 3 && metricas.cursos_ativos !== undefined) {
+      var targets = [metricas.cursos_ativos || 0, metricas.total_usuarios || 0, 98];
+      statEls.forEach(function (el, i) {
+        if (targets[i] !== undefined) el.setAttribute("data-target", targets[i]);
+      });
+    }
+    initStatsCounters();
+  }).catch(function () { initStatsCounters(); });
+}
+
+
+/* ============================================================
+   5. INICIALIZAÇÃO
    ============================================================ */
 
 /**
@@ -175,8 +198,8 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Inicializa abertura/fechamento da sidebar no mobile */
   initSidebarMobile();
 
-  /* Inicia os contadores de estatísticas */
-  initStatsCounters();
+  /* Carrega stats da API e inicia contadores */
+  carregarStats();
 
   const planoMap = {
     'admin':              'Administrador',
@@ -249,6 +272,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (input) input.focus();
   }
 });
+
+  const userName = sessionStorage.getItem('orcoma_user_name') || 'Usuário';
+  const usernameEl = document.querySelector('.progress-sidebar__username');
+  if (usernameEl) usernameEl.textContent = userName;
 });
 
 /* Anti Copy */

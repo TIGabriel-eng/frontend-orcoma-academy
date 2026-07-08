@@ -141,16 +141,14 @@ async function carregarPerfil() {
     };
   }
   try {
-    var res = await fetch('http://localhost:8000/api/me/', {
-      headers: { 'Authorization': 'Bearer ' + token }
-    });
-    if (!res.ok) throw new Error('Falha ao carregar perfil');
-    var data = await res.json();
+    var data = await API.get('/api/me/');
     return {
+      id: data.id,
       nome: data.nome || data.username,
       email: data.email || "",
       role: data.role || "visitor",
       empresa: data.perfil ? (data.perfil.empresa || "") : "",
+      telefone: data.perfil ? (data.perfil.telefone || "") : "",
       plano_nome: data.plano_nome || "Visitante",
       sobre: data.perfil ? (data.perfil.bio || "") : "",
       created_at: data.date_joined || null
@@ -333,6 +331,7 @@ function initSobreComposer() {
     textEl.textContent = texto;
     pill.textContent = "Editar descrição";
     localStorage.setItem("perfil_sobre", texto);
+    API.patch('/api/me/', { perfil: { bio: texto } }).catch(function () {});
     fecharComposer();
   });
 }
