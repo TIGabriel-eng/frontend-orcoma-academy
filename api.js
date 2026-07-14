@@ -1,5 +1,5 @@
 const API = (function () {
-  const BASE_URL = 'https://orcoma-academy-backend.onrender.com';
+  const BASE_URL = 'http://localhost:8000';
 
   function getToken() {
     return sessionStorage.getItem('access_token');

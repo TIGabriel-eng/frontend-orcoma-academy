@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const ehAdmin = role === 'admin';
 
+    const ehClienteOrcoma = role === 'cliente_orcoma';
+
     const todosCards = document.querySelectorAll('.plano-card');
 
     todosCards.forEach(card => {
@@ -19,6 +21,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (titulo === "ADMIN ORCOMA") {
             if (!ehAdmin) {
+                card.style.display = 'none';
+            }
+        }
+
+        if (titulo === "Plano Team") {
+            if (ehClienteOrcoma) {
                 card.style.display = 'none';
             }
         }
@@ -115,9 +123,3 @@ window.addEventListener('load', () => {
 });
 
 /* Anti Copy */
-document.addEventListener('copy', function (e) { e.preventDefault(); });
-document.addEventListener('cut', function (e) { e.preventDefault(); });
-document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-document.addEventListener('dragstart', function (e) { e.preventDefault(); });
-
-

@@ -1356,6 +1356,26 @@ select.settings-field__input option {
   color: #ff4444;
 }
 
+#planName.pill-cliente_orcoma {
+  color: #3b82f6;
+}
+
+#planName.pill-colaborador_orcoma {
+  color: #10b981;
+}
+
+#planName.pill-gestor_orcoma {
+  color: #f59e0b;
+}
+
+#planName.pill-empresario {
+  color: #8b5cf6;
+}
+
+#planName.pill-visitor {
+  color: #64748b;
+}
+
 .insignia-card {
   cursor: pointer;
   transition: border-color 0.2s, transform 0.15s;
@@ -1569,6 +1589,164 @@ select.settings-field__input option {
   background: rgba(16, 185, 129, 0.15);
   color: #10b981;
   border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* ==========================================================
+   ASSINATURA
+========================================================== */
+
+.assinatura-card__status {
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.assinatura-card__status--ativa {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.assinatura-card__status--atencao {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.assinatura-card__status--expirada {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.assinatura-card__status--cancelada {
+  background: rgba(100, 116, 139, 0.15);
+  color: #64748b;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+.plan-badge--inactive {
+  background: rgba(100, 116, 139, 0.15);
+  color: #64748b;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+.assinatura-header-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.assinatura-header-inline__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.assinatura-header-inline__left i {
+  color: #3b82f6;
+  font-size: 13px;
+}
+
+.assinatura-header-inline__left span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.assinatura-dates-inline {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.assinatura-dates-inline__item {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.assinatura-dates-inline__item i {
+  color: #64748b;
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.assinatura-dates-inline__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.assinatura-dates-inline__label {
+  font-size: 10px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.assinatura-dates-inline__value {
+  font-size: 13px;
+  color: #e2e8f0;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.assinatura-progress-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.assinatura-progress-inline__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.assinatura-progress-inline__label {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.assinatura-progress-inline__pct {
+  font-size: 12px;
+  color: #3b82f6;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.assinatura-progress-inline__bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.assinatura-progress-inline__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.assinatura-progress-inline__fill--expirada {
+  background: linear-gradient(90deg, #ef4444, #f87171);
 }
 
 /* ==========================================================

@@ -181,6 +181,49 @@ function carregarStats() {
   }).catch(function () { initStatsCounters(); });
 }
 
+/* ============================================================
+   5. CARREGAR CURSOS DA API
+   ============================================================ */
+
+function carregarCursos() {
+  var container = document.getElementById('cursosContainer');
+  if (!container) return;
+
+  API.get('/api/cursos/?status=publicado').then(function (cursos) {
+    container.innerHTML = '';
+    if (!cursos || cursos.length === 0) {
+      container.innerHTML = '<p style="color:var(--color-text-secondary);padding:20px;">Nenhum curso dispon\u00edvel no momento.</p>';
+      return;
+    }
+    cursos.forEach(function (curso) {
+      var card = document.createElement('div');
+      card.className = 'curso-card';
+
+      var thumbSrc = curso.thumbnail_url || '../assets/images/orcoma.contabilidade.jpg';
+
+      card.innerHTML =
+        '<div class="curso-card__image">' +
+          '<img src="' + thumbSrc + '" alt="' + curso.titulo + '" loading="lazy" onerror="this.src=\'../assets/images/orcoma.contabilidade.jpg\'">' +
+        '</div>' +
+        '<div class="curso-card__content">' +
+          '<h4>' + curso.titulo + '</h4>' +
+          (curso.descricao ? '<p style="color:var(--color-text-secondary);font-size:.82rem;margin:6px 0;">' + curso.descricao.substring(0, 100) + (curso.descricao.length > 100 ? '...' : '') + '</p>' : '') +
+          '<div class="curso-recursos">' +
+            '<span><img src="../assets/images/video.png" alt=""> ' + (curso.tipo === 'video' ? 'V\u00eddeo' : 'Curso') + '</span>' +
+            (curso.video_url ? '<span><img src="../assets/images/video.png" alt=""> 1 V\u00eddeo</span>' : '') +
+          '</div>' +
+        '</div>' +
+        '<a href="../video-area/index.html?id=' + curso.id + '" class="btn-acessar">' +
+          'Acessar <i class="fa-solid fa-arrow-right"></i>' +
+        '</a>';
+
+      container.appendChild(card);
+    });
+  }).catch(function () {
+    container.innerHTML = '<p style="color:var(--color-text-secondary);padding:20px;">Erro ao carregar cursos.</p>';
+  });
+}
+
 
 /* ============================================================
    5. INICIALIZAÇÃO
@@ -200,6 +243,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   /* Carrega stats da API e inicia contadores */
   carregarStats();
+
+  /* Carrega cursos da API */
+  carregarCursos();
 
   const planoMap = {
     'admin':              'Administrador',
@@ -279,11 +325,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /* Anti Copy */
-document.addEventListener('copy', function (e) { e.preventDefault(); });
-document.addEventListener('cut', function (e) { e.preventDefault(); });
-document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-document.addEventListener('dragstart', function (e) { e.preventDefault(); });
-
 /* Widget Checklist - pulsar */
 (function initChecklist() {
   var icon = document.getElementById('checklistIcon');

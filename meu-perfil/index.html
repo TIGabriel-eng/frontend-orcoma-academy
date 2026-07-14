@@ -138,12 +138,6 @@
         <div class="profile-card__section">
           <span class="profile-card__section-title">Orcoma Insígnias</span>
           <div class="insignias-grid" id="insigniasGrid">
-            <div class="insignia-card" data-insignia="admin" data-icon="shield-halved" onclick="abrirInsignia(this)">
-              <div class="insignia-card__icon">
-                <i class="fa-solid fa-shield-halved"></i>
-              </div>
-              <span class="insignia-card__name pill-admin">Administrador</span>
-            </div>
           </div>
         </div>
 
@@ -157,6 +151,38 @@
               <span id="planStatus">Plano ativo</span>
             </div>
             <span class="plan-badge plan-badge--active" id="planBadge">Ativo</span>
+          </div>
+          <div class="assinatura-header-inline">
+            <div class="assinatura-header-inline__left">
+              <i class="fa-solid fa-file-invoice"></i>
+              <span>Detalhes da Assinatura</span>
+            </div>
+            <span class="assinatura-card__status" id="assinaturaStatus"></span>
+          </div>
+          <div class="assinatura-dates-inline">
+            <div class="assinatura-dates-inline__item">
+              <i class="fa-regular fa-calendar-check"></i>
+              <div class="assinatura-dates-inline__info">
+                <span class="assinatura-dates-inline__label">Contratado em</span>
+                <span class="assinatura-dates-inline__value" id="assinaturaDataContratacao">—</span>
+              </div>
+            </div>
+            <div class="assinatura-dates-inline__item">
+              <i class="fa-regular fa-calendar-xmark"></i>
+              <div class="assinatura-dates-inline__info">
+                <span class="assinatura-dates-inline__label">Expira em</span>
+                <span class="assinatura-dates-inline__value" id="assinaturaDataExpiracao">—</span>
+              </div>
+            </div>
+          </div>
+          <div class="assinatura-progress-inline">
+            <div class="assinatura-progress-inline__header">
+              <span class="assinatura-progress-inline__label" id="assinaturaDiasLabel">—</span>
+              <span class="assinatura-progress-inline__pct" id="assinaturaDiasPct">—</span>
+            </div>
+            <div class="assinatura-progress-inline__bar">
+              <div class="assinatura-progress-inline__fill" id="assinaturaProgressFill" style="width:0%"></div>
+            </div>
           </div>
         </div>
       </section>

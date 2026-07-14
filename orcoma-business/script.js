@@ -166,7 +166,11 @@ document.addEventListener("DOMContentLoaded", function () {
   carregarEventos();
   carregarTrilhas();
 
-  animateProgressCircle(72);
+  var percentGeral = 0;
+  try {
+    percentGeral = parseInt(localStorage.getItem('orcoma_progresso_geral') || '0', 10);
+  } catch (e) {}
+  animateProgressCircle(percentGeral);
   animateProgressBars();
 
   const userRole = sessionStorage.getItem('orcoma_user_role') || 'visitor';
@@ -205,7 +209,19 @@ document.addEventListener("DOMContentLoaded", function () {
     envDropdown.addEventListener('click', function (e) { e.stopPropagation(); });
     const currentPath = window.location.pathname;
     const envItems = envDropdown.querySelectorAll('.env-dropdown__item');
-    envItems.forEach(function (item) { item.classList.remove('active'); if (currentPath.includes(item.getAttribute('href'))) { item.classList.add('active'); if (currentEnvName) { currentEnvName.textContent = item.textContent.trim(); } } });
+    envItems.forEach(function (item) {
+      item.classList.remove('active');
+      var allowedRoles = (item.getAttribute('data-roles') || '').split(',');
+      if (allowedRoles.length && !allowedRoles.includes(userRole)) {
+        item.style.display = 'none';
+      } else {
+        item.style.display = '';
+      }
+      if (currentPath.includes(item.getAttribute('href'))) {
+        item.classList.add('active');
+        if (currentEnvName) { currentEnvName.textContent = item.textContent.trim(); }
+      }
+    });
   }
 
   if (userRole === 'admin') {
@@ -270,12 +286,6 @@ let current = 0;
 function showCard(index) { cards.forEach(function (card) { card.classList.remove('active'); }); cards[index].classList.add('active'); }
 document.getElementById('nextBtn')?.addEventListener('click', function () { current++; if (current >= cards.length) { current = 0; } showCard(current); });
 document.getElementById('prevBtn')?.addEventListener('click', function () { current--; if (current < 0) { current = cards.length - 1; } showCard(current); });
-
-document.addEventListener('copy', function (e) { e.preventDefault(); });
-document.addEventListener('cut', function (e) { e.preventDefault(); });
-document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-document.addEventListener('dragstart', function (e) { e.preventDefault(); });
-
 (function initChecklist() {
   var icon = document.getElementById('checklistIcon');
   var panel = document.getElementById('checklistPanel');

@@ -6,6 +6,28 @@ const insigniaData = {
   }
 };
 
+const insigniaPermitidas = {
+  admin: ["admin"]
+};
+
+function renderizarInsignias(role) {
+  const grid = document.getElementById("insigniasGrid");
+  if (!grid) return;
+  const permitidas = insigniaPermitidas[role] || [];
+  if (permitidas.length === 0) {
+    grid.innerHTML = '<p style="color:#64748b;font-size:13px;margin:0;">Nenhuma insígnia</p>';
+    return;
+  }
+  grid.innerHTML = permitidas.map(function (key) {
+    const d = insigniaData[key];
+    if (!d) return "";
+    return '<div class="insignia-card" data-insignia="' + key + '" data-icon="' + d.icon + '" onclick="abrirInsignia(this)">' +
+      '<div class="insignia-card__icon"><i class="fa-solid ' + d.icon + '"></i></div>' +
+      '<span class="insignia-card__name pill-' + key + '">' + d.name + '</span>' +
+    '</div>';
+  }).join("");
+}
+
 function abrirInsignia(el) {
   const key = el.getAttribute("data-insignia");
   const data = insigniaData[key];
@@ -179,7 +201,8 @@ function preencherPerfil(profile) {
     : "—";
 
   const planoNome = profile.plano_nome || sessionStorage.getItem("orcoma_plano_nome") || "";
-  const roleLabel = planoNome || planoMap[role] || role;
+  const roleLabel = planoMap[role] || role;
+  const planoLabel = planoNome || roleLabel;
   const isAdmin = role === "admin";
 
   const avatarEl = document.querySelector(".profile-card__avatar");
@@ -206,13 +229,17 @@ function preencherPerfil(profile) {
   /* Formação acadêmica no card */
   const formacaoEl = document.getElementById("profileFormacao");
   if (formacaoEl) {
-    var formacoes = carregarFormacoesLocal();
-    if (formacoes.length > 0) {
-      formacaoEl.textContent = formacoes[0].nivel + " em " + formacoes[0].area;
-    } else {
-      formacaoEl.textContent = "";
-    }
+    carregarFormacoesApi().then(function (formacoes) {
+      if (formacoes.length > 0) {
+        formacaoEl.textContent = formacoes[0].nivel + " em " + formacoes[0].area;
+      } else {
+        formacaoEl.textContent = "";
+      }
+    });
   }
+
+  /* Insígnias baseadas na role do Django */
+  renderizarInsignias(role);
 
   const infoSpans = document.querySelectorAll(".profile-card__info span");
   if (infoSpans.length >= 3) {
@@ -242,9 +269,13 @@ function preencherPerfil(profile) {
   if (inputEmail) inputEmail.value = email;
   if (inputTelefone) inputTelefone.value = profile.telefone || "";
   if (displayEmpresa) displayEmpresa.textContent = profile.empresa || "Orcoma";
-  if (displayPlano) displayPlano.textContent = roleLabel;
-  if (planName) planName.textContent = roleLabel;
-  if (planStatus) planStatus.textContent = isAdmin ? "Plano ativo" : "Plano ativo";
+  if (displayPlano) displayPlano.textContent = planoLabel;
+  if (planName) {
+    planName.textContent = planoLabel;
+    planName.className = "";
+    planName.classList.add("pill-" + role);
+  }
+  if (planStatus) planStatus.textContent = planoNome ? "Plano ativo" : "Plano ativo";
   if (planBadge) {
     planBadge.textContent = "Ativo";
     planBadge.className = "plan-badge plan-badge--active";
@@ -387,23 +418,27 @@ function fecharModalFormacao() {
   document.body.style.overflow = "";
 }
 
-const FORMACOES_PADRAO = [
-  { id: "f1", instituicao: "UNIVALI", nivel: "Bacharel", area: "Contabilidade", inicio_mes: "Fevereiro", inicio_ano: "2018", termino_mes: "Dezembro", termino_ano: "2022" },
-  { id: "f2", instituicao: "FGV", nivel: "Pós-graduado", area: "Gestão Empresarial", inicio_mes: "Março", inicio_ano: "2023", termino_mes: "Dezembro", termino_ano: "2024" }
-];
-
-function carregarFormacoesLocal() {
-  var raw = localStorage.getItem("perfil_formacoes");
-  if (raw) return JSON.parse(raw);
-  localStorage.setItem("perfil_formacoes", JSON.stringify(FORMACOES_PADRAO));
-  return FORMACOES_PADRAO;
+async function carregarFormacoesApi() {
+  try {
+    return await API.get('/api/formacoes/');
+  } catch (e) {
+    return [];
+  }
 }
 
-function salvarFormacoesLocal(lista) {
-  localStorage.setItem("perfil_formacoes", JSON.stringify(lista));
+async function salvarFormacaoApi(dados) {
+  return await API.post('/api/formacoes/', dados);
 }
 
-function initFormacao() {
+async function editarFormacaoApi(id, dados) {
+  return await API.patch('/api/formacoes/' + id + '/', dados);
+}
+
+async function excluirFormacaoApi(id) {
+  return await API.del('/api/formacoes/' + id + '/');
+}
+
+async function initFormacao() {
   const modal = document.getElementById("formacaoModal");
   const form = document.getElementById("formacaoForm");
   const lista = document.getElementById("formacaoLista");
@@ -447,8 +482,8 @@ function initFormacao() {
     return mapa[chave] || "";
   }
 
-  function renderizarFormacoes() {
-    var items = carregarFormacoesLocal();
+  async function renderizarFormacoes() {
+    var items = await carregarFormacoesApi();
     if (items.length === 0) {
       lista.innerHTML = '<p class="formacao-empty">Nenhuma formação adicionada</p>';
       return;
@@ -462,7 +497,7 @@ function initFormacao() {
           '<span class="formacao-item__instituicao">' + escapeHtml(f.instituicao) + '</span>' +
           '<span style="display:flex;align-items:center;gap:8px;margin-top:4px;">' +
             '<span class="formacao-item__badge formacao-item__badge--' + cor + '">' + escapeHtml(f.nivel) + '</span>' +
-            '<span class="formacao-item__periodo">' + f.inicio_mes + ' ' + f.inicio_ano + ' a ' + f.termino_mes + ' ' + f.termino_ano + '</span>' +
+            '<span class="formacao-item__periodo">' + f.inicio_mes + ' ' + f.inicio_ano + ' a ' + (f.termino_mes ? f.termino_mes + ' ' + f.termino_ano : 'Atual') + '</span>' +
           '</span>' +
         '</div>' +
         '<div class="formacao-item__actions">' +
@@ -479,20 +514,19 @@ function initFormacao() {
 
   let editandoId = null;
 
-  function deletarFormacao(id) {
-    showConfirmModal("Tem certeza que deseja excluir esta formação?").then(function (confirmed) {
+  async function deletarFormacao(id) {
+    showConfirmModal("Tem certeza que deseja excluir esta formação?").then(async function (confirmed) {
       if (!confirmed) return;
-      var lista = carregarFormacoesLocal().filter(function (f) { return f.id !== id; });
-      salvarFormacoesLocal(lista);
+      await excluirFormacaoApi(id);
       renderizarFormacoes();
     });
   }
 
-  function editarFormacao(id) {
-    var lista = carregarFormacoesLocal();
+  async function editarFormacao(id) {
+    var items = await carregarFormacoesApi();
     var data = null;
-    for (var i = 0; i < lista.length; i++) {
-      if (lista[i].id === id) { data = lista[i]; break; }
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].id == id) { data = items[i]; break; }
     }
     if (!data) return;
 
@@ -509,7 +543,7 @@ function initFormacao() {
     abrirModalFormacao();
   }
 
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const instituicao = document.getElementById("formacaoInstituicao");
@@ -523,36 +557,23 @@ function initFormacao() {
     if (!instituicao.value.trim() || !nivel.value || !area.value.trim()) return;
     if (!inicioMes.value || !inicioAno.value) return;
 
-    var lista = carregarFormacoesLocal();
+    const dados = {
+      instituicao: instituicao.value.trim(),
+      nivel: nivel.value.trim(),
+      area: area.value.trim(),
+      inicio_mes: inicioMes.value,
+      inicio_ano: inicioAno.value,
+      termino_mes: terminoMes.value || "",
+      termino_ano: terminoAno.value || ""
+    };
 
     if (editandoId) {
-      for (var i = 0; i < lista.length; i++) {
-        if (lista[i].id === editandoId) {
-          lista[i].instituicao = instituicao.value.trim();
-          lista[i].nivel = nivel.value.trim();
-          lista[i].area = area.value.trim();
-          lista[i].inicio_mes = inicioMes.value;
-          lista[i].inicio_ano = inicioAno.value;
-          lista[i].termino_mes = terminoMes.value || "";
-          lista[i].termino_ano = terminoAno.value || "";
-          break;
-        }
-      }
+      await editarFormacaoApi(editandoId, dados);
       editandoId = null;
     } else {
-      lista.unshift({
-        id: "f" + Date.now(),
-        instituicao: instituicao.value.trim(),
-        nivel: nivel.value.trim(),
-        area: area.value.trim(),
-        inicio_mes: inicioMes.value,
-        inicio_ano: inicioAno.value,
-        termino_mes: terminoMes.value || "",
-        termino_ano: terminoAno.value || ""
-      });
+      await salvarFormacaoApi(dados);
     }
 
-    salvarFormacoesLocal(lista);
     document.querySelector("#formacaoModal h2").textContent = "Adicionar Formação";
     renderizarFormacoes();
     fecharModalFormacao();
@@ -585,24 +606,23 @@ function initFormacao() {
    HABILIDADES
 ============================================================ */
 
-const HABILIDADES_PADRAO = [
-  { id: "h1", nome: "Excel avançado" },
-  { id: "h2", nome: "Gestão de equipes" },
-  { id: "h3", nome: "Análise de dados" }
-];
-
-function carregarHabilidadesLocal() {
-  var raw = localStorage.getItem("perfil_habilidades");
-  if (raw) return JSON.parse(raw);
-  localStorage.setItem("perfil_habilidades", JSON.stringify(HABILIDADES_PADRAO));
-  return HABILIDADES_PADRAO;
+async function carregarHabilidadesApi() {
+  try {
+    return await API.get('/api/habilidades/');
+  } catch (e) {
+    return [];
+  }
 }
 
-function salvarHabilidadesLocal(lista) {
-  localStorage.setItem("perfil_habilidades", JSON.stringify(lista));
+async function salvarHabilidadeApi(dados) {
+  return await API.post('/api/habilidades/', dados);
 }
 
-function initHabilidades() {
+async function excluirHabilidadeApi(id) {
+  return await API.del('/api/habilidades/' + id + '/');
+}
+
+async function initHabilidades() {
   const lista = document.getElementById("habilidadesLista");
   const form = document.getElementById("habilidadeForm");
   const input = document.getElementById("habilidadeInput");
@@ -621,8 +641,8 @@ function initHabilidades() {
     document.body.style.overflow = "";
   }
 
-  function renderizar() {
-    var items = carregarHabilidadesLocal();
+  async function renderizar() {
+    var items = await carregarHabilidadesApi();
     if (items.length === 0) {
       lista.innerHTML = '<p class="formacao-empty">Nenhuma habilidade adicionada</p>';
       return;
@@ -637,23 +657,20 @@ function initHabilidades() {
     }).join("");
   }
 
-  lista.addEventListener("click", function (e) {
+  lista.addEventListener("click", async function (e) {
     const btn = e.target.closest(".habilidade-tag__remove");
     if (!btn) return;
     const id = btn.getAttribute("data-id");
-    var listaAtual = carregarHabilidadesLocal().filter(function (h) { return h.id !== id; });
-    salvarHabilidadesLocal(listaAtual);
+    await excluirHabilidadeApi(id);
     renderizar();
   });
 
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
     const nome = input.value.trim();
     if (!nome) return;
 
-    var listaAtual = carregarHabilidadesLocal();
-    listaAtual.push({ id: "h" + Date.now(), nome: nome });
-    salvarHabilidadesLocal(listaAtual);
+    await salvarHabilidadeApi({ nome: nome });
     renderizar();
     fecharModal();
   });
@@ -751,17 +768,85 @@ document.addEventListener("DOMContentLoaded", async function () {
   initHabilidades();
   initCertificados();
   initAvatarUpload();
-
   const profile = await carregarPerfil();
   preencherPerfil(profile);
+  initAssinaturaStatus();
 });
 
-/* Anti Copy */
-document.addEventListener('copy', function (e) { e.preventDefault(); });
-document.addEventListener('cut', function (e) { e.preventDefault(); });
-document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-document.addEventListener('dragstart', function (e) { e.preventDefault(); });
+/* ============================================================
+   STATUS DA ASSINATURA
+============================================================ */
 
+function initAssinaturaStatus() {
+  var statusEl = document.getElementById("assinaturaStatus");
+  var dataExpiracaoEl = document.getElementById("assinaturaDataExpiracao");
+  var dataContratacaoEl = document.getElementById("assinaturaDataContratacao");
+  var diasLabelEl = document.getElementById("assinaturaDiasLabel");
+  var diasPctEl = document.getElementById("assinaturaDiasPct");
+  var progressFillEl = document.getElementById("assinaturaProgressFill");
+  var planNameEl = document.getElementById("planName");
+  var planStatusEl = document.getElementById("planStatus");
+  var planBadgeEl = document.getElementById("planBadge");
+
+  if (!statusEl) return;
+
+  API.get('/api/assinaturas/').then(function (items) {
+    if (!items || items.length === 0) return;
+
+    var a = items[0];
+
+    if (dataContratacaoEl) dataContratacaoEl.textContent = formatarDataBR(a.data_contratacao);
+    if (dataExpiracaoEl) dataExpiracaoEl.textContent = formatarDataBR(a.data_expiracao);
+    if (diasPctEl) diasPctEl.textContent = a.percentual_usado + "%";
+    if (progressFillEl) progressFillEl.style.width = a.percentual_usado + "%";
+
+    var diasRestantes = a.dias_restantes;
+    var statusAtual = a.status;
+
+    var expirado = statusAtual === "expirada" || statusAtual === "cancelada" || statusAtual === "inativo" || diasRestantes <= 0;
+
+    if (expirado) {
+      statusEl.textContent = statusAtual === "cancelada" ? "Cancelado" : "Vencido";
+      statusEl.className = "assinatura-card__status assinatura-card__status--expirada";
+      if (diasLabelEl) { diasLabelEl.textContent = "Plano vencido"; diasLabelEl.style.color = "#ef4444"; }
+      if (diasPctEl) diasPctEl.style.color = "#ef4444";
+      if (progressFillEl) {
+        progressFillEl.classList.add("assinatura-progress-inline__fill--expirada");
+        progressFillEl.style.width = "100%";
+      }
+      if (diasPctEl) diasPctEl.textContent = "100%";
+      if (planNameEl) { planNameEl.textContent = a.plano_nome; planNameEl.style.color = "#64748b"; }
+      if (planStatusEl) { planStatusEl.textContent = "Plano inativo"; planStatusEl.style.color = "#64748b"; }
+      if (planBadgeEl) { planBadgeEl.textContent = "Inativo"; planBadgeEl.className = "plan-badge plan-badge--inactive"; }
+    } else if (diasRestantes <= 7) {
+      statusEl.textContent = "Atenção";
+      statusEl.className = "assinatura-card__status assinatura-card__status--atencao";
+      if (diasLabelEl) { diasLabelEl.textContent = "Restam " + diasRestantes + " dias"; diasLabelEl.style.color = "#f59e0b"; }
+      if (diasPctEl) diasPctEl.style.color = "#f59e0b";
+      if (planNameEl) planNameEl.textContent = a.plano_nome;
+      if (planStatusEl) planStatusEl.textContent = "Plano ativo";
+      if (planBadgeEl) { planBadgeEl.textContent = "Ativo"; planBadgeEl.className = "plan-badge plan-badge--active"; }
+    } else {
+      statusEl.textContent = "Ativa";
+      statusEl.className = "assinatura-card__status assinatura-card__status--ativa";
+      if (diasLabelEl) diasLabelEl.textContent = "Restam " + diasRestantes + " dias";
+      if (planNameEl) planNameEl.textContent = a.plano_nome;
+      if (planStatusEl) planStatusEl.textContent = "Plano ativo";
+      if (planBadgeEl) { planBadgeEl.textContent = "Ativo"; planBadgeEl.className = "plan-badge plan-badge--active"; }
+    }
+  });
+}
+
+function formatarDataBR(dateStr) {
+  if (!dateStr) return "";
+  var parts = dateStr.split("-");
+  if (parts.length !== 3) return dateStr;
+  var meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+  var mesIdx = parseInt(parts[1], 10) - 1;
+  return parts[2] + "/" + (meses[mesIdx] || parts[1]) + "/" + parts[0];
+}
+
+/* Anti Copy */
 /* Widget Checklist - pulsar */
 (function initChecklist() {
   var icon = document.getElementById('checklistIcon');

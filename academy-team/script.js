@@ -310,6 +310,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const userRole = sessionStorage.getItem('orcoma_user_role') || 'visitor';
 
+  if (userRole === 'cliente_orcoma') {
+    window.location.href = '../orcoma-business/index.html';
+    return;
+  }
+
   const envCards = document.querySelectorAll('.module-pill');
   envCards.forEach(function (card) {
     const allowedRoles = (card.getAttribute('data-roles') || '').split(',');
@@ -381,11 +386,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const envItems = envDropdown.querySelectorAll('.env-dropdown__item');
       envItems.forEach(function (item) {
         item.classList.remove('active');
+        var allowedRoles = (item.getAttribute('data-roles') || '').split(',');
+        if (allowedRoles.length && !allowedRoles.includes(userRole)) {
+          item.style.display = 'none';
+        } else {
+          item.style.display = '';
+        }
         if (currentPath.includes(item.getAttribute('href'))) {
           item.classList.add('active');
-          if (currentEnvName) {
-            currentEnvName.textContent = item.textContent.trim();
-          }
+          if (currentEnvName) { currentEnvName.textContent = item.textContent.trim(); }
         }
       });
     }
@@ -544,11 +553,6 @@ document.getElementById('prevBtn').addEventListener('click', () => {
 });
 
 /* Anti Copy */
-document.addEventListener('copy', function (e) { e.preventDefault(); });
-document.addEventListener('cut', function (e) { e.preventDefault(); });
-document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-document.addEventListener('dragstart', function (e) { e.preventDefault(); });
-
 /* Widget Checklist - pulsar */
 (function initChecklist() {
   var icon = document.getElementById('checklistIcon');

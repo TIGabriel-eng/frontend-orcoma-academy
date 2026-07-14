@@ -720,6 +720,11 @@ body {
   color: #000;
 }
 
+.badge--concluido {
+  background-color: #22c55e;
+  color: #fff;
+}
+
 .course-card__progress {
   display: flex;
   align-items: center;

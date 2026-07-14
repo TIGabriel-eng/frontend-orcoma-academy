@@ -279,11 +279,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /* Anti Copy */
-document.addEventListener('copy', function (e) { e.preventDefault(); });
-document.addEventListener('cut', function (e) { e.preventDefault(); });
-document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-document.addEventListener('dragstart', function (e) { e.preventDefault(); });
-
 /* Widget Checklist - pulsar */
 (function initChecklist() {
   var icon = document.getElementById('checklistIcon');
