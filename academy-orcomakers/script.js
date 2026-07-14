@@ -11,7 +11,24 @@
 
 
 /* ============================================================
-   2. SIDEBAR MOBILE
+   8. CARREGAR TRILHAS DA API
+   ============================================================ */
+
+function carregarTrilhas() {
+  API.get('/api/trilhas/').then(function (trilhas) {
+    var slider = document.getElementById("trilhasSlider");
+    if (!slider || !trilhas || trilhas.length === 0) return;
+    slider.innerHTML = trilhas.map(function (t) {
+      return '<div class="trail-card">' +
+        '<div class="trail-card__icon"><i class="fas fa-route"></i></div>' +
+        '<div><h3>' + t.nome + '</h3><span>' + (t.ambiente_nome || '') + '</span></div></div>';
+    }).join("");
+  }).catch(function () {});
+}
+
+
+/* ============================================================
+   9. CARREGAR EVENTOS DA API
    ============================================================ */
 
 /**
@@ -201,11 +218,19 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Carrega stats da API e inicia contadores */
   carregarStats();
 
+  /* Carrega trilhas da API */
+  carregarTrilhas();
+
+  /* Carrega trilhas da API */
+  carregarTrilhas();
+
   const planoMap = {
     'admin':              'Administrador',
+    'cliente_premium':    'Cliente Premium ⭐',
     'cliente_orcoma':     'Cliente Orcoma',
     'colaborador_orcoma': 'Orcoma Team',
     'gestor_orcoma':      'Orcoma Business',
+    'empresario':         'Empresário',
     'visitor':            'Visitante'
   };
 
@@ -214,11 +239,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const planLabel = document.querySelector('.progress-sidebar__plan');
   if (planLabel) {
     planLabel.textContent = planoMap[tipoUsuario] ?? 'Cliente Orcoma';
-    planLabel.classList.remove('pill-admin', 'pill-cliente', 'pill-visitor');
+    planLabel.classList.remove('pill-admin', 'pill-cliente', 'pill-visitor', 'pill-premium');
     if (tipoUsuario === 'admin') {
       planLabel.classList.add('pill-admin');
     } else if (tipoUsuario === 'visitor') {
       planLabel.classList.add('pill-visitor');
+    } else if (tipoUsuario === 'cliente_premium') {
+      planLabel.classList.add('pill-premium');
     } else {
       planLabel.classList.add('pill-cliente');
     }

@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!allowedRoles.includes(userRole)) { card.classList.add('locked'); }
   });
 
-  const planoMap = { 'cliente_orcoma': 'Cliente Orcoma', 'colaborador_orcoma': 'Orcoma Team', 'gestor_orcoma': 'Orcoma Business', 'admin': 'Administrador', 'empresario': 'Empresário', 'visitor': 'Visitante' };
+  const planoMap = { 'cliente_premium': 'Cliente Premium ⭐', 'cliente_orcoma': 'Cliente Orcoma', 'colaborador_orcoma': 'Orcoma Team', 'gestor_orcoma': 'Orcoma Business', 'admin': 'Administrador', 'empresario': 'Empresário', 'visitor': 'Visitante' };
   const tipoUsuario = userRole;
   const planLabel = document.querySelector('.progress-sidebar__plan');
   if (planLabel) {

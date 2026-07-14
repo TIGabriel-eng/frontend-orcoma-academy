@@ -324,6 +324,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   const planoMap = {
+  'cliente_premium':    'Cliente Premium ⭐',
   'cliente_orcoma':     'Cliente Orcoma',
   'colaborador_orcoma': 'Orcoma Team',
   'gestor_orcoma':      'Orcoma Business',
@@ -337,14 +338,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const planLabel = document.querySelector('.progress-sidebar__plan');
         if (planLabel) {
          planLabel.textContent = planoMap[tipoUsuario] ?? 'Visitante';
-         planLabel.classList.remove('pill-admin', 'pill-cliente', 'pill-visitor');
+         planLabel.classList.remove('pill-admin', 'pill-cliente', 'pill-visitor', 'pill-premium');
          if (userRole === 'admin') {
            planLabel.classList.add('pill-admin');
          } else if (userRole === 'visitor') {
            planLabel.classList.add('pill-visitor');
-         } else {
-           planLabel.classList.add('pill-cliente');
-         }
+          } else if (userRole === 'cliente_premium') {
+            planLabel.classList.add('pill-premium');
+          } else {
+            planLabel.classList.add('pill-cliente');
+          }
     }
 
     const chevron = document.getElementById('profileChevron');

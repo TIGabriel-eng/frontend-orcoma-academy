@@ -1531,6 +1531,12 @@ img {
   background-color: rgba(139, 154, 181, 0.1);
 }
 
+.progress-sidebar__plan.pill-premium {
+  color: #f59e0b;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.15));
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
 .progress-sidebar__plan-wrapper {
   position: relative;
   display: inline-flex;
