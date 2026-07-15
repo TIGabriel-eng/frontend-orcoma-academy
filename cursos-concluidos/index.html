@@ -25,6 +25,8 @@
     .course-card__badge { display: inline-flex; align-items: center; gap: var(--spacing-xs); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-full); width: fit-content; }
     .badge--concluido { background: #22c55e; color: #fff; }
     .badge--nao-iniciado { background: #fff; color: #000; }
+    .pill--amarelo { display: inline; background: #f59e0b; color: #000; font-weight: 600; padding: 2px 10px; border-radius: 999px; font-size: 14px; white-space: nowrap; transition: background var(--transition-fast); }
+    .pill--amarelo:hover { background: #d97706; color: #000; }
     .course-card__completed-date { font-size: 12px; color: var(--color-text-muted); }
     .course-card__cert-link { display: flex; align-items: center; gap: var(--spacing-xs); font-size: 13px; color: var(--color-accent-2); margin-top: var(--spacing-xs); transition: opacity var(--transition-fast); }
     .course-card__cert-link:hover { opacity: .75; }
@@ -39,11 +41,18 @@
     <nav class="sidebar__nav">
       <ul>
         <li class="nav-item" data-page="inicio"><i class="fa-solid fa-house"></i><span data-i18n="nav.inicio">Início</span></li>
+        <li class="nav-divider">Aprendizado</li>
+
+        <li class="nav-item" data-page="cursos">
+          <i class="fa-solid fa-book"></i>
+          <span>Catálogo</span>
+        </li>
+
+        <li class="nav-divider">Progresso</li>
         <li class="nav-item" data-page="continuar"><i class="fa-solid fa-play"></i><span data-i18n="nav.continuar">Continuar assistindo</span></li>
         <li class="nav-item active" data-page="concluidos"><i class="fa-solid fa-circle-check"></i><span data-i18n="nav.concluidos">Cursos concluídos</span></li>
-        
         <li class="nav-item" data-page="trilhas"><i class="fa-solid fa-route"></i><span data-i18n="nav.trilhas">Trilhas de aprendizagem</span></li>
-        <li class="nav-item" data-page="favoritos"><i class="fa-regular fa-heart"></i><span data-i18n="nav.favoritos">Favoritos</span></li>
+        <li class="nav-divider">Geral</li>
         <li class="nav-item" data-page="suporte"><i class="fa-regular fa-circle-question"></i><span data-i18n="nav.suporte">Suporte</span></li>
         <li class="nav-item" data-page="config"><i class="fa-solid fa-gear"></i><span data-i18n="nav.config">Configurações</span></li>
         <li class="nav-item nav-item--logout" data-page="sair"><i class="fa-solid fa-right-from-bracket"></i><span data-i18n="nav.sair">Sair</span></li>
@@ -80,48 +89,14 @@
       <button class="topbar__menu-btn" id="menuToggle" aria-label="Abrir menu">
         <i class="fa-solid fa-bars"></i>
       </button>
-      <div class="topbar__actions">
-        <button class="topbar__icon-btn">
-          <i class="fa-regular fa-bell"></i>
-          <span class="topbar__notif-dot"></span>
-        </button>
-      </div>
     </header>
-
+    
     <div class="page-header">
       <h1 data-i18n="concluidos.title">Cursos Concluídos</h1>
       <p data-i18n="concluidos.subtitle">Parabéns! Confira os cursos que você já finalizou</p>
     </div>
 
-    <div class="catalog-grid">
-      <div class="course-card" data-curso="introducao-contabilidade">
-        <img src="../assets/images/reforma-tribut%C3%A1ria.png" alt="Introdução à Contabilidade" class="curso-capa">
-        <div class="course-card__body">
-          <h3>Introdução à Contabilidade</h3>
-          <span class="course-card__badge badge--concluido" data-i18n="concluidos.badge"><i class="fa-solid fa-check"></i> Concluído</span>
-          <span class="course-card__completed-date"><i class="fa-regular fa-calendar"></i> Concluído em 15/04/2026</span>
-          <a href="/Certificados/index.html" class="course-card__cert-link" data-i18n="concluidos.view-cert"><i class="fa-solid fa-certificate"></i> Ver certificado</a>
-        </div>
-      </div>
-      <div class="course-card" data-curso="lgpd-contadores">
-        <img src="../assets/images/reforma-tribut%C3%A1ria.png" alt="LGPD para Contadores" class="curso-capa">
-        <div class="course-card__body">
-          <h3>LGPD para Contadores</h3>
-          <span class="course-card__badge badge--concluido" data-i18n="concluidos.badge"><i class="fa-solid fa-check"></i> Concluído</span>
-          <span class="course-card__completed-date"><i class="fa-regular fa-calendar"></i> Concluído em 02/03/2026</span>
-          <a href="/Certificados/index.html" class="course-card__cert-link" data-i18n="concluidos.view-cert"><i class="fa-solid fa-certificate"></i> Ver certificado</a>
-        </div>
-      </div>
-      <div class="course-card" data-curso="sped-fiscal">
-        <img src="../assets/images/reforma-tribut%C3%A1ria.png" alt="SPED Fiscal" class="curso-capa">
-        <div class="course-card__body">
-          <h3>SPED Fiscal</h3>
-          <span class="course-card__badge badge--concluido" data-i18n="concluidos.badge"><i class="fa-solid fa-check"></i> Concluído</span>
-          <span class="course-card__completed-date"><i class="fa-regular fa-calendar"></i> Concluído em 18/01/2026</span>
-          <a href="/Certificados/index.html" class="course-card__cert-link" data-i18n="concluidos.view-cert"><i class="fa-solid fa-certificate"></i> Ver certificado</a>
-        </div>
-      </div>
-    </div>
+    <div class="catalog-grid" id="catalogGrid"></div>
   </main>
 
   <div class="sidebar__overlay" id="sidebarOverlay"></div>

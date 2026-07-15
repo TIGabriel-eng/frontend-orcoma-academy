@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Orcoma Academy | Curso</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="../responsive.css" />
+  <script>
+    // Get course slug from URL
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const cursoSlug = params.get('curso');
+      if (!cursoSlug) {
+        window.location.href = '../orcoma-business/index.html';
+        return;
+      }
+      document.documentElement.dataset.cursoSlug = cursoSlug;
+    })();
+  </script>
+</head>
+<body>
+  <div class="shell" id="cursoShell">
+    <!-- Loading State -->
+    <div id="loadingState" class="loading-overlay" style="display: none;">
+      <div class="loading-spinner">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <span>Carregando curso...</span>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="error-overlay" style="display: none;">
+      <div class="error-content">
+        <i class="fa-solid fa-exclamation-triangle"></i>
+        <h3>Erro ao carregar curso</h3>
+        <p id="errorMessage">Curso não encontrado ou você não tem permissão para acessá-lo.</p>
+        <button onclick="window.location.href='../orcoma-business/index.html'" class="error-btn">
+          Voltar ao início
+        </button>
+      </div>
+    </div>
+
+    <!-- Sidebar will be populated dynamically -->
+    <aside class="sidebar" id="sidebar" aria-label="Menu do curso">
+      <div class="sidebar-logo">
+        <a href="../orcoma-business/index.html" aria-label="Voltar ao início">
+          <img src="../assets/images/LOGO ORCOMA ACADEMY.png" alt="Orcoma Academy" class="sidebar__logo-img" />
+        </a>
+      </div>
+      <div class="sidebar-course-title" id="courseTitle">Carregando...</div>
+      <nav aria-label="Módulos do curso" id="modulesNav">
+        <!-- Modules will be loaded here dynamically -->
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main" id="main-content">
+      <div id="playerSection" style="display: none;">
+        <!-- Video + Chat Row -->
+        <div class="content-row">
+          <!-- Video Column -->
+          <div class="video-col">
+            <!-- Video -->
+            <div class="video-wrapper">
+              <iframe
+                id="course-video"
+                src=""
+                title="Vídeo da aula"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+                sandbox="allow-scripts allow-same-origin"
+              ></iframe>
+              <div class="video-share-blocker" aria-hidden="true"></div>
+            </div>
+            <!-- Video Meta -->
+            <div class="video-meta">
+              <h1 id="lessonTitle">Carregando...</h1>
+              <p id="lessonMeta">-</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs" role="tablist">
+              <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-resources" onclick="switchTab(this, 'panel-resources')">Materiais</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-notes" onclick="switchTab(this, 'panel-notes')">Anotações</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-about" onclick="switchTab(this, 'panel-about')">Sobre o Curso</button>
+            </div>
+
+            <!-- Tab: Materials -->
+            <div class="tab-panel active" id="panel-resources" role="tabpanel">
+              <div class="resource-list" id="materialsList">
+                <!-- Material items will be loaded here -->
+              </div>
+            </div>
+
+            <!-- Tab: Notes -->
+            <div class="tab-panel" id="panel-notes" role="tabpanel">
+              <textarea
+                class="notes-area"
+                id="notes-area"
+                placeholder="Suas anotações sobre esta aula ficam aqui..."
+                aria-label="Campo de anotações da aula"
+                maxlength="4000"
+              ></textarea>
+              <button class="notes-save" onclick="saveNotes()">Salvar anotações</button>
+            </div>
+
+            <!-- Tab: About -->
+            <div class="tab-panel" id="panel-about" role="tabpanel">
+              <p id="courseDescription" style="color:var(--text-2);font-size:.84rem;line-height:1.7;max-width:600px;">
+                Carregando descrição do curso...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="lessonToast" class="lesson-toast" aria-live="polite" aria-atomic="true">Etapa Concluída!</div>
+  </div>
+
+  <!-- Course Complete Modal -->
+  <div class="overlay" id="courseCompleteOverlay" aria-hidden="true">
+    <div class="card course-complete-card">
+      <button class="close-x" id="courseCompleteClose">✕</button>
+      <h2 class="title">🎉 Parabéns!</h2>
+      <p class="course-complete-message">Você concluiu este curso!</p>
+      <div class="course-complete-actions">
+        <button class="continue-btn" id="courseCompleteReview">Revisar Aula</button>
+        <button class="continue-btn" id="courseCompleteBack">Voltar aos Cursos</button>
+        <button class="continue-btn" id="courseCompleteNext">Próximo Curso</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../api.js"></script>
+  <script src="../router.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="https://player.vimeo.com/api/player.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

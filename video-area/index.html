@@ -12,13 +12,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="../responsive.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
 
 <div class="shell">
 
   <!-- ── SIDEBAR ── -->
-  <aside class="sidebar" aria-label="Menu do curso">
+  <aside class="sidebar" id="sidebar" aria-label="Menu do curso">
     <div class="sidebar-logo">
       <a href="../orcoma-business/index.html" aria-label="Voltar ao início">
         <img src="../assets/images/LOGO ORCOMA ACADEMY.png" alt="Orcoma Academy" class="sidebar__logo-img" />
@@ -117,6 +118,10 @@
   <!-- ── MAIN ── -->
   <main class="main" id="main-content">
 
+    <button class="topbar__menu-btn" id="menuToggle" aria-label="Abrir menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
     <!-- VIDEO + CHAT ROW -->
     <div class="content-row">
 
@@ -135,6 +140,7 @@
             sandbox="allow-scripts allow-same-origin"
           ></iframe>
           <div class="video-share-blocker" aria-hidden="true"></div>
+          <div class="video-share-blocker-left" aria-hidden="true"></div>
           <!-- Curso Concluído Overlay -->
           <div class="curso-concluido-overlay" id="cursoConcluidoOverlay" aria-hidden="true">
             <div class="curso-concluido-badge">
@@ -153,24 +159,16 @@
 
         <!-- RATING BAR -->
         <div class="rating-bar">
-          <div class="stars-display">
-            <span class="star lit" onclick="rate(1)" role="button" tabindex="0" aria-label="1 estrela">★</span>
-            <span class="star lit" onclick="rate(2)" role="button" tabindex="0" aria-label="2 estrelas">★</span>
-            <span class="star lit" onclick="rate(3)" role="button" tabindex="0" aria-label="3 estrelas">★</span>
-            <span class="star lit" onclick="rate(4)" role="button" tabindex="0" aria-label="4 estrelas">★</span>
-            <span class="star" onclick="rate(5)" role="button" tabindex="0" aria-label="5 estrelas">★</span>
+          <div class="stars-display" id="starsDisplay">
+            <span class="star lit">★</span>
+            <span class="star lit">★</span>
+            <span class="star lit">★</span>
+            <span class="star lit">★</span>
+            <span class="star">★</span>
           </div>
-          <span class="rating-label"><strong>4/5</strong></span>
+          <span class="rating-label" id="ratingLabel"><strong>0/5</strong></span>
           <div class="rating-divider" aria-hidden="true"></div>
-          <button class="review-toggle" onclick="toggleReview()" aria-expanded="false" aria-controls="review-form">Avaliar</button>
-        </div>
-
-        <!-- REVIEW FORM -->
-        <div class="review-form" id="review-form" aria-hidden="true">
-          <textarea id="review-text" placeholder="Escreva seu comentário sobre esta aula..." aria-label="Campo de comentário da avaliação" maxlength="2000"></textarea>
-          <div class="review-form-footer">
-            <button class="post-btn" onclick="postReview()">Postar avaliação</button>
-          </div>
+          <button class="review-toggle" onclick="toggleReview()" aria-expanded="false" aria-controls="panel-reviews">Avaliar</button>
         </div>
 
         <!-- TABS -->
@@ -178,6 +176,7 @@
           <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-resources" onclick="switchTab(this,'panel-resources')">Materiais</button>
           <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-notes" onclick="switchTab(this,'panel-notes')">Anotações</button>
           <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-about" onclick="switchTab(this,'panel-about')">Sobre o Curso</button>
+          <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-reviews" onclick="switchTab(this,'panel-reviews')">Avaliações e Comentários</button>
         </div>
 
         <!-- TAB: MATERIALS -->
@@ -245,6 +244,26 @@
           <p style="color:var(--text-3);font-size:.76rem;margin-top:12px;"> Atualizado em 2026 · Certificado incluso</p>
         </div>
 
+        <!-- TAB: AVALIAÇÕES E COMENTÁRIOS -->
+        <div class="tab-panel" id="panel-reviews" role="tabpanel">
+          <div class="review-composer">
+            <div class="review-composer__stars">
+              <span class="star" onclick="setComposerRating(1)" role="button" tabindex="0" aria-label="1 estrela">★</span>
+              <span class="star" onclick="setComposerRating(2)" role="button" tabindex="0" aria-label="2 estrelas">★</span>
+              <span class="star" onclick="setComposerRating(3)" role="button" tabindex="0" aria-label="3 estrelas">★</span>
+              <span class="star" onclick="setComposerRating(4)" role="button" tabindex="0" aria-label="4 estrelas">★</span>
+              <span class="star" onclick="setComposerRating(5)" role="button" tabindex="0" aria-label="5 estrelas">★</span>
+            </div>
+            <textarea class="review-composer__textarea" id="composer-text" placeholder="Escreva seu comentário e avaliação sobre este módulo..." aria-label="Campo de comentário da avaliação" maxlength="2000"></textarea>
+            <div class="review-composer__footer">
+              <button class="post-btn" onclick="postComposerReview()">Postar avaliação</button>
+            </div>
+          </div>
+          <div class="reviews-list" id="reviewsList">
+            <!-- reviews are loaded dynamically via carregarReviews() -->
+          </div>
+        </div>
+
       </div><!-- /video-col -->
 
     </div><!-- /content-row -->
@@ -252,6 +271,8 @@
   </main>
 
   <div id="lessonToast" class="lesson-toast" aria-live="polite" aria-atomic="true">Etapa Concluída!</div>
+
+  <div class="sidebar__overlay" id="sidebarOverlay"></div>
 </div>
 
 <script src="../api.js"></script>

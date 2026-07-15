@@ -25,11 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        if (titulo === "Plano Team") {
-            if (ehClienteOrcoma) {
-                card.style.display = 'none';
-            }
-        }
     });
 
 });
@@ -54,8 +49,6 @@ botoes.forEach(botao => {
 
         if (plano === "ADMIN ORCOMA") {
             Router.navigate("../orcoma-business/index.html");
-        } else if (plano === "Plano Team") {
-            Router.navigate("../plano-team/index.html");
         }
 
     });

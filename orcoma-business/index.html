@@ -35,6 +35,15 @@
           <span data-i18n="nav.inicio">Início</span>
         </li>
 
+        <li class="nav-divider">Aprendizado</li>
+
+        <li class="nav-item" data-page="cursos">
+          <i class="fa-solid fa-book"></i>
+          <span>Catálogo</span>
+        </li>
+
+        <li class="nav-divider">Progresso</li>
+
         <li class="nav-item" data-page="continuar">
           <i class="fa-solid fa-play"></i>
           <span data-i18n="nav.continuar">Continuar assistindo</span>
@@ -43,22 +52,20 @@
           <i class="fa-solid fa-circle-check"></i>
           <span data-i18n="nav.concluidos">Cursos concluídos</span>
         </li>
-        
         <li class="nav-item" data-page="trilhas">
           <i class="fa-solid fa-route"></i>
           <span data-i18n="nav.trilhas">Trilhas de aprendizagem</span>
-        
-        
-        
+        </li>
+
+        <li class="nav-divider">Geral</li>
+
+        <li class="nav-item" data-page="suporte">
+          <i class="fa-regular fa-circle-question"></i>
+          <span data-i18n="nav.suporte">Suporte</span>
         </li>
         <li class="nav-item" data-page="config">
           <i class="fa-solid fa-gear"></i>
           <span data-i18n="nav.config">Configurações</span>
-        
-        </li>
-        <li class="nav-item nav-item--logout" data-page="sair">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span data-i18n="nav.sair">Sair</span>
         </li>
       </ul>
     </nav>
@@ -72,10 +79,10 @@
         <i class="fa-solid fa-chevron-down" id="envChevron"></i>
       </div>
       <div class="env-dropdown" id="envDropdown">
-        <a href="../orcoma-business/index.html" class="env-dropdown__item" data-env="business" data-roles="admin,cliente_orcoma,gestor_orcoma,empresario">
+        <a href="../orcoma-business/index.html" class="env-dropdown__item" data-env="business" data-academy="Academy Business">
           <i class="fa-solid fa-building"></i> Academy Business
         </a>
-        <a href="../academy-team/index.html" class="env-dropdown__item" data-env="team" data-roles="admin,colaborador_orcoma">
+        <a href="../academy-team/index.html" class="env-dropdown__item" data-env="team" data-academy="Academy Team">
           <i class="fa-solid fa-users"></i> Academy Team
         </a>
       </div>
@@ -108,6 +115,9 @@
         <kbd>Ctrl K</kbd>
       </div>
       <div class="topbar__actions">
+        <button class="topbar__icon-btn" id="themeToggle" aria-label="Alternar tema" style="font-size:18px;cursor:pointer;">
+          &#9790;
+        </button>
         <button class="topbar__icon-btn" aria-label="Notificações">
           <i class="fa-regular fa-bell"></i>
           <span class="topbar__notif-dot"></span>
@@ -139,7 +149,7 @@
 
       <!-- Cards de ambiente -->
     <div class="hero__pills">
-      <a href="../academy-contabil/index.html" class="module-pill" data-roles="admin,cliente_orcoma">
+      <a href="../academy-contabil/index.html" class="module-pill">
         <div class="module-pill__inner">
           <div class="module-pill__header">
             <i class="fa-solid fa-calculator"></i>
@@ -151,7 +161,7 @@
           </div>
         </div>
       </a>
-      <a href="../academy-empresarial/index.html" class="module-pill" data-roles="admin,cliente_orcoma,empresario">
+      <a href="../academy-empresarial/index.html" class="module-pill">
         <div class="module-pill__inner">
           <div class="module-pill__header">
             <i class="fa-solid fa-chart-line"></i>
@@ -593,6 +603,10 @@
       <a href="/Certificados/index.html" class="profile-dropdown__item">
         <i class="fa-solid fa-certificate"></i> Certificados
       </a>
+      <div class="profile-dropdown__divider"></div>
+      <a href="#" class="profile-dropdown__item profile-dropdown__item--logout" id="profileLogout">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </a>
     </div>
 
   </div>
@@ -613,62 +627,13 @@
         </svg>
 
         <div class="progress__circle-text">
-          <span class="progress__percent" id="progressPercent">72%</span>
+          <span class="progress__percent" id="progressPercent">0%</span>
         </div>
       </div>
 
       <div class="progress__info">
-        <span class="progress__label">Excelente!</span>
-        <span class="progress__sub">Você está no caminho certo para concluir seus cursos.</span>
-      </div>
-
-    </div>
-
-    <div class="progress__bars">
-
-      <div class="progress__bars-header">
-        <span>Cursos em Andamento</span>
-        <a href="#">Ver todos</a>
-      </div>
-
-      <div class="progress__bar-item">
-        <div class="progress__bar-header">
-          <span>Reforma Tributária</span>
-          <span>75%</span>
-        </div>
-        <div class="progress__bar-track">
-          <div class="progress__bar-fill" data-width="75"></div>
-        </div>
-      </div>
-
-      <div class="progress__bar-item">
-        <div class="progress__bar-header">
-          <span>Gestão Financeira</span>
-          <span>60%</span>
-        </div>
-        <div class="progress__bar-track">
-          <div class="progress__bar-fill" data-width="60"></div>
-        </div>
-      </div>
-
-      <div class="progress__bar-item">
-        <div class="progress__bar-header">
-          <span>Atendimento ao Cliente</span>
-          <span>90%</span>
-        </div>
-        <div class="progress__bar-track">
-          <div class="progress__bar-fill" data-width="90"></div>
-        </div>
-      </div>
-
-      <div class="progress__bar-item">
-        <div class="progress__bar-header">
-          <span>Processos Internos</span>
-          <span>30%</span>
-        </div>
-        <div class="progress__bar-track">
-          <div class="progress__bar-fill" data-width="30"></div>
-        </div>
+        <span class="progress__label" id="progressLabel">Iniciante!</span>
+        <span class="progress__sub" id="progressSub">Você deu o primeiro passo! Cada aula é uma conquista.</span>
       </div>
 
     </div>
@@ -831,9 +796,43 @@
 
   <script src="../api.js"></script>
   <script src="../i18n.js"></script>
+  <script src="../permissions.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../router.js"></script>
-<script src="script.js"></script>
+  <script src="script.js"></script>
   <script src="../search.js"></script>
+  <script>
+    (function() {
+      var btn = document.getElementById('themeToggle');
+      if (!btn) return;
+
+      function applyLight() {
+        document.documentElement.style.backgroundColor = '#E6F1FB';
+        document.body.style.backgroundColor = '#E6F1FB';
+        document.body.style.color = '#1a1a2e';
+        document.body.classList.add('light-mode');
+        btn.innerHTML = '&#9728;';
+      }
+      function applyDark() {
+        document.documentElement.style.backgroundColor = '';
+        document.body.style.backgroundColor = '';
+        document.body.style.color = '';
+        document.body.classList.remove('light-mode');
+        btn.innerHTML = '&#9790;';
+      }
+
+      if (localStorage.getItem('theme') === 'light') applyLight();
+
+      btn.addEventListener('click', function() {
+        if (document.body.classList.contains('light-mode')) {
+          applyDark();
+          localStorage.setItem('theme', 'dark');
+        } else {
+          applyLight();
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

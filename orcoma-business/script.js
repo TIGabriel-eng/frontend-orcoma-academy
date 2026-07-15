@@ -25,7 +25,6 @@ function initSidebarNav() {
       else if (page === "concluidos") url = "../cursos-concluidos/index.html";
       else if (page === "certificados") url = "/Certificados/index.html";
       else if (page === "trilhas") url = "../trilhasdeaprendizagem/index.html";
-      else if (page === "favoritos") url = "../favoritos/index.html";
       else if (page === "suporte") url = "../suporte/index.html";
       else if (page === "config") url = "../configuracoes/index.html";
       if (!url) { navItems.forEach(function (i) { i.classList.remove("active"); }); item.classList.add("active"); return; }
@@ -61,6 +60,83 @@ function animateProgressBars() {
     const targetWidth = bar.getAttribute("data-width");
     if (!targetWidth) return;
     setTimeout(function () { bar.style.width = targetWidth + "%"; }, 300);
+  });
+}
+
+function applyCourseCardLayout() {
+  const cards = document.querySelectorAll(".course-card");
+  const pills = document.querySelectorAll(".module-pill");
+  const trails = document.querySelectorAll(".trail-card");
+  const isCompact = window.innerWidth <= 1024;
+  cards.forEach(function (card) {
+    if (isCompact) {
+      card.classList.add("compact");
+    } else {
+      card.classList.remove("compact");
+    }
+  });
+  pills.forEach(function (pill) {
+    if (isCompact) {
+      pill.classList.add("compact");
+    } else {
+      pill.classList.remove("compact");
+    }
+  });
+  trails.forEach(function (trail) {
+    if (isCompact) {
+      trail.classList.add("compact");
+    } else {
+      trail.classList.remove("compact");
+    }
+  });
+}
+
+function applyFloatingProfile() {
+  var actions = document.querySelector(".topbar__actions");
+  var profileBar = document.querySelector(".progress-profile-bar");
+  var topbar = document.querySelector(".topbar");
+  if (!actions || !profileBar || !topbar) return;
+
+  if (window.innerWidth <= 1024) {
+    if (actions.parentElement !== profileBar) {
+      profileBar.appendChild(actions);
+    }
+  } else {
+    if (actions.parentElement !== topbar) {
+      topbar.appendChild(actions);
+    }
+  }
+}
+
+function carregarProgressoSidebar() {
+  Promise.all([
+    API.get('/api/cursos/'),
+    API.get('/api/matriculas/minhas/')
+  ]).then(function ([cursos, matriculas]) {
+    var total = cursos.length || 1;
+    var concluidas = matriculas.filter(function (m) { return m.concluido; }).length;
+    var percent = Math.round((concluidas / total) * 100);
+
+    animateProgressCircle(percent);
+
+    var tiers = [
+      { max: 10,  label: 'Iniciante',  color: '#dc2626', msg: 'Você deu o primeiro passo! Cada aula é uma conquista.' },
+      { max: 47,  label: 'Razoável',   color: '#eab308', msg: 'Bom começo! Continue assistindo suas aulas.' },
+      { max: 99,  label: 'Bom',        color: '#22c55e', msg: 'Incrível! Você já completou metade dos cursos.' },
+      { max: 100, label: 'Excelente',  color: '#0073ff', msg: 'Parabéns! Você completou todos os cursos! Queremos ouvir suas sugestões e, se desejar, preparamos uma insignia especial para você.' }
+    ];
+
+    var tier = tiers.find(function (t) { return percent <= t.max; });
+
+    var ring = document.getElementById('progressRing');
+    if (ring) ring.style.stroke = tier.color;
+
+    var labelEl = document.getElementById('progressLabel');
+    var subEl = document.getElementById('progressSub');
+    if (labelEl) labelEl.textContent = tier.label + '!';
+    if (subEl) subEl.textContent = tier.msg;
+  }).catch(function () {
+    animateProgressCircle(0);
   });
 }
 
@@ -113,7 +189,8 @@ function carregarCursos() {
     if (!slider || !cursos || cursos.length === 0) return;
     var inProgress = cursos;
     slider.innerHTML = inProgress.map(function (c) {
-      return '<div class="course-card">' +
+      var slug = c.slug || c.id;
+      return '<div class="course-card" data-slug="' + slug + '" style="cursor: pointer;">' +
         '<img src="../assets/images/reforma-tributária.png" alt="' + c.titulo + '" class="curso-capa">' +
         '<div class="course-card__thumb">' +
         '<div class="course-card__body">' +
@@ -125,6 +202,17 @@ function carregarCursos() {
         '</div></div></div>';
     }).join("");
     animateProgressBars();
+    applyCourseCardLayout();
+    
+    // Add click handlers to course cards
+    slider.querySelectorAll('.course-card').forEach(function (card) {
+      card.addEventListener('click', function () {
+        var slug = card.getAttribute('data-slug');
+        if (slug) {
+          window.location.href = '../curso/index.html?curso=' + slug;
+        }
+      });
+    });
   }).catch(function () {});
 }
 
@@ -155,6 +243,7 @@ function carregarTrilhas() {
         '<div class="trail-card__icon"><i class="fas fa-route"></i></div>' +
         '<div><h3>' + t.nome + '</h3><span>' + (t.ambiente_nome || '') + '</span></div></div>';
     }).join("");
+    applyCourseCardLayout();
   }).catch(function () {});
 }
 
@@ -165,19 +254,21 @@ document.addEventListener("DOMContentLoaded", function () {
   carregarCursos();
   carregarEventos();
   carregarTrilhas();
-
-  var percentGeral = 0;
-  try {
-    percentGeral = parseInt(localStorage.getItem('orcoma_progresso_geral') || '0', 10);
-  } catch (e) {}
-  animateProgressCircle(percentGeral);
-  animateProgressBars();
+  carregarProgressoSidebar();
+  applyCourseCardLayout();
+  applyFloatingProfile();
+  window.addEventListener("resize", function() {
+    applyCourseCardLayout();
+    applyFloatingProfile();
+  });
 
   const userRole = sessionStorage.getItem('orcoma_user_role') || 'visitor';
   const envCards = document.querySelectorAll('.module-pill');
   envCards.forEach(function (card) {
-    const allowedRoles = (card.getAttribute('data-roles') || '').split(',');
-    if (!allowedRoles.includes(userRole)) { card.classList.add('locked'); }
+    const academyName = card.getAttribute('data-academy');
+    if (academyName && !Permissions.canAccess(academyName)) {
+      card.classList.add('locked');
+    }
   });
 
   const planoMap = { 'cliente_premium': 'Cliente Premium ⭐', 'cliente_orcoma': 'Cliente Orcoma', 'colaborador_orcoma': 'Orcoma Team', 'gestor_orcoma': 'Orcoma Business', 'admin': 'Administrador', 'empresario': 'Empresário', 'visitor': 'Visitante' };
@@ -185,9 +276,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const planLabel = document.querySelector('.progress-sidebar__plan');
   if (planLabel) {
     planLabel.textContent = planoMap[tipoUsuario] ?? 'Visitante';
-    planLabel.classList.remove('pill-admin', 'pill-cliente', 'pill-visitor');
+    planLabel.classList.remove('pill-admin', 'pill-cliente', 'pill-visitor', 'pill-premium');
     if (userRole === 'admin') { planLabel.classList.add('pill-admin'); }
     else if (userRole === 'visitor') { planLabel.classList.add('pill-visitor'); }
+    else if (userRole === 'cliente_premium') { planLabel.classList.add('pill-premium'); }
     else { planLabel.classList.add('pill-cliente'); }
   }
 
@@ -197,6 +289,15 @@ document.addEventListener("DOMContentLoaded", function () {
     chevron.addEventListener('click', function (e) { e.stopPropagation(); chevron.classList.toggle('is-open'); dropdown.classList.toggle('is-visible'); });
     document.addEventListener('click', function () { chevron.classList.remove('is-open'); dropdown.classList.remove('is-visible'); });
     dropdown.addEventListener('click', function (e) { e.stopPropagation(); });
+  }
+
+  var profileLogout = document.getElementById('profileLogout');
+  if (profileLogout) {
+    profileLogout.addEventListener('click', function (e) {
+      e.preventDefault();
+      sessionStorage.clear();
+      window.location.href = '../Login/index.html';
+    });
   }
 
   const envToggle = document.getElementById('envSelectorToggle');
@@ -221,6 +322,16 @@ document.addEventListener("DOMContentLoaded", function () {
         item.classList.add('active');
         if (currentEnvName) { currentEnvName.textContent = item.textContent.trim(); }
       }
+    });
+
+    Permissions.load().then(() => {
+      const envItems = envDropdown.querySelectorAll('.env-dropdown__item');
+      envItems.forEach(function (item) {
+        const academyName = item.getAttribute('data-academy');
+        if (academyName && !Permissions.canAccess(academyName)) {
+          item.style.display = 'none';
+        }
+      });
     });
   }
 
@@ -259,8 +370,18 @@ if (slider) {
   var btnAssinar = document.getElementById('btnAssinar');
   var btnDepois = document.getElementById('btnDepois');
   if (!modal) return;
+
+  /* Se já for Cliente Premium, não mostra modal */
+  if (plano.toLowerCase().includes('premium')) return;
+
+  /* Se já dispensou, não mostra de novo */
+  if (localStorage.getItem('premiumModalDismissed')) return;
+
   modal.classList.add('is-visible');
-  btnDepois.addEventListener('click', function () { modal.classList.remove('is-visible'); });
+  btnDepois.addEventListener('click', function () {
+    localStorage.setItem('premiumModalDismissed', '1');
+    modal.classList.remove('is-visible');
+  });
   btnAssinar.addEventListener('click', function () { modal.classList.remove('is-visible'); var assinarModal = document.getElementById('assinarModal'); if (assinarModal) assinarModal.classList.add('is-visible'); });
   modal.addEventListener('click', function (e) { if (e.target === modal) { modal.classList.remove('is-visible'); } });
   var assinarModal = document.getElementById('assinarModal');

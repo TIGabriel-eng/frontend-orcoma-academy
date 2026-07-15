@@ -11,6 +11,7 @@
 
   .main-content {
     margin-left: 80px;
+    padding-top: 52px;
   }
 
   .stats-bar,
@@ -22,7 +23,97 @@
     flex: 0 0 calc((100% - var(--spacing-md)) / 2);
   }
 
+  .course-card.compact {
+    width: 300px;
+    height: 100px;
+    flex: 0 0 300px;
+  }
+
+  /* ── Right panel — flutuante no canto superior direito ── */
   .right-panel {
+    position: absolute !important;
+    top: 45px;
+    right: 12px;
+    width: auto;
+    min-width: 0;
+    max-width: 260px;
+    padding: 0;
+    z-index: 200;
+    background: transparent;
+    gap: 0;
+    overflow: visible;
+  }
+
+  .right-panel .progress-sidebar,
+  .right-panel .events-sidebar {
+    display: none;
+  }
+
+  .right-panel .progress-profile-bar {
+    position: relative;
+    background: none;
+    border: none;
+    border-radius: var(--radius-full);
+    padding: 6px 12px;
+    left: 0;
+    gap: 8px;
+  }
+
+  .right-panel .progress-sidebar__avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .right-panel .progress-sidebar__username {
+    font-size: 12px;
+  }
+
+  .right-panel .progress-sidebar__plan {
+    font-size: 10px;
+    padding: 1px 8px;
+  }
+
+  .right-panel .progress-sidebar__chevron {
+    font-size: 9px;
+  }
+
+  .right-panel .topbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 4px;
+  }
+
+  .right-panel .topbar__icon-btn {
+    font-size: 14px;
+    padding: 2px;
+  }
+
+  .right-panel .topbar__notif-dot {
+    width: 5px;
+    height: 5px;
+    top: 1px;
+    right: 1px;
+  }
+
+  .right-panel .profile-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    left: auto;
+    min-width: 180px;
+    z-index: 300;
+  }
+
+  .trail-card {
+    flex: 0 0 calc((100% - 12px) / 2);
+  }
+
+  .hero {
+    background-size: cover;
+  }
+
+  .hero::before {
     display: none;
   }
 }
@@ -46,6 +137,8 @@
   .main-content {
     margin-left: 0;
     padding: var(--spacing-md);
+    padding-top: 52px;
+    gap: 20px;
   }
 
   /* ── Topbar ── */
@@ -54,7 +147,10 @@
   }
 
   .topbar__search {
-    max-width: none;
+    width: 300px;
+    max-width: 300px;
+    height: 35px;
+    padding: 0 var(--spacing-md);
   }
 
   .topbar__search kbd {
@@ -68,11 +164,18 @@
   /* ── Grids / Cards ── */
   .stats-bar,
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 
   .course-card {
-    flex: 0 0 100%;
+    flex: 0 0 calc(100% - 8px);
+    min-width: 0;
+  }
+
+  .course-card.compact {
+    width: 300px;
+    height: 100px;
+    flex: 0 0 300px;
   }
 
   .courses-grid {
@@ -84,8 +187,25 @@
   }
 
   /* ── Hero ── */
+  .hero {
+    padding: var(--spacing-md);
+    background-size: cover;
+    background-position: center top;
+    border-radius: var(--radius-lg);
+  }
+
+  .hero::before {
+    display: none;
+  }
+
   .hero__pills {
     flex-direction: column;
+    gap: 6px;
+  }
+
+  .module-pill.compact {
+    width: 400px;
+    max-width: 100%;
   }
 
   .hero__cards {
@@ -93,15 +213,24 @@
   }
 
   .hero__brand-logo-img {
-    width: 120px;
+    width: 110px;
+  }
+
+  .hero__brand-logo-img--large {
+    width: 130px;
   }
 
   .hero__tagline {
     font-size: 13px;
   }
 
-  .hero {
-    padding: var(--spacing-md);
+  .hero__desc,
+  .hero h5 {
+    max-width: 100%;
+  }
+
+  .hero__welcome {
+    padding-left: 8px;
   }
 
   /* ── Page header ── */
@@ -114,9 +243,80 @@
     gap: var(--spacing-xs);
   }
 
-  /* ── Right panel ── */
+  /* ── Right panel — flutuante ── */
   .right-panel {
+    position: absolute !important;
+    top: 48px;
+    right: 12px;
+    width: auto;
+    min-width: 0;
+    max-width: 260px;
+    padding: 0;
+    z-index: 200;
+    background: none;
+    gap: 0;
+    overflow: visible;
+  }
+
+  .right-panel .progress-sidebar,
+  .right-panel .events-sidebar {
     display: none;
+  }
+
+  .right-panel .progress-profile-bar {
+    position: relative;
+    background: none;
+    border: none;
+    border-radius: var(--radius-full);
+    padding: 6px 12px;
+    left: 0;
+    gap: 8px;
+  }
+
+  .right-panel .progress-sidebar__avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .right-panel .progress-sidebar__username {
+    font-size: 12px;
+  }
+
+  .right-panel .progress-sidebar__plan {
+    font-size: 10px;
+    padding: 1px 8px;
+  }
+
+  .right-panel .progress-sidebar__chevron {
+    font-size: 9px;
+  }
+
+  .right-panel .topbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 4px;
+  }
+
+  .right-panel .topbar__icon-btn {
+    font-size: 14px;
+    padding: 2px;
+  }
+
+  .right-panel .topbar__notif-dot {
+    width: 5px;
+    height: 5px;
+    top: 1px;
+    right: 1px;
+  }
+
+  .right-panel .profile-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    left: auto;
+    min-width: 180px;
+    z-index: 300;
   }
 
   /* ── Premium card ── */
@@ -145,8 +345,16 @@
 
   /* ── Modal ── */
   .premium-modal__content {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-lg) var(--spacing-md);
     max-width: 95%;
+  }
+
+  .premium-modal__title {
+    font-size: 26px;
+  }
+
+  .premium-modal__subtitle {
+    font-size: 13px;
   }
 
   /* ── Certificates / Courses list ── */
@@ -169,6 +377,136 @@
   .sidebar__env {
     display: none;
   }
+
+  /* ── Section titles ── */
+  .section__title {
+    font-size: 18px;
+  }
+
+  .section-tittle {
+    font-size: 17px;
+  }
+
+  /* ── Trail cards ── */
+  .trail-card {
+    flex: 0 0 calc(100% - 8px);
+    min-width: 0;
+  }
+
+  .trail-card.compact {
+    width: 300px;
+    flex: 0 0 300px;
+  }
+
+  /* ── Learning paths ── */
+  .learning-paths__title {
+    font-size: 16px;
+  }
+
+  .learning-paths__header h3 {
+    font-size: 16px;
+  }
+
+  /* ── Slider buttons ── */
+  .slider-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .slider-btn--prev {
+    left: -8px;
+  }
+
+  .slider-btn--next {
+    right: -8px;
+  }
+
+  .trilhas-next-btn,
+  .trilhas-prev-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .trilhas-prev-btn {
+    left: -8px;
+  }
+
+  .trilhas-next-btn {
+    right: -8px;
+  }
+
+  /* ── Stats ── */
+  .stat-item {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+
+  .stat-item__number {
+    font-size: 20px;
+  }
+
+  .stat-item i {
+    font-size: 18px;
+  }
+
+  .stat-item p {
+    font-size: 10px;
+  }
+
+  /* ── Events ── */
+  .events-sidebar {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .event-card {
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .event-date {
+    width: 42px;
+    height: 50px;
+  }
+
+  .event-date .day {
+    font-size: 16px;
+  }
+
+  .event-content h4 {
+    font-size: 11px;
+  }
+
+  /* ── Progress sidebar ── */
+  .progress-sidebar {
+    padding: 20px 16px;
+    border-radius: 18px;
+  }
+
+  /* ── Checklist widget ── */
+  .checklist-widget {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .checklist-widget__panel {
+    width: 250px;
+    right: 0;
+  }
+
+  /* ── Pricing card ── */
+  .pricing-card {
+    padding: 24px var(--spacing-md) 20px;
+  }
+
+  .pricing-card__amount {
+    font-size: 44px;
+  }
+
+  .pricing-card__btn {
+    padding: 10px var(--spacing-lg);
+    font-size: 12px;
+  }
 }
 
 /* Mobile pequeno (até 480px) */
@@ -180,7 +518,14 @@
 
   .topbar__search {
     order: 3;
-    width: 100%;
+    width: 300px;
+    max-width: 300px;
+    height: 35px;
+    padding: 0 var(--spacing-md);
+  }
+
+  .topbar__search input {
+    font-size: 14px;
   }
 
   .page-header h1 {
@@ -197,16 +542,80 @@
     width: 90px;
   }
 
+  .hero__brand-logo-img--large {
+    width: 110px;
+  }
+
+  .module-pill.compact {
+    width: 100%;
+  }
+
   .course-card {
     flex: 0 0 100%;
   }
 
-  .sidebar__premium,
-  .sidebar__env {
-    display: none;
+  .course-card.compact {
+    width: 300px;
+    height: 100px;
+    flex: 0 0 300px;
   }
 
-  body {
-    font-size: 14px;
+  .hero__tagline {
+    font-size: 12px;
+  }
+
+  .hero h5 {
+    font-size: 11px;
+  }
+
+  .btn-hero {
+    font-size: 10px;
+    padding: 6px 14px;
+  }
+
+  .module-pill__name {
+    font-size: 10px;
+  }
+
+  .module-pill__desc {
+    font-size: 9px;
+  }
+
+  .section__title {
+    font-size: 16px;
+  }
+
+  .section-tittle {
+    font-size: 15px;
+  }
+
+  .stat-item {
+    padding: 12px 14px;
+  }
+
+  .stat-item__number {
+    font-size: 18px;
+  }
+
+  .checklist-widget__panel {
+    width: 220px;
+    right: -8px;
+  }
+
+  .premium-modal__content {
+    padding: var(--spacing-md);
+  }
+
+  .premium-modal__title {
+    font-size: 22px;
+  }
+
+  .premium-modal__subtitle {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .pricing-card__amount {
+    font-size: 36px;
   }
 }

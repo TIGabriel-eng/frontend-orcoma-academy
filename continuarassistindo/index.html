@@ -40,11 +40,18 @@
     <nav class="sidebar__nav">
       <ul>
         <li class="nav-item" data-page="inicio"><i class="fa-solid fa-house"></i><span data-i18n="nav.inicio">Início</span></li>
+        <li class="nav-divider">Aprendizado</li>
+
+        <li class="nav-item" data-page="cursos">
+          <i class="fa-solid fa-book"></i>
+          <span>Catálogo</span>
+        </li>
+
+        <li class="nav-divider">Progresso</li>
         <li class="nav-item active" data-page="continuar"><i class="fa-solid fa-play"></i><span data-i18n="nav.continuar">Continuar assistindo</span></li>
         <li class="nav-item" data-page="concluidos"><i class="fa-solid fa-circle-check"></i><span data-i18n="nav.concluidos">Cursos concluídos</span></li>
-        
         <li class="nav-item" data-page="trilhas"><i class="fa-solid fa-route"></i><span data-i18n="nav.trilhas">Trilhas de aprendizagem</span></li>
-        <li class="nav-item" data-page="favoritos"><i class="fa-regular fa-heart"></i><span data-i18n="nav.favoritos">Favoritos</span></li>
+        <li class="nav-divider">Geral</li>
         <li class="nav-item" data-page="suporte"><i class="fa-regular fa-circle-question"></i><span data-i18n="nav.suporte">Suporte</span></li>
         <li class="nav-item" data-page="config"><i class="fa-solid fa-gear"></i><span data-i18n="nav.config">Configurações</span></li>
         <li class="nav-item nav-item--logout" data-page="sair"><i class="fa-solid fa-right-from-bracket"></i><span data-i18n="nav.sair">Sair</span></li>
@@ -90,52 +97,7 @@
       <p data-i18n="continuar.subtitle">Retome de onde parou nos seus cursos</p>
     </div>
 
-    <div class="catalog-grid">
-      <div class="course-card" data-curso="reforma-tributaria">
-        <img src="../assets/images/reforma-tribut%C3%A1ria.png" alt="Reforma Tributária" class="curso-capa">
-        <div class="course-card__body">
-          <h3>Reforma Tributária</h3>
-          <span class="course-card__badge badge--nao-iniciado" data-i18n="continuar.badge">Não iniciado</span>
-          <div class="course-card__progress">
-            <div class="progress__bar-track"><div class="progress__bar-fill" style="width:0%"></div></div>
-            <span>0%</span>
-          </div>
-        </div>
-      </div>
-      <div class="course-card" data-curso="atualizacoes-contabeis">
-        <img src="../assets/images/reforma-tribut%C3%A1ria.png" alt="Atualizações Contábeis" class="curso-capa">
-        <div class="course-card__body">
-          <h3>Atualizações Contábeis</h3>
-          <span class="course-card__badge badge--nao-iniciado" data-i18n="continuar.badge">Não iniciado</span>
-          <div class="course-card__progress">
-            <div class="progress__bar-track"><div class="progress__bar-fill" style="width:0%"></div></div>
-            <span>0%</span>
-          </div>
-        </div>
-      </div>
-      <div class="course-card" data-curso="planejamento-estrategico">
-        <img src="../assets/images/reforma-tribut%C3%A1ria.png" alt="Planejamento Estratégico" class="curso-capa">
-        <div class="course-card__body">
-          <h3>Planejamento Estratégico</h3>
-          <span class="course-card__badge badge--nao-iniciado" data-i18n="continuar.badge">Não iniciado</span>
-          <div class="course-card__progress">
-            <div class="progress__bar-track"><div class="progress__bar-fill" style="width:0%"></div></div>
-            <span>0%</span>
-          </div>
-        </div>
-      </div>
-      <div class="course-card" data-curso="atendimento-ao-cliente">
-        <img src="../assets/images/reforma-tribut%C3%A1ria.png" alt="Atendimento ao Cliente" class="curso-capa">
-        <div class="course-card__body">
-          <h3>Atendimento ao Cliente</h3>
-          <span class="course-card__badge badge--nao-iniciado" data-i18n="continuar.badge">Não iniciado</span>
-          <div class="course-card__progress">
-            <div class="progress__bar-track"><div class="progress__bar-fill" style="width:0%"></div></div>
-            <span>0%</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="catalog-grid" id="catalogGrid"></div>
   </main>
 
   <div class="sidebar__overlay" id="sidebarOverlay"></div>

@@ -1,14 +1,6 @@
-const insigniaData = {
-  admin: {
-    icon: "fa-shield-halved",
-    name: "Administrador",
-    desc: "Insígnia concedida a administradores da plataforma."
-  }
-};
+const insigniaData = {};
 
-const insigniaPermitidas = {
-  admin: ["admin"]
-};
+const insigniaPermitidas = {};
 
 function renderizarInsignias(role) {
   const grid = document.getElementById("insigniasGrid");
@@ -92,7 +84,6 @@ function initSidebarNav() {
       else if (page === "concluidos") url = "../cursos-concluidos/index.html";
       else if (page === "certificados") url = "/Certificados/index.html";
       else if (page === "trilhas") url = "../trilhasdeaprendizagem/index.html";
-      else if (page === "favoritos") url = "../favoritos/index.html";
       else if (page === "suporte") url = "../suporte/index.html";
       else if (page === "config") url = "../configuracoes/index.html";
 
@@ -690,7 +681,7 @@ async function initHabilidades() {
 
 function initCertificados() {
   const certEl = document.getElementById("certCount");
-  if (certEl) certEl.textContent = "12";
+  if (certEl) certEl.textContent = "0";
 }
 
 function abrirCatalogoModal() {

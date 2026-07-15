@@ -314,6 +314,27 @@ img {
   justify-content: center;
 }
 
+/* Divisor de seção na sidebar */
+.nav-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px var(--spacing-md) 6px 0;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  cursor: default;
+  user-select: none;
+}
+.nav-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
 /* Item de logout */
 .nav-item--logout {
   margin-top: var(--spacing-sm);
@@ -659,11 +680,12 @@ img {
   grid-template-columns: 1fr min-content;
   gap: 0;
   align-items: start;
-  background: #000c20;
-  background-size: cover;
+  background: none;
+  background-image: url('../assets/images/orcoma_academy_banner.jpg');
+  background-size: 100%;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 140px;
+  min-height: 100px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: 16px;
@@ -676,6 +698,16 @@ img {
 .hero__welcome{
   min-width:0;
   padding-left: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero__tagline,
+.hero__desc,
+.hero h5,
+.hero__brand {
+  position: relative;
+  z-index: 2;
 }
 
 .hero__desc,
@@ -889,6 +921,50 @@ img {
   gap: 8px;
 }
 
+.module-pill.compact {
+  width: 400px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.module-pill.compact .module-pill__inner {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.module-pill.compact .module-pill__header {
+  flex-shrink: 0;
+}
+
+.module-pill.compact .module-pill__body {
+  max-height: none;
+  opacity: 1;
+  overflow: visible;
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.module-pill.compact .module-pill__desc {
+  display: block;
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  line-height: 1.3;
+  margin-top: 0;
+}
+
+.module-pill.compact .module-pill__cta {
+  margin: 0;
+  flex-shrink: 0;
+}
+
 .hero__brand-logo-img--large {
   width: 160px;
   margin-bottom: var(--spacing-sm);
@@ -986,7 +1062,6 @@ img {
 /* Parte preenchida do círculo, animada via JS ajustando stroke-dashoffset para criar o efeito de progresso */
 .progress__ring-fill {
   fill: none;
-  stroke: #002a85;
   filter: drop-shadow(0 0 6px rgba(255,255,255,0.15));
   stroke-width: 8;
   stroke-linecap: round;
@@ -1174,6 +1249,52 @@ img {
     border-radius: var(--radius-md);
   background: #050b16;
 }
+
+.course-card.compact {
+    width: 300px;
+    height: 100px;
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: row;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.course-card.compact img {
+    width: 110px;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+    flex-shrink: 0;
+}
+
+.course-card.compact .course-card__thumb {
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+}
+
+.course-card.compact .course-card__body h3 {
+    font-size: 12px;
+}
+
+.course-card.compact .course-card__badge {
+    font-size: 9px;
+    padding: 1px 6px;
+}
+
+.course-card.compact .course-card__progress {
+    padding: 0;
+    gap: 6px;
+}
+
+.course-card.compact .course-card__progress span {
+    font-size: 10px;
+}
 /* ============================================================
    BOTÕES DE NAVEGAÇÃO
 ============================================================ */
@@ -1304,7 +1425,7 @@ img {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  overflow: hidden;
+  overflow: visible;
   background: var(--color-bg);
 }
 
@@ -1319,7 +1440,7 @@ img {
 }
 
 .progress-sidebar {
-  flex: 1;
+  flex: none;
   background: linear-gradient(
     180deg,
     #000c20 0%,
@@ -1498,6 +1619,21 @@ img {
   flex-shrink: 0;
 }
 
+.profile-dropdown__divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 4px 12px;
+}
+
+.profile-dropdown__item--logout {
+  color: #ef4444;
+}
+
+.profile-dropdown__item--logout:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
 /* ============================================================
    CARD DE EVENTOS
    ============================================================ */
@@ -1657,6 +1793,12 @@ img {
     transition:.3s;
 }
 
+.trail-card.compact {
+    width: 300px;
+    flex: 0 0 300px;
+    min-width: 0;
+}
+
 .trail-card:hover{
     border-color:#2563eb;
     transform:translateY(-2px);
@@ -1807,54 +1949,281 @@ img {
 
 }
 
+/* ============================================================
+   BOTTOM ROW (Trilhas wrapper)
+   ============================================================ */
+.bottom-row {
+  width: 100%;
+  max-width: 100%;
+}
+
 /* ==========================================================
-   RESPONSIVIDADE
+   RESPONSIVIDADE — Página Orcoma Business
+   (complementa o responsive.css global)
 ========================================================== */
 
+/* Tablet (até 1024px) */
+@media (max-width: 1024px) {
 
-/* Tablet */
-@media (max-width: 1024px){
-
-  .sidebar{
-    width:clamp(220px, 15vw, 320px);
+  .hero {
+    background-size: cover;
+    background-position: center;
   }
 
-  .main-content{
-    margin-left:80px;
+  .hero::before {
+    display: none;
   }
 
-  .course-card{
-    flex:0 0 calc((100% - 10px) / 2);
+  .curso-recomendado__content {
+    gap: 12px;
   }
 
-  .stats-bar{
-    grid-template-columns:repeat(2,1fr);
+  .curso-recomendado__thumb {
+    width: 200px;
+    height: 112px;
+  }
+
+  .curso-recomendado__info p {
+    max-width: 100%;
+  }
+
+  .learning-paths__list {
+    gap: 10px;
   }
 }
 
-/* Celular */
-@media (max-width: 768px){
+/* Mobile (até 768px) */
+@media (max-width: 768px) {
 
-  .sidebar{
-    transform:translateX(-100%);
-  }
-
-  .sidebar.is-open{
-    transform:translateX(0);
-  }
-
-  .main-content{
-    margin-left:0;
-    margin-right:0;
-    padding:16px;
-  }
-
-  .right-panel{
-    display:none;
-  }
-
-  .hero__pills{
+  /* ── Hero ── */
+  .hero {
+    display: flex;
     flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    background-size: cover;
+    background-position: center top;
+    border-radius: var(--radius-lg);
+    min-height: auto;
+  }
+
+  .hero::before {
+    display: none;
+  }
+
+  .hero__welcome {
+    padding-left: 0;
+    width: 100%;
+  }
+
+  .hero__brand {
+    margin-bottom: 4px;
+  }
+
+  .hero__tagline {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .hero__desc {
+    max-width: 100%;
+    font-size: 11px;
+  }
+
+  .hero h5 {
+    max-width: 100%;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .hero__pills {
+    width: 100%;
+    gap: 6px;
+  }
+
+  .module-pill {
+    padding: 6px 12px;
+  }
+
+  .module-pill__name {
+    font-size: 11px;
+  }
+
+  /* ── Curso Recomendado ── */
+  .curso-recomendado {
+    padding: 14px;
+    border-radius: 14px;
+    min-height: auto;
+  }
+
+  .curso-recomendado__content {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .curso-recomendado__thumb {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+  }
+
+  .curso-recomendado__info {
+    width: 100%;
+  }
+
+  .curso-recomendado__info h3 {
+    font-size: 17px;
+  }
+
+  .curso-recomendado__info p {
+    font-size: 13px;
+    max-width: 100%;
+  }
+
+  .curso-recomendado__meta {
+    gap: 10px;
+    font-size: 12px;
+  }
+
+  .curso-recomendado__badge {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  /* ── Section headers ── */
+  .section__header {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .learning-paths__header {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .learning-paths__header a {
+    font-size: 11px;
+  }
+
+  /* ── Bottom row ── */
+  .bottom-row {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ── Courses slider ── */
+  .courses-slider-wrapper {
+    overflow: visible;
+  }
+
+  .courses-slider {
+    gap: 6px;
+  }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    border-radius: 10px;
+  }
+
+  /* ── Modal premium ── */
+  .premium-modal__content {
+    padding: var(--spacing-lg) var(--spacing-md);
+    border-radius: var(--radius-lg);
+  }
+
+  .premium-modal__actions {
+    gap: 8px;
+  }
+
+  .premium-modal__btn {
+    font-size: 13px;
+    padding: 12px var(--spacing-md);
+  }
+
+  .premium-modal__content--pricing {
+    max-width: 90%;
+  }
+}
+
+/* Mobile pequeno (até 480px) */
+@media (max-width: 480px) {
+
+  .hero {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .hero__welcome h5 {
+    font-size: 11px;
+  }
+
+  .btn-hero {
+    width: 100%;
+    justify-content: center;
+    font-size: 11px;
+    padding: 8px 16px;
+  }
+
+  .module-pill {
+    padding: 5px 10px;
+  }
+
+  .curso-recomendado {
+    padding: 12px;
+  }
+
+  .curso-recomendado__thumb {
+    height: 150px;
+  }
+
+  .curso-recomendado__info h3 {
+    font-size: 15px;
+  }
+
+  .curso-recomendado__meta {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .btn-recomendado {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .stat-item:not(:last-child) {
+    border-right: none;
+  }
+
+  .stat-item {
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+
+  .stat-item:last-child {
+    border-bottom: none;
+  }
+
+  .stats-bar {
+    border-radius: 10px;
+  }
+
+  .premium-modal__content--pricing {
+    max-width: 95%;
+  }
+
+  .pricing-card {
+    padding: 20px var(--spacing-sm) 16px;
+    border-radius: 18px;
+  }
+
+  .pricing-card__ribbon {
+    font-size: 9px;
+    padding: 4px 36px;
+  }
+
+  .pricing-card__benefits li {
+    font-size: 11px;
   }
 }
 
@@ -2481,6 +2850,45 @@ img {
 .pricing-card__btn:hover {
   transform: scale(1.03);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35), 0 0 20px rgba(212, 160, 23, 0.3);
+}
+
+/* ============================================================
+   LIGHT MODE — Elementos específicos
+   ============================================================ */
+body.light-mode .right-panel {
+  background: #E6F1FB;
+}
+
+body.light-mode .section__title {
+  color: #0d1b2e;
+}
+
+body.light-mode .hero__welcome h5 {
+  color: #ffffff;
+}
+
+body.light-mode .hero__brand-sub {
+  color: #ffffff;
+}
+
+body.light-mode .trail-card h3 {
+  color: #ffffff;
+}
+
+body.light-mode .trail-card span {
+  color: #ffffff;
+}
+
+body.light-mode .section-tittle {
+  color: #0d1b2e;
+}
+
+body.light-mode .progress-sidebar__username {
+  color: #0d1b2e;
+}
+
+body.light-mode .progress__header h3 {
+  color: #ffffff;
 }
 
 /* Anti Copy */

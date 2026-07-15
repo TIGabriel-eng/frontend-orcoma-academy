@@ -7,7 +7,7 @@ const i18n = {
     "nav.inicio":"Início","nav.perfil":"Meu Perfil","nav.cursos":"Meus cursos",
     "nav.continuar":"Continuar assistindo","nav.concluidos":"Cursos concluídos",
     "nav.certificados":"Certificados","nav.trilhas":"Trilhas de aprendizagem",
-    "nav.favoritos":"Favoritos","nav.suporte":"Suporte","nav.config":"Configurações",
+    "nav.suporte":"Suporte","nav.config":"Configurações",
     "nav.sair":"Sair","sidebar.env.label":"AMBIENTE ATIVO",
     "sidebar.premium.title":"Seja Premium",
     "sidebar.premium.desc":"Tenha acesso a todos os cursos, trilhas e certificados.",
@@ -25,9 +25,6 @@ const i18n = {
     "certificados.title":"Certificados",
     "certificados.subtitle":"Baixe seus certificados de conclusão",
     "certificados.download":"Baixar PDF","certificados.hours":"horas",
-
-    "favoritos.title":"Favoritos",
-    "favoritos.subtitle":"Seus cursos salvos para ver depois",
 
     "suporte.title":"Suporte","suporte.subtitle":"Estamos aqui para ajudar",
     "suporte.faq.title":"Perguntas Frequentes",
@@ -77,8 +74,8 @@ const i18n = {
     "trilhas.card4.title":"LGPD & Compliance",
     "trilhas.card4.desc":"Entenda a Lei Geral de Proteção de Dados e adequação de escritórios.",
 
-    "cursos.title":"Meus Cursos",
-    "cursos.subtitle":"Acesse seus conteúdos salvos, assistidos e criados",
+    "cursos.title":"Catálogo de Cursos",
+    "cursos.subtitle":"Venha conferir o ambiente que preparamos para você!",
     "cursos.tab.catalog":"Catálogo de Cursos","cursos.tab.saved":"Salvos",
     "cursos.empty.saved":"Você não salvou nenhum curso",
 
@@ -92,7 +89,7 @@ const i18n = {
     "nav.inicio":"Home","nav.perfil":"My Profile","nav.cursos":"My Courses",
     "nav.continuar":"Continue Watching","nav.concluidos":"Completed Courses",
     "nav.certificados":"Certificates","nav.trilhas":"Learning Paths",
-    "nav.favoritos":"Favorites","nav.suporte":"Support","nav.config":"Settings",
+    "nav.suporte":"Support","nav.config":"Settings",
     "nav.sair":"Logout","sidebar.env.label":"ACTIVE ENVIRONMENT",
     "sidebar.premium.title":"Be Premium",
     "sidebar.premium.desc":"Get access to all courses, learning paths and certificates.",
@@ -110,9 +107,6 @@ const i18n = {
     "certificados.title":"Certificates",
     "certificados.subtitle":"Download your completion certificates",
     "certificados.download":"Download PDF","certificados.hours":"hours",
-
-    "favoritos.title":"Favorites",
-    "favoritos.subtitle":"Your saved courses for later",
 
     "suporte.title":"Support","suporte.subtitle":"We're here to help",
     "suporte.faq.title":"Frequently Asked Questions",

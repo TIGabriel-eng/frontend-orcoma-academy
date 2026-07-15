@@ -569,3 +569,93 @@ a, button, input, textarea, select, [contenteditable], label, [role="button"], .
 }
 
 
+/* ==========================================================
+   RESPONSIVIDADE MOBILE
+   Ajustes para telas pequenas (tablets e celulares)
+========================================================== */
+
+/* Tablets e telas médias */
+@media (max-width: 900px) {
+    .login-page {
+        grid-template-columns: 1fr;
+        min-height: 100vh;
+    }
+
+    .login-left {
+        padding: 40px 24px;
+    }
+
+    .logo-big {
+        width: 260px;
+    }
+
+    .login-left h1 {
+        font-size: 32px;
+        max-width: 100%;
+    }
+
+    .login-left p {
+        font-size: 16px;
+    }
+
+    .login-right {
+        border-left: none;
+        padding: 0 24px 40px;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+    }
+}
+
+/* Celulares */
+@media (max-width: 480px) {
+    .login-left {
+        padding: 32px 20px 16px;
+    }
+
+    .logo-big {
+        width: 200px;
+    }
+
+    .login-left h1 {
+        font-size: 26px;
+        margin-top: 20px;
+    }
+
+    .login-left p {
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .login-right {
+        padding: 0 20px 32px;
+    }
+
+    .login-card h2 {
+        font-size: 26px;
+        margin-bottom: 24px;
+    }
+
+    .input-group input {
+        height: 48px;
+    }
+
+    button {
+        height: 48px;
+    }
+
+    /* Empilha nome e sobrenome no cadastro */
+    .input-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .recovery-box {
+        width: calc(100% - 32px);
+        padding: 24px;
+    }
+}
+
+

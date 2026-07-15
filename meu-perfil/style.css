@@ -298,6 +298,27 @@ body {
   justify-content: center;
 }
 
+/* Divisor de seção na sidebar */
+.nav-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px var(--spacing-md) 6px 0;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  cursor: default;
+  user-select: none;
+}
+.nav-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
 /* Item de logout */
 .nav-item--logout {
   margin-top: var(--spacing-sm);

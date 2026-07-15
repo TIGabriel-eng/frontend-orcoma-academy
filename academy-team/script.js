@@ -53,6 +53,51 @@ function initSidebarMobile() {
    3. NAVEGAÇÃO DA SIDEBAR (ITEM ATIVO)
    ============================================================ */
 
+function applyFloatingProfile() {
+  var actions = document.querySelector(".topbar__actions");
+  var profileBar = document.querySelector(".progress-profile-bar");
+  var topbar = document.querySelector(".topbar");
+  if (!actions || !profileBar || !topbar) return;
+
+  if (window.innerWidth <= 1024) {
+    if (actions.parentElement !== profileBar) {
+      profileBar.appendChild(actions);
+    }
+  } else {
+    if (actions.parentElement !== topbar) {
+      topbar.appendChild(actions);
+    }
+  }
+}
+
+function applyCourseCardLayout() {
+  var cards = document.querySelectorAll(".course-card");
+  var pills = document.querySelectorAll(".module-pill");
+  var trails = document.querySelectorAll(".trail-card");
+  var isCompact = window.innerWidth <= 1024;
+  cards.forEach(function (card) {
+    if (isCompact) {
+      card.classList.add("compact");
+    } else {
+      card.classList.remove("compact");
+    }
+  });
+  pills.forEach(function (pill) {
+    if (isCompact) {
+      pill.classList.add("compact");
+    } else {
+      pill.classList.remove("compact");
+    }
+  });
+  trails.forEach(function (trail) {
+    if (isCompact) {
+      trail.classList.add("compact");
+    } else {
+      trail.classList.remove("compact");
+    }
+  });
+}
+
 function navigateWithAnimation(url) {
   if (!url) return;
   Router.navigate(url);
@@ -78,7 +123,6 @@ function initSidebarNav() {
       else if (page === "concluidos") url = "../cursos-concluidos/index.html";
       else if (page === "certificados") url = "/Certificados/index.html";
       else if (page === "trilhas") url = "../trilhasdeaprendizagem/index.html";
-      else if (page === "favoritos") url = "../favoritos/index.html";
       else if (page === "suporte") url = "../suporte/index.html";
       else if (page === "config") url = "../configuracoes/index.html";
 
@@ -145,6 +189,39 @@ function animateProgressBars() {
     setTimeout(function () {
       bar.style.width = targetWidth + "%";
     }, 300);
+  });
+}
+
+
+function carregarProgressoSidebar() {
+  Promise.all([
+    API.get('/api/cursos/'),
+    API.get('/api/matriculas/minhas/')
+  ]).then(function ([cursos, matriculas]) {
+    var total = cursos.length || 1;
+    var concluidas = matriculas.filter(function (m) { return m.concluido; }).length;
+    var percent = Math.round((concluidas / total) * 100);
+
+    animateProgressCircle(percent);
+
+    var tiers = [
+      { max: 10,  label: 'Iniciante',  color: '#dc2626', msg: 'Você deu o primeiro passo! Cada aula é uma conquista.' },
+      { max: 47,  label: 'Razoável',   color: '#eab308', msg: 'Bom começo! Continue assistindo suas aulas.' },
+      { max: 99,  label: 'Bom',        color: '#22c55e', msg: 'Incrível! Você já completou metade dos cursos.' },
+      { max: 100, label: 'Excelente',  color: '#0073ff', msg: 'Parabéns! Você completou todos os cursos! Queremos ouvir suas sugestões e, se desejar, preparamos uma insignia especial para você.' }
+    ];
+
+    var tier = tiers.find(function (t) { return percent <= t.max; });
+
+    var ring = document.getElementById('progressRing');
+    if (ring) ring.style.stroke = tier.color;
+
+    var labelEl = document.getElementById('progressLabel');
+    var subEl = document.getElementById('progressSub');
+    if (labelEl) labelEl.textContent = tier.label + '!';
+    if (subEl) subEl.textContent = tier.msg;
+  }).catch(function () {
+    animateProgressCircle(0);
   });
 }
 
@@ -242,6 +319,7 @@ function carregarCursos() {
         '</div></div></div>';
     }).join("");
     animateProgressBars();
+    applyCourseCardLayout();
   }).catch(function () {});
 }
 
@@ -282,6 +360,7 @@ function carregarTrilhas() {
         '<div class="trail-card__icon"><i class="fas fa-route"></i></div>' +
         '<div><h3>' + t.nome + '</h3><span>' + (t.ambiente_nome || '') + '</span></div></div>';
     }).join("");
+    applyCourseCardLayout();
   }).catch(function () {});
 }
 
@@ -304,21 +383,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
   carregarTrilhas();
 
-  animateProgressCircle(72);
-
-  animateProgressBars();
+  carregarProgressoSidebar();
+  applyFloatingProfile();
+  applyCourseCardLayout();
+  window.addEventListener("resize", function() {
+    applyFloatingProfile();
+    applyCourseCardLayout();
+  });
 
   const userRole = sessionStorage.getItem('orcoma_user_role') || 'visitor';
 
-  if (userRole === 'cliente_orcoma') {
-    window.location.href = '../orcoma-business/index.html';
-    return;
-  }
 
   const envCards = document.querySelectorAll('.module-pill');
   envCards.forEach(function (card) {
-    const allowedRoles = (card.getAttribute('data-roles') || '').split(',');
-    if (!allowedRoles.includes(userRole)) {
+    const academyName = card.getAttribute('data-academy');
+    if (academyName && !Permissions.canAccess(academyName)) {
       card.classList.add('locked');
     }
   });
@@ -367,6 +446,15 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
+    var profileLogout = document.getElementById('profileLogout');
+    if (profileLogout) {
+      profileLogout.addEventListener('click', function (e) {
+        e.preventDefault();
+        sessionStorage.clear();
+        window.location.href = '../Login/index.html';
+      });
+    }
+
     const envToggle = document.getElementById('envSelectorToggle');
     const envDropdown = document.getElementById('envDropdown');
     const envChevron = document.getElementById('envChevron');
@@ -399,6 +487,16 @@ document.addEventListener("DOMContentLoaded", function () {
           item.classList.add('active');
           if (currentEnvName) { currentEnvName.textContent = item.textContent.trim(); }
         }
+      });
+
+      Permissions.load().then(() => {
+        const envItems = envDropdown.querySelectorAll('.env-dropdown__item');
+        envItems.forEach(function (item) {
+          const academyName = item.getAttribute('data-academy');
+          if (academyName && !Permissions.canAccess(academyName)) {
+            item.style.display = 'none';
+          }
+        });
       });
     }
 
@@ -439,16 +537,21 @@ document.addEventListener("DOMContentLoaded", function () {
 /* Modal Premium */
 (function checkPremium() {
   var plano = sessionStorage.getItem('orcoma_plano_nome') || '';
-  var planosPremium = ['Administrador', 'Premium', 'Empresarial'];
-
   var modal = document.getElementById('premiumModal');
   var btnAssinar = document.getElementById('btnAssinar');
   var btnDepois = document.getElementById('btnDepois');
   if (!modal) return;
 
+  /* Se já for Cliente Premium, não mostra modal */
+  if (plano.toLowerCase().includes('premium')) return;
+
+  /* Se já dispensou, não mostra de novo */
+  if (localStorage.getItem('premiumModalDismissed')) return;
+
   modal.classList.add('is-visible');
 
   btnDepois.addEventListener('click', function () {
+    localStorage.setItem('premiumModalDismissed', '1');
     modal.classList.remove('is-visible');
   });
 

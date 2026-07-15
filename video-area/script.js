@@ -620,20 +620,172 @@ function rate(val) {
     '<strong>' + val + '/5</strong>';
 }
 
+/* ── RATING DISPLAY (based on reviews) ── */
+function updateRatingDisplay() {
+  var cards = document.querySelectorAll('.review-card');
+  var label = document.getElementById('ratingLabel');
+  var displayStars = document.querySelectorAll('#starsDisplay .star');
+  if (cards.length === 0) {
+    displayStars.forEach(function(s) { s.classList.remove('lit'); });
+    if (label) label.innerHTML = '<strong>—/5</strong>';
+    return;
+  }
+  var total = 0;
+  cards.forEach(function(card) {
+    var litStars = card.querySelectorAll('.review-card__stars .star.lit');
+    total += litStars.length;
+  });
+  var avg = total / cards.length;
+  var rounded = Math.round(avg * 10) / 10;
+  displayStars.forEach(function(s, i) {
+    if (i < Math.round(avg)) s.classList.add('lit');
+    else s.classList.remove('lit');
+  });
+  if (label) label.innerHTML = '<strong>' + rounded.toFixed(1) + '/5</strong>';
+}
+
+/* ── LOAD REVIEWS FROM API ── */
+function carregarReviews() {
+  var moduloId = getParam('modulo');
+  var list = document.getElementById('reviewsList');
+  if (!list) return;
+
+  if (!moduloId) {
+    list.innerHTML = '<div class="reviews-empty"><img src="../assets/images/sem-comentários.png" alt="Sem comentários" class="reviews-empty__icon" /><p>Ninguém comentou ainda!</p></div>';
+    updateRatingDisplay();
+    return;
+  }
+
+  API.get('/api/modulos/' + moduloId + '/avaliacoes/')
+    .then(function(data) {
+      var reviews = data.results || data;
+      if (!reviews || reviews.length === 0) {
+        list.innerHTML = '<div class="reviews-empty"><img src="../assets/images/sem-comentários.png" alt="Sem comentários" class="reviews-empty__icon" /><p>Ninguém comentou ainda!</p></div>';
+        updateRatingDisplay();
+        return;
+      }
+      list.innerHTML = '';
+      reviews.forEach(function(r) {
+        var starsHtml = '';
+        for (var i = 1; i <= 5; i++) {
+          starsHtml += '<span class="star ' + (i <= r.nota ? 'lit' : '') + '">★</span>';
+        }
+        var dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString('pt-BR') : '';
+        var avatarSrc = r.usuario_avatar || '';
+        var avatarHtml = avatarSrc
+          ? '<img src="' + sanitize(avatarSrc) + '" alt="Avatar" class="review-card__avatar" />'
+          : '<div class="review-card__avatar review-card__avatar--initial" style="background:' + corDoNome(r.usuario_nome || '?') + '">' + sanitize((r.usuario_nome || '?').charAt(0).toUpperCase()) + '</div>';
+        var card = document.createElement('div');
+        card.className = 'review-card';
+        card.innerHTML =
+          '<div class="review-card__header">' +
+            avatarHtml +
+            '<div class="review-card__info">' +
+              '<span class="review-card__name">' + sanitize(r.usuario_nome || 'Usuário') + '</span>' +
+              '<span class="review-card__date">' + dateStr + '</span>' +
+            '</div>' +
+            '<div class="review-card__stars">' + starsHtml + '</div>' +
+          '</div>' +
+          '<p class="review-card__comment">' + sanitize(r.comentario || '') + '</p>';
+        list.appendChild(card);
+      });
+      updateRatingDisplay();
+    })
+    .catch(function() {
+      list.innerHTML = '<div class="reviews-empty"><img src="../assets/images/sem-comentários.png" alt="Sem comentários" class="reviews-empty__icon" /><p>Ninguém comentou ainda!</p></div>';
+      updateRatingDisplay();
+    });
+}
+
+function corDoNome(nome) {
+  var hash = 0;
+  for (var i = 0; i < nome.length; i++) {
+    hash = nome.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  var colors = ['#f59e0b','#3b82f6','#ef4444','#10b981','#8b5cf6','#ec4899','#06b6d4','#84cc16'];
+  return colors[Math.abs(hash) % colors.length];
+}
+
 /* ── REVIEW FORM ── */
 function toggleReview() {
-  var form = document.getElementById('review-form');
-  var btn = document.querySelector('.review-toggle');
-  var open = form.classList.toggle('open');
-  btn.setAttribute('aria-expanded', open);
-  form.setAttribute('aria-hidden', !open);
-  if (open) document.getElementById('review-text').focus();
+  var reviewsTab = null;
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    if (b.getAttribute('aria-controls') === 'panel-reviews') reviewsTab = b;
+  });
+  if (reviewsTab) switchTab(reviewsTab, 'panel-reviews');
+  setTimeout(function() {
+    var textarea = document.getElementById('composer-text');
+    if (textarea) textarea.focus();
+  }, 100);
+}
+
+var composerRating = 0;
+function setComposerRating(n) {
+  composerRating = n;
+  var stars = document.querySelectorAll('.review-composer__stars .star');
+  stars.forEach(function(s, i) {
+    if (i < n) s.classList.add('lit');
+    else s.classList.remove('lit');
+  });
+}
+
+function postComposerReview() {
+  var txt = document.getElementById('composer-text').value.trim();
+  if (!txt || composerRating === 0) return;
+  var list = document.getElementById('reviewsList');
+  var moduloId = getParam('modulo');
+  var userName = sessionStorage.getItem('orcoma_user_name') || 'Usuário';
+  var userAvatar = sessionStorage.getItem('orcoma_user_avatar') || '';
+
+  var reviewData = {
+    modulo: moduloId ? parseInt(moduloId) : null,
+    nota: composerRating,
+    comentario: txt
+  };
+
+  function renderReview(r) {
+    var now = new Date();
+    var dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString('pt-BR') : String(now.getDate()).padStart(2,'0') + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + now.getFullYear();
+    var starsHtml = '';
+    for (var i = 1; i <= 5; i++) {
+      starsHtml += '<span class="star ' + (i <= (r.nota || composerRating) ? 'lit' : '') + '">★</span>';
+    }
+    var avatarSrc = r.usuario_avatar || userAvatar;
+    var nombre = r.usuario_nome || userName;
+    var avatarHtml = avatarSrc
+      ? '<img src="' + sanitize(avatarSrc) + '" alt="Avatar" class="review-card__avatar" />'
+      : '<div class="review-card__avatar review-card__avatar--initial" style="background:' + corDoNome(nombre) + '">' + sanitize(nombre.charAt(0).toUpperCase()) + '</div>';
+    var card = document.createElement('div');
+    card.className = 'review-card';
+    card.innerHTML =
+      '<div class="review-card__header">' +
+        avatarHtml +
+        '<div class="review-card__info">' +
+          '<span class="review-card__name">' + sanitize(nombre) + '</span>' +
+          '<span class="review-card__date">' + dateStr + '</span>' +
+        '</div>' +
+        '<div class="review-card__stars">' + starsHtml + '</div>' +
+      '</div>' +
+      '<p class="review-card__comment">' + sanitize(txt) + '</p>';
+    if (list.querySelector('.reviews-empty')) list.innerHTML = '';
+    list.insertBefore(card, list.firstChild);
+  }
+
+  if (moduloId) {
+    API.post('/api/modulos/' + moduloId + '/avaliacoes/', reviewData)
+      .then(function(data) { renderReview(data); })
+      .catch(function() { renderReview({}); });
+  } else {
+    renderReview({});
+  }
+
+  document.getElementById('composer-text').value = '';
+  composerRating = 0;
+  document.querySelectorAll('.review-composer__stars .star').forEach(function(s) { s.classList.remove('lit'); });
+  updateRatingDisplay();
 }
 
 function postReview() {
-  var txt = document.getElementById('review-text').value.trim();
-  if (!txt) return;
-  document.getElementById('review-text').value = '';
   toggleReview();
 }
 
@@ -702,9 +854,47 @@ function updateModuleLocks() {
 
 updateModuleLocks();
 
+/* ── SIDEBAR MOBILE ── */
+function initSidebarMobile() {
+  var sidebar = document.getElementById('sidebar');
+  var menuToggleBtn = document.getElementById('menuToggle');
+  var overlay = document.getElementById('sidebarOverlay');
+  if (!sidebar || !menuToggleBtn || !overlay) return;
+
+  function openSidebar() {
+    sidebar.classList.add('is-open');
+    overlay.classList.add('is-visible');
+    menuToggleBtn.classList.add('is-active');
+    var icon = menuToggleBtn.querySelector('i');
+    if (icon) { icon.classList.remove('fa-bars'); icon.classList.add('fa-times'); }
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('is-open');
+    overlay.classList.remove('is-visible');
+    menuToggleBtn.classList.remove('is-active');
+    var icon = menuToggleBtn.querySelector('i');
+    if (icon) { icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); }
+    document.body.style.overflow = '';
+  }
+
+  menuToggleBtn.addEventListener('click', function () {
+    if (sidebar.classList.contains('is-open')) {
+      closeSidebar();
+    } else {
+      openSidebar();
+    }
+  });
+
+  overlay.addEventListener('click', closeSidebar);
+}
+
 /* ── DOM READY ── */
 document.addEventListener('DOMContentLoaded', function () {
   carregarCurso();
+  initSidebarMobile();
+  carregarReviews();
+  updateRatingDisplay();
 
   /* AntibCopy */
 document.addEventListener('cut', function (e) { e.preventDefault(); });
