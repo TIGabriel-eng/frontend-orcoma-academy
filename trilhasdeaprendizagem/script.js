@@ -15,7 +15,7 @@ function initSidebarNav() {
     item.addEventListener("click", function () {
       var page = item.getAttribute("data-page");
       if (page === "sair") {
-        sessionStorage.clear();
+        auth.logout();
         window.location.href = "../Login/index.html";
         return;
       }

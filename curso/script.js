@@ -176,7 +176,17 @@
             return;
         }
 
-        materiais.forEach(material => {
+        // Filter out video items (they are shown in the player, not as downloadable materials)
+        const materiaisDownload = materiais.filter(function(m) {
+            return m.modalidade !== 'video';
+        });
+
+        if (materiaisDownload.length === 0) {
+            materialsList.innerHTML = '<p style="color: var(--text-2);">Nenhum material de apoio disponível para este módulo.</p>';
+            return;
+        }
+
+        materiaisDownload.forEach(material => {
             const item = document.createElement('div');
             item.className = 'resource-item';
 
@@ -256,8 +266,12 @@
 
     // Initialize on DOM ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            loadSavedNotes();
+        });
     } else {
         init();
+        loadSavedNotes();
     }
 })();

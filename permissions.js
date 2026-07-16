@@ -19,7 +19,7 @@ const Permissions = (() => {
   }
 
   function getRole() {
-    return cached?.role || sessionStorage.getItem('orcoma_user_role') || 'visitor';
+    return cached?.role || auth.getRole();
   }
 
   function canAccess(academyName) {

@@ -2,12 +2,12 @@
 
 /* ============================================================
    ORCOMA ACADEMY — Search Engine
-   Dados centralizados de cursos e trilhas + UI de busca
+   Busca via API com fallback para dados estáticos
    ============================================================ */
 
-/* ---------- DADOS ---------- */
+/* ---------- DADOS FALLBACK (offline) ---------- */
 
-const SEARCH_DATA = {
+const SEARCH_DATA_FALLBACK = {
   cursos: [
     { id: "reforma-tributaria",          titulo: "Reforma Tributária",          descricao: "Módulos sobre a nova reforma tributária, impactos e adequações.",                        url: "../cursos/reforma-tributaria.html",          academy: "contabil" },
     { id: "atualizacoes-contabeis",      titulo: "Atualizações Contábeis",      descricao: "Mudanças nas normas contábeis, IFRS, CPC e legislação.",                                   url: "../cursos/atualizacoes-contabeis.html",      academy: "contabil" },
@@ -22,7 +22,6 @@ const SEARCH_DATA = {
     { id: "treinamentos-internos",       titulo: "Treinamentos Internos",       descricao: "Capacitação interna da equipe Orcoma: processos, ferramentas e cultura.",                  url: "../cursos/treinamentos-internos.html",       academy: "orcomakers" },
     { id: "processos-orcoma",            titulo: "Processos da Orcoma",         descricao: "Entenda o funcionamento interno, fluxos e sistemas utilizados na Orcoma.",                 url: "../cursos/processos-orcoma.html",            academy: "orcomakers" },
   ],
-
   trilhas: [
     { id: "contabilidade-completa",     titulo: "Contabilidade Completa",       descricao: "Do básico ao avançado: balanços, DRE, tributos e muito mais.",                             url: "../trilhasdeaprendizagem/index.html",        cursos: 8 },
     { id: "sped-obrigacoes",            titulo: "SPED & Obrigações Acessórias", descricao: "Domine SPED Fiscal, SPED Contábil, EFD-Reinf e DCTFWeb.",                                 url: "../trilhasdeaprendizagem/index.html",        cursos: 7 },
@@ -30,6 +29,8 @@ const SEARCH_DATA = {
     { id: "lgpd-compliance",            titulo: "LGPD & Compliance",            descricao: "Entenda a Lei Geral de Proteção de Dados e adequação de escritórios.",                     url: "../trilhasdeaprendizagem/index.html",        cursos: 5 },
   ],
 };
+
+let SEARCH_DATA = SEARCH_DATA_FALLBACK;
 
 /* ---------- UI ---------- */
 
@@ -69,7 +70,37 @@ function renderSearchResults(results, query) {
           <i class="fa-solid fa-graduation-cap"></i>
           <div class="search-dropdown__item-content">
             <span class="search-dropdown__item-title">${highlightMatch(curso.titulo, query)}</span>
-            <span class="search-dropdown__item-desc">${curso.descricao}</span>
+            <span class="search-dropdown__item-desc">${curso.descricao || ''}</span>
+          </div>
+        </a>`;
+    });
+  }
+
+  const modulos = results.filter(r => r.tipo === "modulo");
+  if (modulos.length > 0) {
+    html += `<div class="search-dropdown__group-label">Módulos</div>`;
+    modulos.forEach(mod => {
+      html += `
+        <a href="${mod.url}" class="search-dropdown__item">
+          <i class="fa-solid fa-layer-group"></i>
+          <div class="search-dropdown__item-content">
+            <span class="search-dropdown__item-title">${highlightMatch(mod.titulo, query)}</span>
+            <span class="search-dropdown__item-desc">${mod.descricao || ''}</span>
+          </div>
+        </a>`;
+    });
+  }
+
+  const materiais = results.filter(r => r.tipo === "material");
+  if (materiais.length > 0) {
+    html += `<div class="search-dropdown__group-label">Materiais</div>`;
+    materiais.forEach(mat => {
+      html += `
+        <a href="${mat.url}" class="search-dropdown__item">
+          <i class="fa-solid fa-file-lines"></i>
+          <div class="search-dropdown__item-content">
+            <span class="search-dropdown__item-title">${highlightMatch(mat.titulo, query)}</span>
+            <span class="search-dropdown__item-desc">${mat.descricao || ''}</span>
           </div>
         </a>`;
     });
@@ -84,7 +115,7 @@ function renderSearchResults(results, query) {
           <i class="fa-solid fa-route"></i>
           <div class="search-dropdown__item-content">
             <span class="search-dropdown__item-title">${highlightMatch(trilha.titulo, query)}</span>
-            <span class="search-dropdown__item-desc">${trilha.descricao} &middot; ${trilha.cursos} cursos</span>
+            <span class="search-dropdown__item-desc">${trilha.descricao || ''} &middot; ${trilha.cursos || ''} cursos</span>
           </div>
         </a>`;
     });
@@ -122,7 +153,11 @@ function highlightMatch(text, query) {
 
 /* ---------- ENGINE ---------- */
 
-function searchPlatform(query) {
+let searchCache = null;
+let searchCacheQuery = '';
+let searchCacheTimeout = null;
+
+function searchPlatformLocal(query) {
   if (!query || query.trim().length < 2) return [];
 
   const q = query.trim().toLowerCase();
@@ -151,6 +186,81 @@ function searchPlatform(query) {
   return results;
 }
 
+function searchPlatformAPI(query) {
+  return new Promise(function(resolve) {
+    if (!query || query.trim().length < 2) {
+      resolve([]);
+      return;
+    }
+
+    if (typeof API === 'undefined' || typeof auth === 'undefined' || !auth.getAccessToken()) {
+      resolve(searchPlatformLocal(query));
+      return;
+    }
+
+    if (searchCacheQuery === query && searchCache) {
+      resolve(searchCache);
+      return;
+    }
+
+    if (searchCacheTimeout) {
+      clearTimeout(searchCacheTimeout);
+    }
+
+    searchCacheTimeout = setTimeout(function() {
+      API.get('/api/busca/?q=' + encodeURIComponent(query)).then(function(data) {
+        var results = [];
+
+        if (data.cursos) {
+          data.cursos.forEach(function(c) {
+            results.push({
+              id: c.slug || c.id,
+              titulo: c.titulo,
+              descricao: c.descricao,
+              url: c.url,
+              tipo: 'curso'
+            });
+          });
+        }
+
+        if (data.modulos) {
+          data.modulos.forEach(function(m) {
+            results.push({
+              id: 'modulo-' + m.id,
+              titulo: m.titulo,
+              descricao: m.curso_titulo,
+              url: m.url,
+              tipo: 'modulo'
+            });
+          });
+        }
+
+        if (data.materiais) {
+          data.materiais.forEach(function(mat) {
+            results.push({
+              id: 'material-' + mat.id,
+              titulo: mat.titulo,
+              descricao: mat.curso_titulo + ' · ' + mat.modalidade.toUpperCase(),
+              url: mat.url,
+              tipo: 'material'
+            });
+          });
+        }
+
+        searchCache = results;
+        searchCacheQuery = query;
+        resolve(results);
+      }).catch(function() {
+        resolve(searchPlatformLocal(query));
+      });
+    }, 250);
+  });
+}
+
+function searchPlatform(query) {
+  return searchPlatformLocal(query);
+}
+
 /* ---------- INIT ---------- */
 
 function initSearch() {
@@ -165,14 +275,16 @@ function initSearch() {
       dropdown.style.display = "none";
       return;
     }
-    const results = searchPlatform(query);
-    renderSearchResults(results, query);
+    searchPlatformAPI(query).then(function(results) {
+      renderSearchResults(results, query);
+    });
   });
 
   searchInput.addEventListener("focus", function () {
     if (this.value.trim().length >= 2) {
-      const results = searchPlatform(this.value);
-      renderSearchResults(results, this.value);
+      searchPlatformAPI(this.value).then(function(results) {
+        renderSearchResults(results, searchInput.value);
+      });
     }
   });
 

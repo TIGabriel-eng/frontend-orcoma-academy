@@ -110,7 +110,7 @@ function initSidebarNav() {
     item.addEventListener("click", function () {
       var page = item.getAttribute("data-page");
       if (page === "sair") {
-        sessionStorage.clear();
+        auth.logout();
         window.location.href = "../Login/index.html";
         return;
       }
@@ -391,7 +391,7 @@ document.addEventListener("DOMContentLoaded", function () {
     applyCourseCardLayout();
   });
 
-  const userRole = sessionStorage.getItem('orcoma_user_role') || 'visitor';
+  const userRole = auth.getRole();
 
 
   const envCards = document.querySelectorAll('.module-pill');
@@ -450,7 +450,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (profileLogout) {
       profileLogout.addEventListener('click', function (e) {
         e.preventDefault();
-        sessionStorage.clear();
+        auth.logout();
         window.location.href = '../Login/index.html';
       });
     }
@@ -529,14 +529,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-  const userName = sessionStorage.getItem('orcoma_user_name') || 'Usuário';
+  const userName = auth.getName() || 'Usuário';
   const usernameEl = document.querySelector('.progress-sidebar__username');
   if (usernameEl) usernameEl.textContent = userName;
 });
 
 /* Modal Premium */
 (function checkPremium() {
-  var plano = sessionStorage.getItem('orcoma_plano_nome') || '';
+  var plano = auth.getPlanoNome();
   var modal = document.getElementById('premiumModal');
   var btnAssinar = document.getElementById('btnAssinar');
   var btnDepois = document.getElementById('btnDepois');

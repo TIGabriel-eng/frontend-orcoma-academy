@@ -83,7 +83,7 @@ function initSidebarNav() {
     item.addEventListener("click", function () {
       var page = item.getAttribute("data-page");
       if (page === "sair") {
-        sessionStorage.clear();
+        auth.logout();
         window.location.href = "../Login/index.html";
         return;
       }
@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
     'visitor':            'Visitante'
   };
 
-  const tipoUsuario = sessionStorage.getItem('orcoma_user_role') || 'visitor';
+  const tipoUsuario = auth.getRole();
 
   const planLabel = document.querySelector('.progress-sidebar__plan');
   if (planLabel) {
@@ -296,7 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-  const userName = sessionStorage.getItem('orcoma_user_name') || 'Usuário';
+  const userName = auth.getName() || 'Usuário';
   const usernameEl = document.querySelector('.progress-sidebar__username');
   if (usernameEl) usernameEl.textContent = userName;
 });

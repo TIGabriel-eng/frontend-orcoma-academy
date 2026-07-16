@@ -71,7 +71,7 @@ function initSidebarNav() {
     item.addEventListener("click", function () {
       var page = item.getAttribute("data-page");
       if (page === "sair") {
-        sessionStorage.clear();
+        auth.logout();
         window.location.href = "../Login/index.html";
         return;
       }
@@ -142,7 +142,7 @@ let profileOriginal = {};
 ============================================================ */
 
 async function carregarPerfil() {
-  var token = sessionStorage.getItem('access_token');
+  var token = auth.getAccessToken();
   if (!token) {
     return {
       nome: "Visitante",
@@ -169,8 +169,8 @@ async function carregarPerfil() {
   } catch (err) {
     return {
       nome: "Usuário",
-      email: sessionStorage.getItem('orcoma_user_email') || "",
-      role: sessionStorage.getItem('orcoma_user_role') || "visitor",
+      email: auth.getEmail(),
+      role: auth.getRole(),
       empresa: "",
       plano_nome: "Visitante",
       sobre: localStorage.getItem("perfil_sobre") || ""
@@ -183,15 +183,15 @@ async function carregarPerfil() {
 ============================================================ */
 
 function preencherPerfil(profile) {
-  const role = profile.role || sessionStorage.getItem("orcoma_user_role") || "visitor";
+  const role = profile.role || auth.getRole();
   const nome = profile.nome || profile.email?.split("@")[0] || "Usuário";
-  const email = profile.email || sessionStorage.getItem("orcoma_user_email") || "";
+  const email = profile.email || auth.getEmail();
   const empresa = profile.empresa || "—";
   const created = profile.created_at
     ? new Date(profile.created_at).toLocaleDateString("pt-BR", { month: "short", year: "numeric" })
     : "—";
 
-  const planoNome = profile.plano_nome || sessionStorage.getItem("orcoma_plano_nome") || "";
+  const planoNome = profile.plano_nome || auth.getPlanoNome();
   const roleLabel = planoMap[role] || role;
   const planoLabel = planoNome || roleLabel;
   const isAdmin = role === "admin";

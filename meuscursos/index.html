@@ -120,99 +120,8 @@
     </nav>
 
     <div class="tab-content active" id="tab-andamento">
-
-      <div class="catalog-grid">
-
-        <!-- Card 1 -->
-        <div class="course-card" data-curso="reforma-tributaria">
-          <img
-            src="../assets/images/reforma-tribut%C3%A1ria.png"
-            alt="Reforma Tributária"
-            class="curso-capa">
-          <div class="course-card__body">
-            <h3>Reforma Tributária</h3>
-            <span class="course-card__badge badge--nao-iniciado" data-i18n="badge.not-started">Não Iniciado</span>
-            <div class="course-card__progress">
-              <div class="progress__bar-track">
-                <div class="progress__bar-fill" data-width="75"></div>
-              </div>
-              <span>75%</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="course-card" data-curso="atualizacoes-contabeis">
-          <img
-            src="../assets/images/reforma-tribut%C3%A1ria.png"
-            alt="Atualizações Contábeis"
-            class="curso-capa">
-          <div class="course-card__body">
-            <h3>Atualizações Contábeis</h3>
-            <span class="course-card__badge badge--nao-iniciado" data-i18n="badge.not-started">Não Iniciado</span>
-            <div class="course-card__progress">
-              <div class="progress__bar-track">
-                <div class="progress__bar-fill" data-width="60"></div>
-              </div>
-              <span>60%</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="course-card" data-curso="planejamento-estrategico">
-          <img
-            src="../assets/images/reforma-tribut%C3%A1ria.png"
-            alt="Planejamento Estratégico"
-            class="curso-capa">
-          <div class="course-card__body">
-            <h3>Planejamento Estratégico</h3>
-            <span class="course-card__badge badge--nao-iniciado" data-i18n="badge.not-started">Não Iniciado</span>
-            <div class="course-card__progress">
-              <div class="progress__bar-track">
-                <div class="progress__bar-fill" data-width="40"></div>
-              </div>
-              <span>40%</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="course-card" data-curso="atendimento-ao-cliente">
-          <img
-            src="../assets/images/reforma-tribut%C3%A1ria.png"
-            alt="Atendimento ao Cliente"
-            class="curso-capa">
-          <div class="course-card__body">
-            <h3>Atendimento ao Cliente</h3>
-            <span class="course-card__badge badge--nao-iniciado" data-i18n="badge.not-started">Não Iniciado</span>
-            <div class="course-card__progress">
-              <div class="progress__bar-track">
-                <div class="progress__bar-fill" data-width="93"></div>
-              </div>
-              <span>93%</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="course-card" data-curso="processos-internos">
-          <img
-            src="../assets/images/reforma-tribut%C3%A1ria.png"
-            alt="Processos Internos"
-            class="curso-capa">
-          <div class="course-card__body">
-            <h3>Processos Internos</h3>
-            <span class="course-card__badge badge--nao-iniciado" data-i18n="badge.not-started">Não Iniciado</span>
-            <div class="course-card__progress">
-              <div class="progress__bar-track">
-                <div class="progress__bar-fill" data-width="30"></div>
-              </div>
-              <span>30%</span>
-            </div>
-          </div>
-        </div>
-
+      <div class="catalog-grid" id="catalogGrid">
+        <!-- Courses will be loaded dynamically from API -->
       </div>
     </div>
 
@@ -257,11 +166,14 @@
       </div>
     </div>
   </div>
+  <script src="../auth.js"></script>
   <script src="../api.js"></script>
   <script src="../i18n.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../router.js"></script>
+  <script src="../plan-expiry-banner.js"></script>
+  <script src="../onboarding.js"></script>
 <script src="script.js"></script>
   <script src="../search.js"></script>
 </body>

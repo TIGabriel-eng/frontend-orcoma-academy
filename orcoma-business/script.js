@@ -16,7 +16,7 @@ function initSidebarNav() {
   navItems.forEach(function (item) {
     item.addEventListener("click", function () {
       var page = item.getAttribute("data-page");
-      if (page === "sair") { sessionStorage.clear(); window.location.href = "../Login/index.html"; return; }
+      if (page === "sair") { auth.logout(); window.location.href = "../Login/index.html"; return; }
       var url = null;
       if (page === "inicio") url = "../orcoma-business/index.html";
       else if (page === "meu-perfil") url = "../meu-perfil/index.html";
@@ -262,7 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
     applyFloatingProfile();
   });
 
-  const userRole = sessionStorage.getItem('orcoma_user_role') || 'visitor';
+  const userRole = auth.getRole();
   const envCards = document.querySelectorAll('.module-pill');
   envCards.forEach(function (card) {
     const academyName = card.getAttribute('data-academy');
@@ -295,7 +295,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (profileLogout) {
     profileLogout.addEventListener('click', function (e) {
       e.preventDefault();
-      sessionStorage.clear();
+      auth.logout();
       window.location.href = '../Login/index.html';
     });
   }
@@ -353,7 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (e.ctrlKey && e.key === 'k') { e.preventDefault(); const input = document.getElementById('searchInput'); if (input) input.focus(); }
   });
 
-  const userName = sessionStorage.getItem('orcoma_user_name') || 'Usuário';
+  const userName = auth.getName() || 'Usuário';
   const usernameEl = document.querySelector('.progress-sidebar__username');
   if (usernameEl) usernameEl.textContent = userName;
 });
@@ -365,7 +365,7 @@ if (slider) {
 }
 
 (function checkPremium() {
-  var plano = sessionStorage.getItem('orcoma_plano_nome') || '';
+  var plano = auth.getPlanoNome();
   var modal = document.getElementById('premiumModal');
   var btnAssinar = document.getElementById('btnAssinar');
   var btnDepois = document.getElementById('btnDepois');

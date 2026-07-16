@@ -8,16 +8,16 @@ var Router = {
     } else if (path.indexOf('/academy-team/') !== -1 || path.indexOf('/academy-cliente-time/') !== -1 || path.indexOf('/academy-orcomakers/') !== -1) {
       this.currentAcademy = 'team';
     } else {
-      this.currentAcademy = sessionStorage.getItem('current_academy') || 'business';
+      this.currentAcademy = auth.getCurrentAcademy();
     }
-    sessionStorage.setItem('current_academy', this.currentAcademy);
+    auth.setCurrentAcademy(this.currentAcademy);
   },
 
   navigate: function (url) {
     if (url.indexOf('/orcoma-business/') !== -1 || url.indexOf('/academy-contabil/') !== -1 || url.indexOf('/academy-empresarial/') !== -1) {
-      sessionStorage.setItem('current_academy', 'business');
+      auth.setCurrentAcademy('business');
     } else if (url.indexOf('/academy-team/') !== -1 || url.indexOf('/academy-cliente-time/') !== -1 || url.indexOf('/academy-orcomakers/') !== -1) {
-      sessionStorage.setItem('current_academy', 'team');
+      auth.setCurrentAcademy('team');
     }
     window.location.href = url;
   },

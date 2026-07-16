@@ -29,7 +29,7 @@ function slugify(str) {
 
 /* ── LOCALSTORAGE PROGRESS ── */
 function getCurrentUserKey() {
-  var email = sessionStorage.getItem('orcoma_user_email') || sessionStorage.getItem('orcoma_user_name') || 'guest';
+  var email = auth.getEmail() || auth.getName() || 'guest';
   return 'user_' + slugify(email);
 }
 
@@ -95,6 +95,9 @@ function salvarProgressoParcial(cursoId, progresso) {
   if (atual.concluido_em) {
     dados.concluido_em = atual.concluido_em;
   }
+  if (ultimoTempoRegistrado > 0) {
+    dados.ultimo_segundo_assistido = Math.floor(ultimoTempoRegistrado);
+  }
 
   salvarProgressoLocalStorage(cursoId, dados);
 }
@@ -138,6 +141,79 @@ function registrarTempoAssistido(current) {
   }
   ultimoTempoRegistrado = current;
 }
+
+/* ── SALVAR POSIÇÃO DO VÍDEO NA API ── */
+var ultimaPosicaoSalva = 0;
+var POSICAO_SAVE_INTERVAL = 15;
+
+function salvarPosicaoVideo(currentTime) {
+  if (!cursoAtualId || !cursoJaPodeSalvar) return;
+  if (Math.abs(currentTime - ultimaPosicaoSalva) < POSICAO_SAVE_INTERVAL) return;
+  ultimaPosicaoSalva = currentTime;
+
+  var videoId = null;
+  try {
+    var params = new URLSearchParams(window.location.search);
+    videoId = params.get('video_id') || params.get('id');
+  } catch (e) {}
+
+  if (typeof API !== 'undefined' && typeof auth !== 'undefined' && auth.getAccessToken()) {
+    API.post('/api/matriculas/salvar-posicao/', {
+      curso: parseInt(cursoAtualId, 10),
+      video_id: videoId ? parseInt(videoId, 10) : null,
+      segundo: Math.floor(currentTime)
+    }).catch(function() {});
+  }
+}
+
+function retomarPosicaoVideo(player, tipo) {
+  if (!cursoAtualId) return;
+
+  if (typeof API !== 'undefined' && typeof auth !== 'undefined' && auth.getAccessToken()) {
+    API.get('/api/matriculas/posicao/?curso=' + parseInt(cursoAtualId, 10)).then(function(data) {
+      if (data && data.segundo > 0 && !data.concluido) {
+        showResumeToast(data.segundo, player, tipo);
+      }
+    }).catch(function() {});
+  }
+}
+
+function showResumeToast(segundos, player, tipo) {
+  var toast = document.getElementById('lessonToast');
+  if (!toast) return;
+
+  var min = Math.floor(segundos / 60);
+  var seg = Math.floor(segundos % 60);
+  var texto = 'Retomar de ' + min + ':' + (seg < 10 ? '0' : '') + seg + '?';
+
+  toast.innerHTML = '<span>' + texto + '</span> <button id="resumeBtn" style="margin-left:12px;padding:4px 12px;border-radius:6px;border:1px solid #fff;background:rgba(255,255,255,0.2);color:#fff;cursor:pointer;font-weight:600;">Sim</button> <button id="dismissResumeBtn" style="margin-left:6px;padding:4px 10px;border-radius:6px;border:none;background:transparent;color:rgba(255,255,255,0.7);cursor:pointer;">Não</button>';
+  toast.classList.add('visible');
+
+  var resumeBtn = document.getElementById('resumeBtn');
+  var dismissBtn = document.getElementById('dismissResumeBtn');
+
+  function doSeek() {
+    toast.classList.remove('visible');
+    if (tipo === 'youtube' && ytPlayer && typeof ytPlayer.seekTo === 'function') {
+      ytPlayer.seekTo(segundos, true);
+      ytPlayer.playVideo();
+    } else if (tipo === 'vimeo' && vimeoPlayer && typeof vimeoPlayer.setCurrentTime === 'function') {
+      vimeoPlayer.setCurrentTime(segundos).then(function() { vimeoPlayer.play(); });
+    } else if (tipo === 'nativo' && player && player.tagName === 'VIDEO') {
+      player.currentTime = segundos;
+      player.play();
+    }
+  }
+
+  if (resumeBtn) resumeBtn.addEventListener('click', doSeek);
+  if (dismissBtn) dismissBtn.addEventListener('click', function() {
+    toast.classList.remove('visible');
+  });
+
+  setTimeout(function() { toast.classList.remove('visible'); }, 10000);
+}
+
+var cursoJaPodeSalvar = false;
 
 function initStaticCourse() {
   var player = document.getElementById('course-video');
@@ -294,6 +370,10 @@ function inicializarVideoYouTube() {
     }
     ytPlayer = new YT.Player('course-video', {
       events: {
+        onReady: function() {
+          cursoJaPodeSalvar = true;
+          retomarPosicaoVideo(null, 'youtube');
+        },
         onStateChange: function(event) {
           if (event.data === YT.PlayerState.ENDED) {
             marcarCursoComoConcluido();
@@ -325,6 +405,7 @@ function inicializarVideoYouTube() {
       var current = ytPlayer.getCurrentTime();
       var duration = ytPlayer.getDuration();
       registrarTempoAssistido(current);
+      salvarPosicaoVideo(current);
       if (duration > 0) {
         var progresso = Math.min(100, Math.round((tempoAssistido / duration) * 100));
         salvarProgressoParcial(cursoAtualId, progresso);
@@ -354,12 +435,18 @@ function inicializarVideoVimeo() {
     marcarCursoComoConcluido();
   });
 
+  vimeoPlayer.ready().then(function() {
+    cursoJaPodeSalvar = true;
+    retomarPosicaoVideo(null, 'vimeo');
+  });
+
   watchInterval = setInterval(function() {
     if (cursoJaConcluido) { clearInterval(watchInterval); watchInterval = null; return; }
     if (!vimeoPlayer) return;
     vimeoPlayer.getCurrentTime().then(function(current) {
       return vimeoPlayer.getDuration().then(function(duration) {
         registrarTempoAssistido(current);
+        salvarPosicaoVideo(current);
         if (duration > 0) {
           var progresso = Math.min(100, Math.round((tempoAssistido / duration) * 100));
           salvarProgressoParcial(cursoAtualId, progresso);
@@ -388,9 +475,15 @@ function inicializarVideoNativo() {
     marcarCursoComoConcluido();
   });
 
+  video.addEventListener('loadedmetadata', function() {
+    cursoJaPodeSalvar = true;
+    retomarPosicaoVideo(video, 'nativo');
+  });
+
   video.addEventListener('timeupdate', function() {
     if (cursoJaConcluido) return;
     registrarTempoAssistido(video.currentTime);
+    salvarPosicaoVideo(video.currentTime);
     if (video.duration > 0) {
       var progresso = Math.min(100, Math.round((tempoAssistido / video.duration) * 100));
       salvarProgressoParcial(cursoAtualId, progresso);
@@ -514,7 +607,7 @@ function salvarConclusao() {
   if (!cursoAtualId) return;
 
   var token = null;
-  try { token = sessionStorage.getItem('access_token'); } catch (e) {}
+  try { token = auth.getAccessToken(); } catch (e) {}
 
   if (!token || typeof API === 'undefined') return;
 
@@ -734,8 +827,8 @@ function postComposerReview() {
   if (!txt || composerRating === 0) return;
   var list = document.getElementById('reviewsList');
   var moduloId = getParam('modulo');
-  var userName = sessionStorage.getItem('orcoma_user_name') || 'Usuário';
-  var userAvatar = sessionStorage.getItem('orcoma_user_avatar') || '';
+  var userName = auth.getName() || 'Usuário';
+  var userAvatar = auth.getAvatar() || '';
 
   var reviewData = {
     modulo: moduloId ? parseInt(moduloId) : null,
@@ -807,7 +900,7 @@ function switchTab(btn, panelId) {
 function saveNotes() {
   var notes = document.getElementById('notes-area').value;
   try {
-    sessionStorage.setItem('orcoma_notes', notes);
+    localStorage.setItem('orcoma_notes', notes);
   } catch(e) {}
   var btn = document.querySelector('.notes-save');
   btn.textContent = 'Salvo \u2713';
@@ -816,7 +909,7 @@ function saveNotes() {
 
 (function() {
   try {
-    var saved = sessionStorage.getItem('orcoma_notes');
+    var saved = localStorage.getItem('orcoma_notes');
     if (saved) document.getElementById('notes-area').value = saved;
   } catch(e) {}
 })();

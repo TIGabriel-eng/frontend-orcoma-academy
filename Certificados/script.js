@@ -2,6 +2,45 @@
    ORCOMA ACADEMY — JavaScript (Certificados)
    ============================================================ */
 
+function formatarData(dataStr) {
+  if (!dataStr) return '';
+  var d = new Date(dataStr);
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function carregarCertificados() {
+  var list = document.getElementById('certList');
+  if (!list) return;
+
+  if (typeof API === 'undefined' || typeof auth === 'undefined' || !auth.getAccessToken()) {
+    list.innerHTML = '<div class="cert-empty">Faça login para ver seus certificados.</div>';
+    return;
+  }
+
+  API.get('/api/certificados/').then(function(certificados) {
+    if (!certificados || certificados.length === 0) {
+      list.innerHTML = '<div class="cert-empty">Nenhum certificado encontrado. Conclua um curso para receber seu certificado!</div>';
+      return;
+    }
+
+    list.innerHTML = certificados.map(function(cert) {
+      var duracao = cert.curso_duracao ? ' — ' + cert.curso_duracao : '';
+      var data = formatarData(cert.emitido_em);
+      return '<div class="cert-item">' +
+        '<div class="cert-item__icon"><i class="fa-solid fa-certificate"></i></div>' +
+        '<div class="cert-item__info">' +
+        '<h3>' + cert.curso_titulo + '</h3>' +
+        '<span>Concluído em ' + data + duracao + '</span>' +
+        '<span class="cert-code">Código: ' + cert.codigo + '</span>' +
+        '</div>' +
+        '<a href="' + cert.download_url + '" target="_blank" class="cert-item__btn" data-i18n="certificados.download"><i class="fa-solid fa-download"></i> Baixar PDF</a>' +
+        '</div>';
+    }).join('');
+  }).catch(function() {
+    list.innerHTML = '<div class="cert-empty">Erro ao carregar certificados. Tente novamente.</div>';
+  });
+}
+
 function initSidebarMobile() {
   const sidebar = document.getElementById("sidebar");
   const menuToggleBtn = document.getElementById("menuToggle");
@@ -20,7 +59,7 @@ function initSidebarNav() {
     item.addEventListener("click", function () {
       var page = item.getAttribute("data-page");
       if (page === "sair") {
-        sessionStorage.clear();
+        auth.logout();
         window.location.href = "../Login/index.html";
         return;
       }
@@ -85,7 +124,7 @@ function initEnvSelector() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () { initEnvSelector(); initSidebarNav(); initSidebarMobile(); });
+document.addEventListener("DOMContentLoaded", function () { initEnvSelector(); initSidebarNav(); initSidebarMobile(); carregarCertificados(); });
 
 /* Anti Copy */
 /* Widget Checklist - pulsar */

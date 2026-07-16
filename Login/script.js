@@ -95,13 +95,14 @@ formLogin.addEventListener("submit", async function (e) {
             return;
         }
 
-        sessionStorage.clear();
-        sessionStorage.setItem('access_token', data.access);
-        sessionStorage.setItem('refresh_token', data.refresh);
-        var user = data.user || {};
-        sessionStorage.setItem('orcoma_user_role', user.role || 'visitor');
-        sessionStorage.setItem('orcoma_user_email', user.email || '');
-        sessionStorage.setItem('orcoma_user_name', (user.first_name + ' ' + user.last_name).trim() || user.username);
+        auth.login(
+          { access: data.access, refresh: data.refresh },
+          {
+            role: user.role || 'visitor',
+            email: user.email || '',
+            name: (user.first_name + ' ' + user.last_name).trim() || user.username,
+          }
+        );
 
         window.location.href = '../selection_area/index.html';
 

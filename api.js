@@ -4,7 +4,7 @@ const API = (function () {
     : 'https://orcoma-academy-backend.onrender.com';
 
   function getToken() {
-    return sessionStorage.getItem('access_token');
+    return auth.getAccessToken();
   }
 
   function getAuthHeaders() {

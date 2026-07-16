@@ -5,7 +5,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     const role =
-        sessionStorage.getItem('orcoma_user_role');
+        auth.getRole();
 
     if (role === null) return;
 

@@ -7,7 +7,7 @@ function slugify(str) {
 }
 
 function getCurrentUserKey() {
-  var email = sessionStorage.getItem('orcoma_user_email') || sessionStorage.getItem('orcoma_user_name') || 'guest';
+  var email = auth.getEmail() || auth.getName() || 'guest';
   return 'user_' + slugify(email);
 }
 
@@ -89,7 +89,7 @@ function initSidebarNav() {
     item.addEventListener("click", function () {
       var page = item.getAttribute("data-page");
       if (page === "sair") {
-        sessionStorage.clear();
+        auth.logout();
         window.location.href = "../Login/index.html";
         return;
       }
@@ -125,21 +125,44 @@ function carregarCursos() {
   if (!grid) return;
 
   API.get('/api/cursos/').then(function (cursos) {
-    if (!cursos || cursos.length === 0) return;
-    grid.innerHTML = cursos.map(function (c) {
+    if (!cursos || cursos.length === 0) {
+      grid.innerHTML = '<div class="empty-state"><i class="fa-regular fa-frown"></i><p>Nenhum curso em andamento.</p></div>';
+      return;
+    }
+
+    // Filter only courses that are in progress (not started and not completed)
+    var cursosEmAndamento = cursos.filter(function (c) {
       var slug = c.slug || c.id;
+      var progresso = getUserCourseProgress(slug);
+      if (!progresso) return false; // never started
+      if (progresso.concluido) return false; // already completed
+      return progresso.progresso > 0 && progresso.progresso < 100;
+    });
+
+    if (cursosEmAndamento.length === 0) {
+      grid.innerHTML = '<div class="empty-state"><i class="fa-regular fa-frown"></i><p>Nenhum curso em andamento.</p></div>';
+      return;
+    }
+
+    grid.innerHTML = cursosEmAndamento.map(function (c) {
+      var slug = c.slug || c.id;
+      var thumbnail = c.thumbnail_url || '../assets/images/reforma-tributária.png';
+      var progresso = getUserCourseProgress(slug);
+      var pct = progresso ? (progresso.progresso || 0) : 0;
       return '<div class="course-card" data-curso="' + slug + '">' +
-        '<img src="../assets/images/reforma-tributária.png" alt="' + c.titulo + '" class="curso-capa">' +
+        '<img src="' + thumbnail + '" alt="' + c.titulo + '" class="curso-capa">' +
         '<div class="course-card__body">' +
         '<h3>' + c.titulo + '</h3>' +
-        '<span class="course-card__badge badge--nao-iniciado">Não iniciado</span>' +
+        '<span class="course-card__badge badge--andamento">Em andamento</span>' +
         '<div class="course-card__progress">' +
-        '<div class="progress__bar-track"><div class="progress__bar-fill" style="width:0%"></div></div>' +
-        '<span>0%</span>' +
+        '<div class="progress__bar-track"><div class="progress__bar-fill" style="width:' + pct + '%"></div></div>' +
+        '<span>' + pct + '%</span>' +
         '</div></div></div>';
     }).join("");
     atualizarProgressoCursos();
-  }).catch(function () {});
+  }).catch(function () {
+    grid.innerHTML = '<div class="empty-state"><i class="fa-solid fa-exclamation-triangle"></i><p>Erro ao carregar cursos.</p></div>';
+  });
 }
 
 function initCourseCards() {
@@ -192,6 +215,13 @@ function initEnvSelector() {
   }
 }
 
+function formatarTempo(segundos) {
+  if (!segundos || segundos <= 0) return '';
+  var min = Math.floor(segundos / 60);
+  var seg = Math.floor(segundos % 60);
+  return min + ':' + (seg < 10 ? '0' : '') + seg;
+}
+
 function atualizarProgressoCursos() {
   try {
     document.querySelectorAll('.course-card[data-curso]').forEach(function (card) {
@@ -207,7 +237,10 @@ function atualizarProgressoCursos() {
       var percentSpan = card.querySelector('.course-card__progress span');
       if (badge) {
         badge.className = 'course-card__badge badge--andamento';
-        badge.textContent = 'Em andamento';
+        var texto = 'Em andamento';
+        var tempo = formatarTempo(progresso.ultimo_segundo_assistido);
+        if (tempo) texto += ' · Assistido até ' + tempo;
+        badge.textContent = texto;
       }
       if (barFill) barFill.style.width = Math.min(100, Math.max(0, progresso.progresso || 0)) + '%';
       if (percentSpan) percentSpan.textContent = Math.min(100, Math.max(0, progresso.progresso || 0)) + '%';
