@@ -1,5 +1,8 @@
 const API = (function () {
-  const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  var hostname = window.location.hostname;
+  // file:// or empty hostname = local development
+  var isLocal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '' || hostname === '[::1]';
+  const BASE_URL = isLocal
     ? 'http://localhost:8000'
     : 'https://orcoma-academy-backend.onrender.com';
 
