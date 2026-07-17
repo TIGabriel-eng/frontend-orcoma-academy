@@ -290,8 +290,8 @@ function carregarDashboard() {
     if (statEls.length >= 4 && metricas.cursos_ativos !== undefined) {
       statEls[0].setAttribute("data-target", metricas.cursos_ativos || 0);
       statEls[1].setAttribute("data-target", metricas.total_usuarios || 0);
-      statEls[2].setAttribute("data-target", metricas.certificados || metricas.total_usuarios || 0);
-      statEls[3].setAttribute("data-target", 98);
+      statEls[2].setAttribute("data-target", metricas.certificados_emitidos || 0);
+      statEls[3].setAttribute("data-target", metricas.satisfacao_alunos || 0);
     }
     initStatsCounters();
   }).catch(function () { initStatsCounters(); });
@@ -305,9 +305,14 @@ function carregarDashboard() {
 function carregarCursos() {
   API.get('/api/cursos/').then(function (cursos) {
     var slider = document.getElementById("coursesSlider");
-    if (!slider || !cursos || cursos.length === 0) return;
+    if (!slider) return;
+    if (!cursos || cursos.length === 0) {
+      slider.innerHTML = '<div style="text-align:center;padding:32px 12px;"><img src="../assets/images/nenhum-curso.png" alt="Nenhum curso" style="max-width:140px;margin-bottom:12px;"><p style="color:var(--text-2);font-size:1rem;font-weight:600;">Nenhum curso disponível!</p></div>';
+      return;
+    }
     slider.innerHTML = cursos.map(function (c) {
-      return '<div class="course-card">' +
+      var slug = c.slug || c.id;
+      return '<div class="course-card" data-slug="' + slug + '" style="cursor: pointer;">' +
         '<img src="../assets/images/reforma-tributária.png" alt="' + c.titulo + '" class="curso-capa">' +
         '<div class="course-card__thumb">' +
         '<div class="course-card__body">' +
@@ -320,6 +325,15 @@ function carregarCursos() {
     }).join("");
     animateProgressBars();
     applyCourseCardLayout();
+
+    slider.querySelectorAll('.course-card').forEach(function (card) {
+      card.addEventListener('click', function () {
+        var slug = card.getAttribute('data-slug');
+        if (slug) {
+          window.location.href = '../video-area/index.html?curso=' + slug;
+        }
+      });
+    });
   }).catch(function () {});
 }
 
@@ -331,7 +345,12 @@ function carregarCursos() {
 function carregarRecomendados() {
   API.get('/api/cursos-recomendados/').then(function (cursos) {
     var section = document.getElementById('recomendadosSection');
-    if (!section || !cursos || cursos.length === 0) return;
+    if (!section) return;
+    if (!cursos || cursos.length === 0) {
+      section.innerHTML = '<div style="text-align:center;padding:32px 12px;"><img src="../assets/images/nenhum-curso.png" alt="Nenhum curso recomendado" style="max-width:140px;margin-bottom:12px;"><p style="color:var(--text-2);font-size:1rem;font-weight:600;">Nenhum curso recomendado!</p></div>';
+      section.style.display = '';
+      return;
+    }
     section.innerHTML = cursos.map(function (c) {
       var slug = c.slug || c.id;
       var thumb = c.thumbnail_url || '../assets/images/reforma-tributária.png';
@@ -387,7 +406,7 @@ function carregarTrilhas() {
     var slider = document.getElementById("trilhasSlider");
     if (!slider) return;
     if (!trilhas || trilhas.length === 0) {
-      slider.innerHTML = '<p style="color:var(--text-2);padding:12px;">Nenhuma trilha disponível no momento.</p>';
+      slider.innerHTML = '<div style="text-align:center;padding:32px 12px;"><img src="../assets/images/trilha-não-encontrada.png" alt="Nenhuma trilha" style="max-width:140px;margin-bottom:12px;"><p style="color:var(--text-2);font-size:1rem;font-weight:600;">Nenhuma trilha disponível!</p></div>';
       return;
     }
     slider.innerHTML = trilhas.map(function (t) {

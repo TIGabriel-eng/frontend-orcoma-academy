@@ -296,3 +296,7 @@ a, button, input, textarea, select, [contenteditable], label, [role="button"], .
   cursor: auto;
 }
 
+a[href] {
+  cursor: pointer;
+}
+
