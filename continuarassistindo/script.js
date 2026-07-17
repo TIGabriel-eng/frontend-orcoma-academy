@@ -140,7 +140,11 @@ function carregarCursos() {
     });
 
     if (cursosEmAndamento.length === 0) {
-      grid.innerHTML = '<div class="empty-state"><i class="fa-regular fa-frown"></i><p>Nenhum curso em andamento.</p></div>';
+      grid.innerHTML = '<div class="empty-state">' +
+        '<img src="../assets/images/curso-não-concluído.png" alt="Nenhum curso em andamento" class="empty-state__img">' +
+        '<p>Você não tem nenhum curso em andamento.</p>' +
+        '<a href="../meuscursos/index.html" class="empty-state__pill">Catálogo de Cursos</a>' +
+        '</div>';
       return;
     }
 

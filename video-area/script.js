@@ -244,116 +244,207 @@ function initStaticCourse() {
 }
 
 function carregarCurso() {
+  var cursoSlug = getParam('curso');
   var cursoId = getParam('id');
-  if (!cursoId) {
+
+  if (!cursoSlug && !cursoId) {
     initStaticCourse();
     return;
   }
 
-  cursoAtualId = String(cursoId);
-
   var player = document.getElementById('course-video');
   var titleEl = document.getElementById('lesson-title');
-  var descEl = document.getElementById('lesson-description');
-  var metaEl = document.querySelector('.video-meta p');
-  var aboutEl = document.getElementById('panel-about');
+  var metaEl = document.getElementById('lesson-meta');
+  var aboutEl = document.getElementById('aboutContent');
+  var materialsEl = document.getElementById('materialsList');
+  var modulesNav = document.getElementById('modulesNav');
 
-  API.get('/api/cursos/' + cursoId + '/').then(function (curso) {
-    document.title = curso.titulo + ' | Orcoma Academy';
-    cursoAtualTitulo = curso.titulo;
+  var cursoData = null;
+  var modulosData = [];
 
-    document.querySelector('.sidebar-course-title').textContent = curso.titulo;
+  function startLoading(slug) {
+    API.get('/api/cursos/' + slug + '/modulos/').then(function (response) {
+    cursoData = response.curso;
+    modulosData = response.modulos || [];
 
-    titleEl.textContent = curso.titulo;
-
-    if (metaEl) {
-      metaEl.textContent = curso.tipo === 'video' ? 'V\u00eddeo' : 'Curso' + (curso.descricao ? ' \u00b7 ' + curso.descricao.substring(0, 60) : '');
+    if (!cursoData) {
+      titleEl.textContent = 'Curso n\u00e3o encontrado';
+      return;
     }
 
-    if (descEl) descEl.textContent = curso.descricao || '';
+    cursoAtualId = String(cursoData.id);
+    cursoAtualTitulo = cursoData.titulo;
+
+    document.title = cursoData.titulo + ' | Orcoma Academy';
+    document.getElementById('sidebarCourseTitle').textContent = cursoData.titulo;
 
     if (aboutEl) {
       aboutEl.innerHTML =
         '<p style="color:var(--text-2);font-size:.84rem;line-height:1.7;max-width:600px;">' +
-          (curso.descricao || 'Nenhuma descri\u00e7\u00e3o dispon\u00edvel.') +
+          (cursoData.descricao || 'Nenhuma descri\u00e7\u00e3o dispon\u00edvel.') +
         '</p>' +
         '<p style="color:var(--text-3);font-size:.76rem;margin-top:12px;">' +
-          'Tipo: ' + (curso.tipo === 'video' ? 'V\u00eddeo' : 'Curso') +
-          ' \u00b7 Status: ' + curso.status +
+          'Tipo: ' + (cursoData.tipo === 'video' ? 'V\u00eddeo' : 'Curso') +
+          ' \u00b7 Status: ' + cursoData.status +
         '</p>';
     }
 
-    var moduleNav = document.querySelector('.sidebar nav');
-    if (moduleNav) {
-      moduleNav.innerHTML =
-        '<div class="module-group">' +
-          '<div class="module-label">Aulas</div>' +
-          '<ul>' +
-            '<li class="module-item active" role="button" tabindex="0" aria-current="true" onclick="selectLesson(this, \'' + sanitize(curso.titulo) + '\')">' +
-              '<svg class="icon" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M6.5 5.5l4 2.5-4 2.5V5.5z"/></svg>' +
-              sanitize(curso.titulo) +
-              '<div class="check-circle done" aria-label="Conclu\u00eddo"></div>' +
-            '</li>' +
-          '</ul>' +
-        '</div>';
+    renderizarModulos();
+
+    var primeiraAula = null;
+    for (var m = 0; m < modulosData.length; m++) {
+      var aulas = modulosData[m].materiais || [];
+      for (var a = 0; a < aulas.length; a++) {
+        if (aulas[a].url_externa || aulas[a].arquivo_url) {
+          primeiraAula = { material: aulas[a], moduloIdx: m, aulaIdx: a };
+          break;
+        }
+      }
+      if (primeiraAula) break;
     }
 
-    if (curso.video_url) {
-      var videoUrl = curso.video_url;
-
-      var isYouTube = videoUrl.indexOf('youtube.com') !== -1 || videoUrl.indexOf('youtu.be') !== -1;
-      var isVimeo = videoUrl.indexOf('vimeo.com') !== -1;
-
-      if (isYouTube) {
-        var embedUrl = videoUrl.replace('watch?v=', 'embed/').split('&')[0];
-        if (embedUrl.indexOf('youtu.be/') !== -1) {
-          embedUrl = embedUrl.replace('youtu.be/', 'youtube.com/embed/');
-        }
-        if (embedUrl.indexOf('youtube.com/embed/') === -1 && embedUrl.indexOf('youtu.be/') === -1) {
-          embedUrl = 'https://www.youtube.com/embed/' + embedUrl.split('/').pop().split('?')[0];
-        }
-        player.outerHTML =
-          '<iframe id="course-video" class="video-player-iframe" src="' + embedUrl + '?rel=0&modestbranding=1&enablejsapi=1" ' +
-          'title="' + sanitize(curso.titulo) + '" ' +
-          'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
-          'allowfullscreen loading="lazy"></iframe>';
-        setTimeout(function() { inicializarVideoYouTube(); }, 500);
-      } else if (isVimeo) {
-        var vimeoId = videoUrl.split('/').pop().split('?')[0];
-        player.outerHTML =
-          '<iframe id="course-video" class="video-player-iframe" src="https://player.vimeo.com/video/' + vimeoId + '" ' +
-          'title="' + sanitize(curso.titulo) + '" ' +
-          'allow="autoplay; fullscreen; picture-in-picture" ' +
-          'allowfullscreen loading="lazy"></iframe>';
-        setTimeout(function() { inicializarVideoVimeo(); }, 500);
-      } else {
-        player.outerHTML =
-          '<video id="course-video" class="video-player-html5" controls preload="metadata">' +
-            '<source src="' + videoUrl + '" type="video/mp4">' +
-            'Seu navegador n\u00e3o suporta v\u00eddeo HTML5.' +
-          '</video>';
-        setTimeout(function() { inicializarVideoNativo(); }, 100);
-      }
-    } else {
-      player.outerHTML =
-        '<div id="course-video" style="display:flex;align-items:center;justify-content:center;height:400px;background:#111;color:#666;font-size:1.1rem;">' +
-          'Nenhum v\u00eddeo enviado para este curso.' +
-        '</div>';
-    }
-
-    if (curso.thumbnail_url) {
-      var existingMeta = document.querySelector('.video-wrapper .video-thumb-fallback');
-      if (!existingMeta) {
-        var wrapper = player.closest('.video-wrapper') || player.parentElement;
-      }
+    if (primeiraAula) {
+      carregarVideo(primeiraAula.material, modulosData[primeiraAula.moduloIdx], primeiraAula.moduloIdx, primeiraAula.aulaIdx);
     }
 
     updateModuleLocks();
     verificarConclusaoAnterior();
   }).catch(function (err) {
     titleEl.textContent = 'Erro ao carregar curso';
-    if (descEl) descEl.textContent = err.message || 'Curso n\u00e3o encontrado.';
+    if (metaEl) metaEl.textContent = err.message || 'Curso n\u00e3o encontrado.';
   });
+  }
+
+  if (cursoSlug) {
+    startLoading(cursoSlug);
+  } else {
+    API.get('/api/cursos/' + cursoId + '/').then(function (c) {
+      startLoading(c.slug);
+    }).catch(function () {
+      titleEl.textContent = 'Erro ao carregar curso';
+    });
+  }
+
+  function renderizarModulos() {
+    if (!modulesNav) return;
+    modulesNav.innerHTML = '';
+
+    modulosData.forEach(function (modulo, moduloIdx) {
+      var group = document.createElement('div');
+      group.className = 'module-group';
+
+      var label = document.createElement('div');
+      label.className = 'module-label';
+      label.textContent = modulo.titulo;
+      group.appendChild(label);
+
+      var ul = document.createElement('ul');
+      var aulas = modulo.materiais || [];
+
+      aulas.forEach(function (material, aulaIdx) {
+        var li = document.createElement('li');
+        li.className = 'module-item' + (moduloIdx === 0 && aulaIdx === 0 ? ' active' : '');
+        li.setAttribute('role', 'button');
+        li.setAttribute('tabindex', '0');
+        if (moduloIdx === 0 && aulaIdx === 0) {
+          li.setAttribute('aria-current', 'true');
+        }
+
+        li.innerHTML =
+          '<svg class="icon" viewBox="0 0 16 16" fill="currentColor">' +
+            '<circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.2" fill="none"/>' +
+            '<path d="M6.5 5.5l4 2.5-4 2.5V5.5z"/>' +
+          '</svg>' +
+          '<span>' + sanitize(material.titulo) + '</span>' +
+          '<div class="check-circle" aria-label="N\u00e3o conclu\u00eddo"></div>';
+
+        li.setAttribute('data-video-url', material.url_externa || material.arquivo_url || '');
+        li.setAttribute('data-modulo-idx', moduloIdx);
+        li.setAttribute('data-aula-idx', aulaIdx);
+
+        li.addEventListener('click', (function (mat, mod, mi, ai) {
+          return function () {
+            selectLesson(this, mat.titulo, mat.url_externa || mat.arquivo_url || '');
+            renderizarMateriais(mod.materiais || []);
+            document.getElementById('lesson-meta').textContent = mod.titulo + ' \u00b7 Aula ' + (ai + 1);
+          };
+        })(material, modulo, moduloIdx, aulaIdx));
+
+        ul.appendChild(li);
+      });
+
+      group.appendChild(ul);
+      modulesNav.appendChild(group);
+    });
+  }
+
+  function renderizarMateriais(aulas) {
+    if (!materialsEl) return;
+    materialsEl.innerHTML = '';
+
+    var downloadables = (aulas || []).filter(function (m) {
+      return m.modalidade !== 'video' && m.modalidade !== 'link';
+    });
+
+    if (downloadables.length === 0) {
+      materialsEl.innerHTML = '<p style="color:var(--text-2);">Nenhum material de apoio para este m\u00f3dulo.</p>';
+      return;
+    }
+
+    downloadables.forEach(function (mat) {
+      var item = document.createElement('div');
+      item.className = 'resource-item';
+
+      var ext = (mat.modalidade || 'pdf').toUpperCase();
+      var iconClass = ext === 'XLS' || ext === 'XLSX' ? 'xls' : ext === 'ZIP' ? 'zip' : 'pdf';
+
+      item.innerHTML =
+        '<div class="resource-icon ' + iconClass + '">' + ext + '</div>' +
+        '<div class="resource-info">' +
+          '<strong>' + sanitize(mat.titulo) + '</strong>' +
+          '<span>' + ext + '</span>' +
+        '</div>' +
+        (mat.arquivo_url
+          ? '<a href="' + mat.arquivo_url + '" class="dl-btn" target="_blank" rel="noopener" aria-label="Baixar ' + sanitize(mat.titulo) + '">Baixar</a>'
+          : '');
+
+      materialsEl.appendChild(item);
+    });
+  }
+
+  function carregarVideo(material, modulo, moduloIdx, aulaIdx) {
+    titleEl.textContent = material.titulo;
+    cursoAtualTitulo = material.titulo;
+    if (metaEl) {
+      metaEl.textContent = modulo.titulo + ' \u00b7 Aula ' + (aulaIdx + 1);
+    }
+
+    document.querySelectorAll('.module-item').forEach(function (i) {
+      i.classList.remove('active');
+      i.removeAttribute('aria-current');
+    });
+
+    var allItems = modulesNav.querySelectorAll('.module-item');
+    allItems.forEach(function (item) {
+      if (parseInt(item.getAttribute('data-modulo-idx')) === moduloIdx &&
+          parseInt(item.getAttribute('data-aula-idx')) === aulaIdx) {
+        item.classList.add('active');
+        item.setAttribute('aria-current', 'true');
+      }
+    });
+
+    var videoUrl = material.url_externa || material.arquivo_url || '';
+    if (videoUrl) {
+      setVideoSource(videoUrl, material.titulo);
+    } else {
+      player.outerHTML =
+        '<div id="course-video" style="display:flex;align-items:center;justify-content:center;height:400px;background:#111;color:#666;font-size:1.1rem;">' +
+          'Nenhum v\u00eddeo dispon\u00edvel para esta aula.' +
+        '</div>';
+    }
+
+    renderizarMateriais(modulo.materiais || []);
+  }
 }
 
 /* ── VIDEO INITIALIZATION: YouTube IFrame API ── */

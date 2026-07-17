@@ -263,11 +263,17 @@ function carregarEventos() {
 function carregarTrilhas() {
   API.get('/api/trilhas/').then(function (trilhas) {
     var slider = document.getElementById("trilhasSlider");
-    if (!slider || !trilhas || trilhas.length === 0) return;
+    if (!slider) return;
+    if (!trilhas || trilhas.length === 0) {
+      slider.innerHTML = '<p style="color:var(--text-2);padding:12px;">Nenhuma trilha disponível no momento.</p>';
+      return;
+    }
     slider.innerHTML = trilhas.map(function (t) {
+      var total = (t.cursos || []).length;
+      var label = total + ' curso' + (total !== 1 ? 's' : '');
       return '<div class="trail-card">' +
         '<div class="trail-card__icon"><i class="fas fa-route"></i></div>' +
-        '<div><h3>' + t.nome + '</h3><span>' + (t.ambiente_nome || '') + '</span></div></div>';
+        '<div><h3>' + t.nome + '</h3><span>' + label + '</span></div></div>';
     }).join("");
     applyCourseCardLayout();
   }).catch(function () {});
