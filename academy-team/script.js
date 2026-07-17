@@ -325,6 +325,37 @@ function carregarCursos() {
 
 
 /* ============================================================
+   8b. CARREGAR CURSOS RECOMENDADOS
+   ============================================================ */
+
+function carregarRecomendados() {
+  API.get('/api/cursos-recomendados/').then(function (cursos) {
+    var section = document.getElementById('recomendadosSection');
+    if (!section || !cursos || cursos.length === 0) return;
+    section.innerHTML = cursos.map(function (c) {
+      var slug = c.slug || c.id;
+      var thumb = c.thumbnail_url || '../assets/images/reforma-tributária.png';
+      var desc = c.descricao ? c.descricao.substring(0, 120) : '';
+      var videos = (c.videos || []).length;
+      return '<div class="curso-recomendado__badge"><i class="fa-solid fa-sparkles"></i> Recomendado para você</div>' +
+        '<div class="curso-recomendado__content">' +
+        '<div class="curso-recomendado__thumb"><img src="' + thumb + '" alt="' + c.titulo + '"></div>' +
+        '<div class="curso-recomendado__info">' +
+        '<h3>' + c.titulo + '</h3>' +
+        (desc ? '<p>' + desc + (c.descricao && c.descricao.length > 120 ? '...' : '') + '</p>' : '') +
+        '<div class="curso-recomendado__meta">' +
+        (videos > 0 ? '<span><i class="fa-solid fa-video"></i> ' + videos + ' aula' + (videos > 1 ? 's' : '') + '</span>' : '') +
+        '<span><i class="fa-solid fa-certificate"></i> Certificado</span>' +
+        '</div>' +
+        '<a href="../video-area/index.html?curso=' + slug + '" class="btn-recomendado">Começar agora <i class="fa-solid fa-arrow-right"></i></a>' +
+        '</div></div>';
+    }).join('');
+    section.style.display = '';
+  }).catch(function () {});
+}
+
+
+/* ============================================================
    9. CARREGAR EVENTOS DA API
    ============================================================ */
 
@@ -378,6 +409,8 @@ document.addEventListener("DOMContentLoaded", function () {
   carregarDashboard();
 
   carregarCursos();
+
+  carregarRecomendados();
 
   carregarEventos();
 
