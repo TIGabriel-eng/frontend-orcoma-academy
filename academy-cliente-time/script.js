@@ -1,17 +1,5 @@
 /* ============================================================
    ORCOMA ACADEMY — JavaScript
-   Organização:
-   1. Sidebar mobile (abrir/fechar)
-   2. Navegação da sidebar (item ativo)
-   3. Animação dos contadores de estatísticas (stats)
-   4. Carregar stats da API
-   5. Inicialização (chamada na carga do DOM)
-   ============================================================ */
-
-
-
-/* ============================================================
-   8. CARREGAR TRILHAS DA API
    ============================================================ */
 
 function carregarTrilhas() {
@@ -26,15 +14,6 @@ function carregarTrilhas() {
   }).catch(function () {});
 }
 
-
-/* ============================================================
-   9. CARREGAR EVENTOS DA API
-   ============================================================ */
-
-/**
- * Abre e fecha a sidebar em telas pequenas.
- * Também fecha ao clicar no overlay escuro.
- */
 function initSidebarMobile() {
   const sidebar        = document.getElementById("sidebar");
   const menuToggleBtn  = document.getElementById("menuToggle");
@@ -42,18 +21,16 @@ function initSidebarMobile() {
 
   if (!sidebar || !menuToggleBtn || !overlay) return;
 
-  /* Abre a sidebar */
   function openSidebar() {
     sidebar.classList.add("is-open");
     overlay.classList.add("is-visible");
-    document.body.style.overflow = "hidden"; /* Trava scroll do body */
+    document.body.style.overflow = "hidden";
   }
 
-  /* Fecha a sidebar */
   function closeSidebar() {
     sidebar.classList.remove("is-open");
     overlay.classList.remove("is-visible");
-    document.body.style.overflow = ""; /* Libera scroll */
+    document.body.style.overflow = "";
   }
 
   menuToggleBtn.addEventListener("click", function () {
@@ -64,18 +41,9 @@ function initSidebarMobile() {
     }
   });
 
-  /* Fecha ao clicar no overlay */
   overlay.addEventListener("click", closeSidebar);
 }
 
-
-/* ============================================================
-   3. NAVEGAÇÃO DA SIDEBAR (ITEM ATIVO)
-   ============================================================ */
-
-/**
- * Marca o item clicado como ativo e remove dos demais.
- */
 function initSidebarNav() {
   const navItems = document.querySelectorAll(".nav-item");
 
@@ -114,24 +82,11 @@ function initSidebarNav() {
   });
 }
 
-
-
-
-
-/* ============================================================
-   3. ANIMAÇÃO DOS CONTADORES DE ESTATÍSTICAS
-   ============================================================ */
-
-/**
- * Anima os números nas cards de estatísticas de 0 até o valor alvo.
- * Usa IntersectionObserver para iniciar apenas quando visível.
- */
 function initStatsCounters() {
   const statNumbers = document.querySelectorAll(".stat-item__number");
 
   if (!statNumbers.length) return;
 
-  /* Formata número com sufixos: 15000 → "15K" */
   function formatNumber(value) {
     if (value >= 1000) {
       return (value / 1000).toFixed(0) + "K";
@@ -139,17 +94,14 @@ function initStatsCounters() {
     return value.toString();
   }
 
-  /* Anima um único elemento contador */
   function animateCounter(element) {
     const target    = parseInt(element.getAttribute("data-target"), 10);
-    const duration  = 1500; /* ms */
+    const duration  = 1500;
     const startTime = performance.now();
 
     function update(currentTime) {
       const elapsed  = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
-      /* Easing: desacelera no final */
       const eased    = 1 - Math.pow(1 - progress, 3);
       const current  = Math.round(eased * target);
 
@@ -163,12 +115,11 @@ function initStatsCounters() {
     requestAnimationFrame(update);
   }
 
-  /* Usa IntersectionObserver: anima quando o elemento entra na tela */
   const observer = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
         animateCounter(entry.target);
-        observer.unobserve(entry.target); /* Anima uma única vez */
+        observer.unobserve(entry.target);
       }
     });
   }, { threshold: 0.5 });
@@ -178,55 +129,82 @@ function initStatsCounters() {
   });
 }
 
-
-/* ============================================================
-   4. CARREGAR STATS DA API
-   ============================================================ */
-
 function carregarStats() {
   API.get('/api/dashboard/').then(function (data) {
     var metricas = data.metricas || {};
     var statEls = document.querySelectorAll(".stat-item__number");
-    if (statEls.length >= 3 && metricas.cursos_ativos !== undefined) {
-      var targets = [metricas.cursos_ativos || 0, metricas.total_usuarios || 0, 98];
+    if (statEls.length >= 1 && metricas.cursos_ativos !== undefined) {
       statEls.forEach(function (el, i) {
-        if (targets[i] !== undefined) el.setAttribute("data-target", targets[i]);
+        var key = ['cursos_ativos', 'total_usuarios', 'total_certificados', 'satisfacao'][i];
+        if (key && metricas[key] !== undefined) el.setAttribute("data-target", metricas[key]);
       });
     }
     initStatsCounters();
   }).catch(function () { initStatsCounters(); });
 }
 
+function carregarCursos() {
+  var container = document.getElementById('cursosContainer');
+  if (!container) return;
 
-/* ============================================================
-   5. INICIALIZAÇÃO
-   ============================================================ */
+  API.get('/api/cursos/').then(function (cursos) {
+    container.innerHTML = '';
+    if (!cursos || cursos.length === 0) {
+      container.innerHTML = '<p style="color:var(--color-text-secondary);padding:20px;">Nenhum curso dispon\u00edvel no momento.</p>';
+      return;
+    }
+    var grid = document.createElement('div');
+    grid.className = 'cursos-grid';
+    cursos.forEach(function (curso) {
+      var card = document.createElement('div');
+      card.className = 'curso-card';
+      var thumbSrc = (curso.titulo === 'ONBOARDING MEI') ? '../assets/images/onboarding-mei.jpg' : (curso.thumbnail_url || '');
+      var statusLabel = '';
+      var statusClass = '';
+      if (curso.status_matricula === 'concluido') {
+        statusLabel = 'Conclu\u00eddo';
+        statusClass = 'status-concluido';
+      } else if (curso.status_matricula === 'em_andamento') {
+        statusLabel = 'Em andamento';
+        statusClass = 'status-em-andamento';
+      } else {
+        statusLabel = 'N\u00e3o-Iniciado';
+        statusClass = 'status-nao-iniciado';
+      }
+      card.innerHTML =
+        '<div class="curso-card__image">' +
+          '<img src="' + thumbSrc + '" alt="' + curso.titulo + '" loading="lazy">' +
+          '<span class="curso-card__status ' + statusClass + '">' + statusLabel + '</span>' +
+        '</div>' +
+        '<div class="curso-card__name">' + curso.titulo + '</div>' +
+        '<div class="curso-card__divider"></div>' +
+        '<div class="curso-card__meta"><span><i class="fa-solid fa-book"></i> Curso</span><span><i class="fa-solid fa-award"></i> Certificado</span></div>';
+      card.addEventListener('click', function () {
+        window.location.href = '../video-area/index.html?curso=' + curso.slug;
+      });
+      grid.appendChild(card);
+    });
+    container.appendChild(grid);
+  }).catch(function () {
+    container.innerHTML = '<p style="color:var(--color-text-secondary);padding:20px;">Erro ao carregar cursos.</p>';
+  });
+}
 
-/**
- * Ponto de entrada principal.
- * Chamado quando o DOM está totalmente carregado.
- */
 document.addEventListener("DOMContentLoaded", function () {
 
-  /* Inicializa módulo de navegação da sidebar */
   initSidebarNav();
-
-  /* Inicializa abertura/fechamento da sidebar no mobile */
   initSidebarMobile();
-
-  /* Carrega stats da API e inicia contadores */
   carregarStats();
-
-  /* Carrega trilhas da API */
   carregarTrilhas();
+  carregarCursos();
 
   const planoMap = {
     'admin':              'Administrador',
-    'cliente_premium':    'Cliente Premium ⭐',
+    'cliente_premium':    'Cliente Premium \u2b50',
     'cliente_orcoma':     'Cliente Orcoma',
     'colaborador_orcoma': 'Orcoma Team',
     'gestor_orcoma':      'Orcoma Business',
-    'empresario':         'Empresário',
+    'empresario':         'Empres\u00e1rio',
     'visitor':            'Visitante'
   };
 
@@ -247,7 +225,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  /* Dropdown do perfil */
   const chevron = document.getElementById('profileChevron');
   const dropdown = document.getElementById('profileDropdown');
   if (chevron && dropdown) {
@@ -265,7 +242,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  /* Dropdown do admin pill (hover) */
   if (tipoUsuario === 'admin') {
     const adminPill = document.getElementById('adminPill');
     const adminDropdown = document.getElementById('adminDropdown');
@@ -287,22 +263,116 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  /* Atalho de teclado: Ctrl + K para focar no input de busca */
-    document.addEventListener('keydown', function(e) {
-  if (e.ctrlKey && e.key === 'k') {
-    e.preventDefault();
-    const input = document.getElementById('searchInput');
-    if (input) input.focus();
-  }
-});
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'k') {
+      e.preventDefault();
+      const input = document.getElementById('searchInput');
+      if (input) input.focus();
+    }
+  });
 
-  const userName = auth.getName() || 'Usuário';
+  const userName = auth.getName() || 'Usu\u00e1rio';
   const usernameEl = document.querySelector('.progress-sidebar__username');
   if (usernameEl) usernameEl.textContent = userName;
+  const heroUserName = document.getElementById('heroUserName');
+  if (heroUserName) heroUserName.textContent = userName;
+  var avatarUrl = auth.getAvatar();
+  var avatarEl = document.getElementById('userAvatar');
+  if (avatarEl && avatarUrl) avatarEl.src = avatarUrl;
+
+  carregarUserStats();
+  carregarContinuarAssistindo();
 });
 
-/* Anti Copy */
-/* Widget Checklist - pulsar */
+function carregarContinuarAssistindo() {
+  var container = document.getElementById('continuarAssistindo');
+  if (!container) return;
+  API.get('/api/matriculas/').then(function (matriculas) {
+    var emAndamento = matriculas.filter(function (m) { return m.progresso > 0 && !m.concluido; });
+    if (!emAndamento || emAndamento.length === 0) {
+      container.className = '';
+      container.innerHTML = '<div class="continuar-card__empty"><img src="../assets/images/curso-n\u00e3o-conclu\u00eddo.png" alt="Nenhum curso" style="width:100px;height:auto;object-fit:contain;"><span>Voc\u00ea n\u00e3o tem nenhum curso em andamento!</span></div>';
+      return;
+    }
+    container.className = 'continuar-card';
+    var m = emAndamento[0];
+    var progresso = m.progresso || 0;
+    var tituloCurso = m.curso_titulo || 'Curso';
+    var tituloVideo = m.video_corrente_titulo || '';
+    var tituloCompleto = tituloCurso + (tituloVideo ? ': ' + tituloVideo : '');
+    container.innerHTML =
+      '<div class="continuar-card__thumb">' +
+        '<i class="fa-solid fa-play"></i>' +
+        '<div class="continuar-card__play" onclick="window.location.href=\'../video-area/index.html?curso=' + m.curso + '\'"><i class="fa-solid fa-play"></i></div>' +
+      '</div>' +
+      '<div class="continuar-card__body">' +
+        '<span class="continuar-card__tag">M\u00f3dulo</span>' +
+        '<h3 class="continuar-card__title">' + tituloCompleto + '</h3>' +
+        '<span class="continuar-card__progress-label">Progresso da Aula</span>' +
+        '<div class="continuar-card__progress">' +
+          '<div class="continuar-card__bar"><div class="continuar-card__bar-fill" style="width:' + progresso + '%"></div></div>' +
+          '<span class="continuar-card__percent">' + progresso + '%</span>' +
+        '</div>' +
+        '<button class="continuar-card__btn" onclick="window.location.href=\'../video-area/index.html?curso=' + m.curso + '\'">Retomar curso <i class="fa-solid fa-arrow-right"></i></button>' +
+      '</div>';
+  }).catch(function () {
+    container.className = '';
+    container.innerHTML = '<div class="continuar-card__empty"><img src="../assets/images/curso-n\u00e3o-conclu\u00eddo.png" alt="Nenhum curso" style="width:100px;height:auto;object-fit:contain;"><span>Voc\u00ea n\u00e3o tem nenhum curso em andamento!</span></div>';
+  });
+}
+
+function carregarUserStats() {
+  API.get('/api/user-stats/').then(function (stats) {
+    var tempoEl = document.getElementById('statTempoEstudo');
+    if (tempoEl) tempoEl.textContent = (stats.horas_estudo || 0) + 'h';
+
+    var certEl = document.getElementById('statCertificados');
+    if (certEl) certEl.textContent = stats.total_certificados || 0;
+
+    var metaProgress = document.getElementById('metaProgress');
+    var metaCta = document.getElementById('metaCta');
+    var heroMetaPercent = document.getElementById('heroMetaPercent');
+    if (stats.meta_semanal) {
+      if (metaProgress) metaProgress.style.display = '';
+      if (metaCta) metaCta.style.display = 'none';
+      var fill = document.getElementById('metaFill');
+      var statMeta = document.getElementById('statMeta');
+      if (fill) fill.style.width = stats.meta_semanal.percentual + '%';
+      if (statMeta) statMeta.textContent = stats.meta_semanal.percentual + '%';
+      if (heroMetaPercent) heroMetaPercent.textContent = stats.meta_semanal.percentual + '%';
+    } else {
+      if (metaProgress) metaProgress.style.display = 'none';
+      if (metaCta) metaCta.style.display = '';
+      if (heroMetaPercent) heroMetaPercent.textContent = '0%';
+    }
+  }).catch(function () {});
+}
+
+function criarMeta() {
+  var titulo = prompt('Qual sua meta de estudo para esta semana?');
+  if (!titulo) return;
+  var horas = prompt('Quantas horas por semana voc\u00ea quer estudar?', '5');
+  if (!horas || isNaN(horas)) return;
+  var hoje = new Date();
+  var inicio = new Date(hoje);
+  inicio.setDate(hoje.getDate() - hoje.getDay());
+  var fim = new Date(inicio);
+  fim.setDate(inicio.getDate() + 6);
+  var fmt = function (d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  API.post('/api/metas-semanais/', {
+    titulo: titulo,
+    meta_horas: parseInt(horas),
+    horas_concluidas: 0,
+    semana_inicio: fmt(inicio),
+    semana_fim: fmt(fim),
+    concluida: false,
+  }).then(function () {
+    carregarUserStats();
+  }).catch(function () {
+    alert('Erro ao criar meta. Tente novamente.');
+  });
+}
+
 (function initChecklist() {
   var icon = document.getElementById('checklistIcon');
   var panel = document.getElementById('checklistPanel');
@@ -346,7 +416,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  /* Auto-check itens com delay */
   var ckIds = ['ck1', 'ck2', 'ck3', 'ck4'];
   var delays = [2000, 5000, 8000, 11000];
   for (var i = 0; i < ckIds.length; i++) {

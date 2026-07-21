@@ -313,7 +313,7 @@ function carregarCursos() {
     slider.innerHTML = cursos.map(function (c) {
       var slug = c.slug || c.id;
       return '<div class="course-card" data-slug="' + slug + '" style="cursor: pointer;">' +
-        '<img src="../assets/images/reforma-tributária.png" alt="' + c.titulo + '" class="curso-capa">' +
+        '<img src="' + (c.titulo === 'ONBOARDING MEI' ? '../assets/images/onboarding-mei.jpg' : (c.thumbnail_url || '')) + '" alt="' + c.titulo + '" class="curso-capa">' +
         '<div class="course-card__thumb">' +
         '<div class="course-card__body">' +
         '<h3>' + c.titulo + '</h3>' +
@@ -353,7 +353,7 @@ function carregarRecomendados() {
     }
     section.innerHTML = cursos.map(function (c) {
       var slug = c.slug || c.id;
-      var thumb = c.thumbnail_url || '../assets/images/reforma-tributária.png';
+      var thumb = (c.titulo === 'ONBOARDING MEI') ? '../assets/images/onboarding-mei.jpg' : (c.thumbnail_url || '');
       var desc = c.descricao ? c.descricao.substring(0, 120) : '';
       var videos = (c.videos || []).length;
       return '<div class="curso-recomendado__badge"><i class="fa-solid fa-sparkles"></i> Recomendado para você</div>' +
@@ -388,7 +388,9 @@ function carregarEventos() {
       var months = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
       var month = months[d.getMonth()];
       var time = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+      var imgHtml = e.imagem ? '<img src="' + API.BASE_URL + e.imagem + '" alt="' + e.titulo + '" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;">' : '';
       return '<article class="event-card">' +
+        imgHtml +
         '<div class="event-date"><span class="day">' + day + '</span><span class="month">' + month + '</span></div>' +
         '<div class="event-content"><h4>' + e.titulo + '</h4><span>' + time + '</span></div>' +
         '</article>';
@@ -425,6 +427,97 @@ function carregarTrilhas() {
    11. INICIALIZAÇÃO
    ============================================================ */
 
+function slugify(str) {
+  return String(str).toLowerCase().normalize('NFD').replace(/[\u0000-\u001F]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+function getCurrentUserKey() {
+  var email = auth.getEmail() || auth.getName() || 'guest';
+  return 'user_' + slugify(email);
+}
+
+function getProgressStorage() {
+  try {
+    return JSON.parse(localStorage.getItem('orcoma_progresso') || '{}');
+  } catch (e) {
+    return {};
+  }
+}
+
+function getCurrentUserProgressState() {
+  var data = getProgressStorage();
+  if (!data.users) { data.users = {}; }
+  var userKey = getCurrentUserKey();
+  if (!data.users[userKey]) { data.users[userKey] = { cursos: {}, ultima_atualizacao: null }; }
+  var userData = data.users[userKey];
+  if (!userData.cursos) { userData.cursos = {}; }
+  return { rootData: data, userData: userData, userKey: userKey };
+}
+
+function getUserCourseProgress(slug) {
+  var state = getCurrentUserProgressState();
+  return state.userData.cursos[slug] || state.userData.cursos['slug_' + slug] || null;
+}
+
+function carregarContinuarAssistindo() {
+  var container = document.getElementById('continuarAssistindo');
+  if (!container) return;
+
+  API.get('/api/cursos/').then(function (cursos) {
+    if (!cursos || cursos.length === 0) {
+      container.className = '';
+      container.innerHTML = '<div style="text-align:center;padding:24px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;">' +
+        '<img src="../assets/images/curso-não-concluído.png" alt="Nenhum curso em andamento" style="max-width:100px;margin-bottom:10px;">' +
+        '<p style="color:var(--color-text-secondary);font-size:0.95rem;font-weight:600;margin:0;">Você não tem nenhum curso em andamento!</p></div>';
+      return;
+    }
+
+    var cursosEmAndamento = cursos.filter(function (c) {
+      var slug = c.slug || c.id;
+      var progresso = getUserCourseProgress(slug);
+      if (!progresso) return false;
+      if (progresso.concluido) return false;
+      return progresso.progresso > 0 && progresso.progresso < 100;
+    });
+
+    if (cursosEmAndamento.length === 0) {
+      container.className = '';
+      container.innerHTML = '<div style="text-align:center;padding:24px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;">' +
+        '<img src="../assets/images/curso-não-concluído.png" alt="Nenhum curso em andamento" style="max-width:100px;margin-bottom:10px;">' +
+        '<p style="color:var(--color-text-secondary);font-size:0.95rem;font-weight:600;margin:0;">Você não tem nenhum curso em andamento!</p></div>';
+      return;
+    }
+
+    var curso = cursosEmAndamento[0];
+    var slug = curso.slug || curso.id;
+    var thumbnail = curso.thumbnail_url || '';
+    var progresso = getUserCourseProgress(slug);
+    var pct = progresso ? (progresso.progresso || 0) : 0;
+
+    container.className = 'continuar-card';
+    container.innerHTML =
+      '<div class="continuar-card__thumb">' +
+        '<img src="' + thumbnail + '" alt="' + curso.titulo + '" style="width:100%;height:100%;object-fit:cover;">' +
+        '<div class="continuar-card__play" onclick="window.location.href=\'../video-area/index.html?curso=' + slug + '\'"><i class="fa-solid fa-play"></i></div>' +
+      '</div>' +
+      '<div class="continuar-card__body">' +
+        '<span class="continuar-card__tag">Curso</span>' +
+        '<h3 class="continuar-card__title">' + curso.titulo + '</h3>' +
+        '<span class="continuar-card__progress-label">Progresso da Aula</span>' +
+        '<div class="continuar-card__progress">' +
+          '<div class="continuar-card__bar"><div class="continuar-card__bar-fill" style="width:' + pct + '%"></div></div>' +
+          '<span class="continuar-card__percent">' + pct + '%</span>' +
+        '</div>' +
+        '<button class="continuar-card__btn" onclick="window.location.href=\'../video-area/index.html?curso=' + slug + '\'">Retomar curso <i class="fa-solid fa-arrow-right"></i></button>' +
+      '</div>';
+  }).catch(function () {
+    container.className = '';
+    container.innerHTML = '<div style="text-align:center;padding:24px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;">' +
+      '<img src="../assets/images/curso-não-concluído.png" alt="Nenhum curso em andamento" style="max-width:100px;margin-bottom:10px;">' +
+      '<p style="color:var(--color-text-secondary);font-size:0.95rem;font-weight:600;margin:0;">Você não tem nenhum curso em andamento!</p></div>';
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 
   initSidebarNav();
@@ -432,6 +525,8 @@ document.addEventListener("DOMContentLoaded", function () {
   initSidebarMobile();
 
   carregarDashboard();
+
+  carregarContinuarAssistindo();
 
   carregarCursos();
 
@@ -452,12 +547,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const userRole = auth.getRole();
 
 
-  const envCards = document.querySelectorAll('.module-pill');
-  envCards.forEach(function (card) {
-    const academyName = card.getAttribute('data-academy');
-    if (academyName && !Permissions.canAccess(academyName)) {
-      card.classList.add('locked');
-    }
+  // Garantir que as permissões são carregadas antes de verificar ambientes
+  Permissions.load().then(() => {
+    const envCards = document.querySelectorAll('.ambiente-card');
+    envCards.forEach(function (card) {
+      const academyName = card.getAttribute('data-academy');
+      if (academyName && !Permissions.canAccess(academyName)) {
+        card.style.display = 'none';
+      }
+    });
   });
 
   const planoMap = {
@@ -590,6 +688,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const userName = auth.getName() || 'Usuário';
   const usernameEl = document.querySelector('.progress-sidebar__username');
   if (usernameEl) usernameEl.textContent = userName;
+  var avatarUrl = auth.getAvatar();
+  var avatarEl = document.getElementById('userAvatar');
+  if (avatarEl && avatarUrl) avatarEl.src = avatarUrl;
 });
 
 /* Modal Premium */

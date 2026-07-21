@@ -22,13 +22,41 @@ const Permissions = (() => {
     return cached?.role || auth.getRole();
   }
 
+function getAcademiasPorRole(role) {
+    const PERMISSOES_PAPEL = {
+      'cliente_orcoma': ['Academy Contábil', 'Academy Gestão Empresarial'],
+      'empresario': ['Academy Gestão Empresarial'],
+      'cliente_equipe': ['Academy Time'],
+      'colaborador_orcoma': ['Academy Orcomakers'],
+      'admin': ['Academy Contábil', 'Academy Gestão Empresarial', 'Academy Time', 'Academy Orcomakers'],
+      'gestor_orcoma': ['Academy Contábil', 'Academy Gestão Empresarial', 'Academy Time', 'Academy Orcomakers'],
+      'cliente_premium': ['Academy Contábil', 'Academy Gestão Empresarial', 'Academy Time'],
+      'visitor': [],
+    };
+    const academias = PERMISSOES_PAPEL[role] || [];
+    return academias;
+  }
+
   function canAccess(academyName) {
-    if (!cached) return false;
+    if (!cached) {
+      // Fallback: usa o role do usuário autenticado
+      const role = auth.getRole();
+      const fullAccessRoles = ['admin', 'gestor_orcoma'];
+      if (fullAccessRoles.includes(role)) return true;
+      if (role === 'cliente_premium') return !['Academy Orcomakers'].includes(academyName);
+      const academiasPermitidas = getAcademiasPorRole(role);
+      return academiasPermitidas.includes(academyName);
+    }
     
-    const role = getRole();
+    const role = getRole() || auth.getRole();
     
     const fullAccessRoles = ['admin', 'gestor_orcoma', 'cliente_premium'];
     if (fullAccessRoles.includes(role)) return true;
+
+    // Para cliente_premium, exclui Academy Orcomakers
+    if (role === 'cliente_premium' && academyName === 'Academy Orcomakers') {
+      return false;
+    }
 
     return cached.academias_permitidas?.includes(academyName) || false;
   }

@@ -82,6 +82,9 @@ const auth = (function () {
     localStorage.removeItem(KEYS.user_name);
     localStorage.removeItem(KEYS.user_avatar);
     localStorage.removeItem(KEYS.plano_nome);
+    if (typeof API !== 'undefined' && API.logout) {
+      API.logout().catch(function() {});
+    }
   }
 
   function isLoggedIn() {

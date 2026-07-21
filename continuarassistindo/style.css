@@ -707,7 +707,7 @@ a[href] {
 }
 
 .empty-state__img {
-  width: 200px;
+  width: 100px;
   height: auto;
   margin-bottom: var(--spacing-lg);
   opacity: 0.85;

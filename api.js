@@ -1,25 +1,21 @@
 const API = (function () {
   var hostname = window.location.hostname;
-  // file:// or empty hostname = local development
   var isLocal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '' || hostname === '[::1]';
   const BASE_URL = isLocal
     ? 'http://localhost:8000'
     : 'https://orcoma-academy-backend.onrender.com';
 
-  function getToken() {
-    return auth.getAccessToken();
-  }
-
-  function getAuthHeaders() {
-    const token = getToken();
-    var headers = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = 'Bearer ' + token;
-    return headers;
-  }
-
   async function request(method, path, body) {
     var url = BASE_URL + path;
-    var options = { method: method, headers: getAuthHeaders() };
+    var headers = { 'Content-Type': 'application/json' };
+    if (typeof auth !== 'undefined' && auth.getAccessToken()) {
+      headers['Authorization'] = 'Bearer ' + auth.getAccessToken();
+    }
+    var options = {
+      method: method,
+      headers: headers,
+      credentials: 'same-origin'
+    };
     if (body !== undefined && body !== null) {
       options.body = JSON.stringify(body);
     }
@@ -35,13 +31,21 @@ const API = (function () {
     return data;
   }
 
+  function logout() {
+    return fetch(BASE_URL + '/api/logout/', { method: 'POST', credentials: 'same-origin' }).then(function() {
+      auth.logout();
+    }).catch(function() {
+      auth.logout();
+    });
+  }
+
   return {
     BASE_URL: BASE_URL,
-    getToken: getToken,
     get: function (path) { return request('GET', path); },
     post: function (path, body) { return request('POST', path, body); },
     patch: function (path, body) { return request('PATCH', path, body); },
     put: function (path, body) { return request('PUT', path, body); },
     del: function (path) { return request('DELETE', path); },
+    logout: logout,
   };
 })();

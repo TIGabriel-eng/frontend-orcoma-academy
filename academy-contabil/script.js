@@ -187,10 +187,10 @@ function carregarStats() {
   API.get('/api/dashboard/').then(function (data) {
     var metricas = data.metricas || {};
     var statEls = document.querySelectorAll(".stat-item__number");
-    if (statEls.length >= 3 && metricas.cursos_ativos !== undefined) {
-      var targets = [metricas.cursos_ativos || 0, metricas.total_usuarios || 0, 98];
+    if (statEls.length >= 1 && metricas.cursos_ativos !== undefined) {
       statEls.forEach(function (el, i) {
-        if (targets[i] !== undefined) el.setAttribute("data-target", targets[i]);
+        var key = ['cursos_ativos', 'total_usuarios', 'total_certificados', 'satisfacao'][i];
+        if (key && metricas[key] !== undefined) el.setAttribute("data-target", metricas[key]);
       });
     }
     initStatsCounters();
@@ -205,36 +205,44 @@ function carregarCursos() {
   var container = document.getElementById('cursosContainer');
   if (!container) return;
 
-  API.get('/api/cursos/?status=publicado').then(function (cursos) {
+  API.get('/api/cursos/').then(function (cursos) {
     container.innerHTML = '';
     if (!cursos || cursos.length === 0) {
       container.innerHTML = '<p style="color:var(--color-text-secondary);padding:20px;">Nenhum curso dispon\u00edvel no momento.</p>';
       return;
     }
+    var grid = document.createElement('div');
+    grid.className = 'cursos-grid';
     cursos.forEach(function (curso) {
       var card = document.createElement('div');
       card.className = 'curso-card';
-
-      var thumbSrc = curso.thumbnail_url || '../assets/images/orcoma.contabilidade.jpg';
-
+      var thumbSrc = (curso.titulo === 'ONBOARDING MEI') ? '../assets/images/onboarding-mei.jpg' : (curso.thumbnail_url || '../assets/images/onboarding-mei.jpg');
+      var statusLabel = '';
+      var statusClass = '';
+      if (curso.status_matricula === 'concluido') {
+        statusLabel = 'Concluído';
+        statusClass = 'status-concluido';
+      } else if (curso.status_matricula === 'em_andamento') {
+        statusLabel = 'Em andamento';
+        statusClass = 'status-em-andamento';
+      } else {
+        statusLabel = 'Não-Iniciado';
+        statusClass = 'status-nao-iniciado';
+      }
       card.innerHTML =
         '<div class="curso-card__image">' +
-          '<img src="' + thumbSrc + '" alt="' + curso.titulo + '" loading="lazy" onerror="this.src=\'../assets/images/orcoma.contabilidade.jpg\'">' +
+          '<img src="' + thumbSrc + '" alt="' + curso.titulo + '" loading="lazy" onerror="this.src=\'../assets/images/onboarding-mei.jpg\'">' +
+          '<span class="curso-card__status ' + statusClass + '">' + statusLabel + '</span>' +
         '</div>' +
-        '<div class="curso-card__content">' +
-          '<h4>' + curso.titulo + '</h4>' +
-          (curso.descricao ? '<p style="color:var(--color-text-secondary);font-size:.82rem;margin:6px 0;">' + curso.descricao.substring(0, 100) + (curso.descricao.length > 100 ? '...' : '') + '</p>' : '') +
-          '<div class="curso-recursos">' +
-            '<span><img src="../assets/images/video.png" alt=""> ' + (curso.tipo === 'video' ? 'V\u00eddeo' : 'Curso') + '</span>' +
-            (curso.video_url ? '<span><img src="../assets/images/video.png" alt=""> 1 V\u00eddeo</span>' : '') +
-          '</div>' +
-        '</div>' +
-        '<a href="../video-area/index.html?id=' + curso.id + '" class="btn-acessar">' +
-          'Acessar <i class="fa-solid fa-arrow-right"></i>' +
-        '</a>';
-
-      container.appendChild(card);
+        '<div class="curso-card__name">' + curso.titulo + '</div>' +
+        '<div class="curso-card__divider"></div>' +
+        '<div class="curso-card__meta"><span><i class="fa-solid fa-book"></i> Curso</span><span><i class="fa-solid fa-award"></i> Certificado</span></div>';
+      card.addEventListener('click', function () {
+        window.location.href = '../video-area/index.html?curso=' + curso.slug;
+      });
+      grid.appendChild(card);
     });
+    container.appendChild(grid);
   }).catch(function () {
     container.innerHTML = '<p style="color:var(--color-text-secondary);padding:20px;">Erro ao carregar cursos.</p>';
   });
@@ -345,7 +353,104 @@ document.addEventListener("DOMContentLoaded", function () {
   const userName = auth.getName() || 'Usuário';
   const usernameEl = document.querySelector('.progress-sidebar__username');
   if (usernameEl) usernameEl.textContent = userName;
+  const heroUserName = document.getElementById('heroUserName');
+  if (heroUserName) heroUserName.textContent = userName;
+  var avatarUrl = auth.getAvatar();
+  var avatarEl = document.getElementById('userAvatar');
+  if (avatarEl && avatarUrl) avatarEl.src = avatarUrl;
+
+  carregarUserStats();
+  carregarContinuarAssistindo();
 });
+
+function carregarContinuarAssistindo() {
+  var container = document.getElementById('continuarAssistindo');
+  if (!container) return;
+  API.get('/api/matriculas/').then(function (matriculas) {
+    var emAndamento = matriculas.filter(function (m) { return m.progresso > 0 && !m.concluido; });
+    if (!emAndamento || emAndamento.length === 0) {
+      container.className = '';
+      container.innerHTML = '<div class="continuar-card__empty"><img src="../assets/images/curso-não-concluído.png" alt="Nenhum curso" style="width:100px;height:auto;object-fit:contain;"><span>Você não tem nenhum curso em andamento!</span></div>';
+      return;
+    }
+    container.className = 'continuar-card';
+    var m = emAndamento[0];
+    var progresso = m.progresso || 0;
+    var tituloCurso = m.curso_titulo || 'Curso';
+    var tituloVideo = m.video_corrente_titulo || '';
+    var tituloCompleto = tituloCurso + (tituloVideo ? ': ' + tituloVideo : '');
+    container.innerHTML =
+      '<div class="continuar-card__thumb">' +
+        '<i class="fa-solid fa-play"></i>' +
+        '<div class="continuar-card__play" onclick="window.location.href=\'../video-area/index.html?curso=' + m.curso + '\'"><i class="fa-solid fa-play"></i></div>' +
+      '</div>' +
+      '<div class="continuar-card__body">' +
+        '<span class="continuar-card__tag">Módulo</span>' +
+        '<h3 class="continuar-card__title">' + tituloCompleto + '</h3>' +
+        '<span class="continuar-card__progress-label">Progresso da Aula</span>' +
+        '<div class="continuar-card__progress">' +
+          '<div class="continuar-card__bar"><div class="continuar-card__bar-fill" style="width:' + progresso + '%"></div></div>' +
+          '<span class="continuar-card__percent">' + progresso + '%</span>' +
+        '</div>' +
+        '<button class="continuar-card__btn" onclick="window.location.href=\'../video-area/index.html?curso=' + m.curso + '\'">Retomar curso <i class="fa-solid fa-arrow-right"></i></button>' +
+      '</div>';
+  }).catch(function () {
+    container.className = '';
+    container.innerHTML = '<div class="continuar-card__empty"><img src="../assets/images/curso-não-concluído.png" alt="Nenhum curso" style="width:100px;height:auto;object-fit:contain;"><span>Você não tem nenhum curso em andamento!</span></div>';
+  });
+}
+
+function carregarUserStats() {
+  API.get('/api/user-stats/').then(function (stats) {
+    var tempoEl = document.getElementById('statTempoEstudo');
+    if (tempoEl) tempoEl.textContent = (stats.horas_estudo || 0) + 'h';
+
+    var certEl = document.getElementById('statCertificados');
+    if (certEl) certEl.textContent = stats.total_certificados || 0;
+
+    var metaProgress = document.getElementById('metaProgress');
+    var metaCta = document.getElementById('metaCta');
+    var heroMetaPercent = document.getElementById('heroMetaPercent');
+    if (stats.meta_semanal) {
+      if (metaProgress) metaProgress.style.display = '';
+      if (metaCta) metaCta.style.display = 'none';
+      var fill = document.getElementById('metaFill');
+      var statMeta = document.getElementById('statMeta');
+      if (fill) fill.style.width = stats.meta_semanal.percentual + '%';
+      if (statMeta) statMeta.textContent = stats.meta_semanal.percentual + '%';
+      if (heroMetaPercent) heroMetaPercent.textContent = stats.meta_semanal.percentual + '%';
+    } else {
+      if (metaProgress) metaProgress.style.display = 'none';
+      if (metaCta) metaCta.style.display = '';
+      if (heroMetaPercent) heroMetaPercent.textContent = '0%';
+    }
+  }).catch(function () {});
+}
+
+function criarMeta() {
+  var titulo = prompt('Qual sua meta de estudo para esta semana?');
+  if (!titulo) return;
+  var horas = prompt('Quantas horas por semana você quer estudar?', '5');
+  if (!horas || isNaN(horas)) return;
+  var hoje = new Date();
+  var inicio = new Date(hoje);
+  inicio.setDate(hoje.getDate() - hoje.getDay());
+  var fim = new Date(inicio);
+  fim.setDate(inicio.getDate() + 6);
+  var fmt = function (d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  API.post('/api/metas-semanais/', {
+    titulo: titulo,
+    meta_horas: parseInt(horas),
+    horas_concluidas: 0,
+    semana_inicio: fmt(inicio),
+    semana_fim: fmt(fim),
+    concluida: false,
+  }).then(function () {
+    carregarUserStats();
+  }).catch(function () {
+    alert('Erro ao criar meta. Tente novamente.');
+  });
+}
 
 /* Anti Copy */
 /* Widget Checklist - pulsar */

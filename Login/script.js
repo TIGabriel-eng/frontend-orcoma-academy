@@ -95,16 +95,33 @@ formLogin.addEventListener("submit", async function (e) {
             return;
         }
 
+        var userData = data.user || {};
+        var role = userData.role || 'visitor';
         auth.login(
           { access: data.access, refresh: data.refresh },
           {
-            role: user.role || 'visitor',
-            email: user.email || '',
-            name: (user.first_name + ' ' + user.last_name).trim() || user.username,
+            role: role,
+            email: userData.email || '',
+            name: (userData.first_name + ' ' + userData.last_name).trim() || userData.username,
+            avatar: userData.avatar_url || '',
           }
         );
 
-        window.location.href = '../selection_area/index.html';
+        if (role === 'cliente_orcoma') {
+          auth.setCurrentAcademy('business');
+          window.location.href = '../orcoma-business/index.html';
+        } else if (role === 'empresario') {
+          auth.setCurrentAcademy('business');
+          window.location.href = '../orcoma-business/index.html';
+        } else if (role === 'cliente_equipe') {
+          auth.setCurrentAcademy('team');
+          window.location.href = '../academy-team/index.html';
+        } else if (role === 'colaborador_orcoma') {
+          auth.setCurrentAcademy('team');
+          window.location.href = '../academy-orcomakers/index.html';
+        } else {
+          window.location.href = '../meuscursos/index.html';
+        }
 
     } catch (err) {
         erroLogin.textContent = "Erro ao conectar ao servidor. Verifique se o backend está rodando.";

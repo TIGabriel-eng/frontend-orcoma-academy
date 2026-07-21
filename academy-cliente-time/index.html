@@ -8,7 +8,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -116,175 +116,75 @@
     <!-- Bloco de boas-vindas -->
 <!-- ===== HERO / BOAS-VINDAS ===== -->
 
-<a href="../academy-team/index.html" class="btn-voltar" data-academy="Academy Team">
-    <i class="fa-solid fa-arrow-left"></i>
-    Voltar
-</a>
+<a href="../academy-team/index.html" class="btn-voltar">
+      <i class="fa-solid fa-arrow-left"></i>
+      Voltar
+    </a>
+    <div class="hero-row">
     <section class="hero">
-
-      <!-- Bloco de boas-vindas -->
       <div class="hero__welcome">
-        <div class="hero__brand">
-          <div>
-            <p class="hero__brand-sub">BEM-VINDO À</p>
-            <img src="../assets/images/LOGO ORCOMA ACADEMY.png" alt="Orcoma Academy" class="hero__brand-logo-img hero__brand-logo-img--large" />
-          </div>
-        </div>
-        <p class="hero__tagline">Conhecimento que <strong>transforma.</strong><br>Inovação que <strong>impulsiona.</strong></p>
-        <p class="hero__desc">
-          Você está em: <span class="tag-env">Academy Time</span><br>
-          Capacitações exclusivas para a equipe de empresas que buscam melhoras na performance no dia a dia focados em treinamentos de vendas, atendimentos ao cliente, processos internos, comunicações, rotinas operacionais e muito mais!
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:40px;font-weight:800;color:var(--color-text-primary);">Bem-Vindo de Volta<br><span id="heroUserName" style="color:#ff9d00;"></span></h1>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:300;font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin-top:8px;">
+          Você está em <span class="tag-env" style="background:linear-gradient(135deg,#ff9d00,#e8941a);color:#000;padding:3px 10px;border-radius:20px;font-weight:700;font-size:12px;display:inline-block;">Academy Time</span>,<br>
+          o seu ambiente de aprendizagem da equipe.<br><br>
+          Continue o seu excelente progresso, você atingiu <strong id="heroMetaPercent" style="color:var(--color-accent-2);">0%</strong> da sua<br>meta semanal!
         </p>
       </div>
-
-
-
-
     </section>
+      <div class="hero-stats">
+        <div class="hero-stat-card" id="cardTempoEstudo">
+          <div class="hero-stat-card__icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="hero-stat-card__info">
+            <span class="hero-stat-card__label">Tempo de Estudo</span>
+            <span class="hero-stat-card__value" id="statTempoEstudo">0h</span>
+          </div>
+        </div>
+        <div class="hero-stat-card" id="cardCertificados">
+          <div class="hero-stat-card__icon"><i class="fa-solid fa-award"></i></div>
+          <div class="hero-stat-card__info">
+            <span class="hero-stat-card__label">Certificados</span>
+            <span class="hero-stat-card__value" id="statCertificados">0</span>
+          </div>
+        </div>
+        <div class="hero-stat-card" id="cardMeta">
+          <div class="hero-stat-card__icon"><i class="fa-solid fa-bullseye"></i></div>
+          <div class="hero-stat-card__info" id="metaContent">
+            <span class="hero-stat-card__label">Meta Semanal</span>
+            <div class="hero-stat-card__meta-progress" id="metaProgress">
+              <div class="hero-stat-card__progress-bar"><div class="hero-stat-card__progress-fill" id="metaFill" style="width:0%"></div></div>
+              <span class="hero-stat-card__value" id="statMeta">0%</span>
+            </div>
+          </div>
+          <div class="hero-stat-card__cta" id="metaCta" style="display:none;">
+            <span>Você ainda não definiu uma meta semanal</span>
+            <button onclick="criarMeta()" class="hero-stat-card__btn">Criar Meta</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- ===== FIM HERO ===== -->
 
-    <!--Curso Treinamento de Vendas-->
+    <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:700;color:var(--color-text-primary);margin:16px 0 0;animation:fadeUp 1.5s ease both;">Continue Assistindo</h1>
+
+    <div id="continuarAssistindo" class="continuar-card">
+    </div>
+
+    <!--Cursos Disponíveis-->
 
 <section class="cursos-disponiveis">
 
     <div class="section-header">
-        <h2>Cursos Disponíveis (exemplos)</h2>
+        <h2>Cursos Disponíveis</h2>
     </div>
 
-    <div class="curso-card">
-        <div class="curso-card__image">
-            <img src="../assets/images/orcoma.contabilidade.jpg">
-        </div>
-
-        <div class="curso-card__content">
-            <h4>Treinamento de Vendas</h4>
-    <div class="curso-recursos">
-
-            <span>
-                <img src="../assets/images/pdf.png" alt="">
-                        8 PDFs
-            </span>
-
-            <span>
-                <img src="../assets/images/video.png" alt="">
-                        20 Vídeos
-            </span>
-
-            <span>
-                <img src="../assets/images/prova.png" alt="">
-                        3 Provas
-            </span>
-
-            <span>
-                <img src="../assets/images/certificado.png" alt="">
-                        Certificado
-            </span>
-
-    </div>
-            <span class="curso-progresso">
-                5 de 6 módulos concluídos
-            </span>
-
-    <div class="curso-card__progress">
-
-        <div class="progress-bar">
-            <div class="progress-fill" style="width:80%"></div>
-        </div>
-
-
-    </div>
-        </div>
-
-        <div class="curso-card__progress">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width:80%"></div>
-            </div>
-            <span class="progress-percent">80%</span>
-        </div>
-
-    <a href="treinamento-vendas.html"
-            class="btn-acessar">
-
-                Acessar
-        <i class="fa-solid fa-arrow-right"></i>
-
-    </a>
-
-</div>
-
-
-    <div class="curso-card">
-
-    <div class="curso-card__image">
-        <img src="../assets/images/orcoma.contabilidade.jpg">
-    </div>
-
-    <div class="curso-card__content">
-
-        <h4>Atendimento ao Cliente</h4>
-
-        <div class="curso-recursos">
-
-            <span>
-                <img src="../assets/images/pdf.png">
-                10 PDFs
-            </span>
-
-            <span>
-                <img src="../assets/images/video.png">
-                15 Vídeos
-            </span>
-
-            <span>
-                <img src="../assets/images/prova.png">
-                2 Provas
-            </span>
-
-            <span>
-                <img src="../assets/images/certificado.png">
-                Certificado
-            </span>
-
-        </div>
-
-        <span>4 de 5 módulos concluídos </span>
-
-    <div class="curso-card__progress">
-
-        <div class="progress-bar">
-            <div class="progress-fill" style="width:75%"></div>
-        </div>
-
-
-    </div>
-
-    </div>
-    <div class="curso-card__progress">
-        <div class="progress-bar">
-            <div class="progress-fill" style="width:80%"></div>
-        </div>
-        <span class="progress-percent">
-                80%
-        </span>
-
-    </div>
-
-    <a href="atendimento-cliente.html"
-        class="btn-acessar">
-
-                Acessar
-        <i class="fa-solid fa-arrow-right"></i>
-
-    </a>
-
-</div>
+    <div id="cursosContainer"></div>
     <!-- ===== STATS ===== -->
     <section class="stats-bar">
 
       <div class="stat-item">
         <i class="fa-solid fa-play-circle"></i>
         <div>
-          <span class="stat-item__number" data-target="120">0</span><span>+</span>
+          <span class="stat-item__number" data-target="0">0</span><span>+</span>
           <p>Cursos disponíveis</p>
         </div>
       </div>
@@ -292,7 +192,7 @@
       <div class="stat-item">
         <i class="fa-solid fa-users"></i>
         <div>
-          <span class="stat-item__number" data-target="15000">0</span><span>+</span>
+          <span class="stat-item__number" data-target="0">0</span><span>+</span>
           <p>Alunos ativos</p>
         </div>
       </div>
@@ -300,7 +200,7 @@
       <div class="stat-item">
         <i class="fa-solid fa-id-card"></i>
         <div>
-          <span class="stat-item__number" data-target="3200">0</span><span>+</span>
+          <span class="stat-item__number" data-target="0">0</span><span>+</span>
           <p>Certificados emitidos</p>
         </div>
       </div>
@@ -308,7 +208,7 @@
       <div class="stat-item">
         <i class="fa-solid fa-star"></i>
         <div>
-          <span class="stat-item__number" data-target="98">0</span><span>%</span>
+          <span class="stat-item__number" data-target="0">0</span><span>%</span>
           <p>Satisfação dos alunos</p>
         </div>
       </div>
@@ -336,8 +236,8 @@
 
   <div class="progress-sidebar__user-info">
 
-    <span class="progress-sidebar__username">
-      Gabriel Anacleto
+    <span class="progress-sidebar__username" id="sidebarUserName">
+      Carregando...
     </span>
 
     <span class="progress-sidebar__plan pill-admin" id="adminPill">

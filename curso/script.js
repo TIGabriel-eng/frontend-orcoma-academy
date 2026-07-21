@@ -56,8 +56,20 @@
 
     function renderCourse() {
         document.getElementById('courseTitle').textContent = cursoData.titulo || 'Curso';
-        document.getElementById('courseDescription').textContent = cursoData.descricao || 'Nenhuma descrição disponível.';
         document.title = `Orcoma Academy | ${cursoData.titulo || 'Curso'}`;
+
+        var html = '<p style="color:var(--text-2);font-size:.84rem;line-height:1.7;max-width:600px;">' +
+            (cursoData.descricao || 'Nenhuma descrição disponível.') +
+            '</p>';
+
+        modulosData.forEach(function(m) {
+            if (m.descricao) {
+                html += '<h4 style="color:var(--text-1);font-size:.82rem;margin:16px 0 4px;">' + m.titulo + '</h4>' +
+                    '<p style="color:var(--text-2);font-size:.82rem;line-height:1.6;margin:0;">' + m.descricao + '</p>';
+            }
+        });
+
+        document.getElementById('courseDescription').innerHTML = html;
     }
 
     function renderModules() {
@@ -232,7 +244,8 @@
     }
 
     function showLoading(show) {
-        document.getElementById('loadingState').style.display = show ? 'flex' : 'none';
+        var el = document.getElementById('loadingState');
+        if (el) el.style.display = show ? 'flex' : 'none';
     }
 
     function showError(message) {

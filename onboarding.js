@@ -104,7 +104,7 @@ const Onboarding = (() => {
     overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;animation:fadeIn 0.3s ease-out;';
 
     var modal = document.createElement('div');
-    modal.style.cssText = 'background:#1a1a2e;border-radius:16px;max-width:480px;width:90%;max-height:90vh;overflow-y:auto;padding:32px;position:relative;animation:scaleIn 0.3s ease-out;border:1px solid rgba(255,157,0,0.2);';
+    modal.style.cssText = 'background:#0f172a;border-radius:16px;max-width:480px;width:90%;max-height:90vh;overflow-y:auto;padding:32px;position:relative;animation:scaleIn 0.3s ease-out;border:1px solid rgba(255,255,255,0.08);scrollbar-width:thin;scrollbar-color:#FF9D00 rgba(255,255,255,0.05);';
 
     var closeBtn = '<button id="closeOnboarding" style="position:absolute;top:12px;right:12px;background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:24px;cursor:pointer;padding:4px 8px;">&times;</button>';
 
@@ -182,7 +182,7 @@ const Onboarding = (() => {
 
 (function injectOnboardingStyles() {
   var style = document.createElement('style');
-  style.textContent = '@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeOut{from{opacity:1}to{opacity:0}}@keyframes scaleIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}';
+  style.textContent = '@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeOut{from{opacity:1}to{opacity:0}}@keyframes scaleIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}#onboardingOverlay::-webkit-scrollbar{width:8px;height:8px}#onboardingOverlay::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);border-radius:4px;margin:8px 0}#onboardingOverlay::-webkit-scrollbar-thumb{background:#FF9D00;border-radius:4px}#onboardingOverlay::-webkit-scrollbar-thumb:hover{background:#FFB84D}';
   document.head.appendChild(style);
 })();
 

@@ -150,7 +150,7 @@ function carregarCursos() {
 
     grid.innerHTML = cursosEmAndamento.map(function (c) {
       var slug = c.slug || c.id;
-      var thumbnail = c.thumbnail_url || '../assets/images/reforma-tributária.png';
+      var thumbnail = c.thumbnail_url || '';
       var progresso = getUserCourseProgress(slug);
       var pct = progresso ? (progresso.progresso || 0) : 0;
       return '<div class="course-card" data-curso="' + slug + '">' +

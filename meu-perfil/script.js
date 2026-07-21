@@ -155,15 +155,20 @@ async function carregarPerfil() {
   }
   try {
     var data = await API.get('/api/me/');
+    var avatarUrl = data.avatar_url || data.perfil && data.perfil.avatar || '';
+    if (avatarUrl) {
+      auth.setUser({ avatar: avatarUrl });
+    }
     return {
       id: data.id,
-      nome: data.nome || data.username,
+      nome: data.nome || data.first_name || data.username,
       email: data.email || "",
       role: data.role || "visitor",
       empresa: data.perfil ? (data.perfil.empresa || "") : "",
       telefone: data.perfil ? (data.perfil.telefone || "") : "",
       plano_nome: data.plano_nome || "Visitante",
       sobre: data.perfil ? (data.perfil.bio || "") : "",
+      avatar_url: avatarUrl,
       created_at: data.date_joined || null
     };
   } catch (err) {
@@ -173,7 +178,8 @@ async function carregarPerfil() {
       role: auth.getRole(),
       empresa: "",
       plano_nome: "Visitante",
-      sobre: localStorage.getItem("perfil_sobre") || ""
+      sobre: localStorage.getItem("perfil_sobre") || "",
+      created_at: localStorage.getItem("perfil_created_at") || null
     };
   }
 }
@@ -213,8 +219,13 @@ function preencherPerfil(profile) {
   const badgeEl = document.querySelector(".profile-card__badge");
   if (badgeEl) {
     badgeEl.textContent = roleLabel;
-    badgeEl.style.borderColor = isAdmin ? "#ff4444" : "#3b82f6";
-    badgeEl.style.color = isAdmin ? "#ff4444" : "#3b82f6";
+    if (isAdmin) {
+      badgeEl.style.borderColor = "#ff4444";
+      badgeEl.style.color = "#ff4444";
+    } else {
+      badgeEl.style.borderColor = "#64748b";
+      badgeEl.style.color = "#64748b";
+    }
   }
 
   /* Formação acadêmica no card */
@@ -707,8 +718,76 @@ window.consultarCatalogos = function () {
 ============================================================ */
 
 function initAvatarUpload() {
-  const overlay = document.querySelector(".profile-card__avatar-overlay");
-  if (overlay) overlay.style.display = "none";
+  var input = document.getElementById('avatarInput');
+  var overlay = document.querySelector('.profile-card__avatar-overlay');
+  if (!input || !overlay) return;
+
+  overlay.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    input.click();
+  });
+
+  input.addEventListener('change', function () {
+    var file = input.files && input.files[0];
+    if (!file) return;
+
+    var allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (allowed.indexOf(file.type) === -1) {
+      alert('Formato não suportado. Use JPG, PNG ou WebP.');
+      input.value = '';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Arquivo muito grande. Máximo 5MB.');
+      input.value = '';
+      return;
+    }
+
+    var formData = new FormData();
+    formData.append('avatar', file);
+
+    var token = auth.getAccessToken();
+    var base = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:8000'
+      : 'https://orcoma-academy-backend.onrender.com';
+
+    overlay.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+    fetch(base + '/api/avatar/', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      body: formData,
+      credentials: 'include'
+    })
+    .then(function (res) {
+      return res.text().then(function (text) {
+        var data;
+        try { data = JSON.parse(text); } catch (e) { data = null; }
+        if (!res.ok) {
+          throw data || { error: 'Erro ao enviar avatar. Tente novamente.' };
+        }
+        return data;
+      });
+    })
+    .then(function (data) {
+      if (data && data.avatar_url) {
+        var avatarEl = document.querySelector('.profile-card__avatar');
+        if (avatarEl) {
+          avatarEl.innerHTML = '<img src="' + data.avatar_url + '" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" />';
+        }
+        auth.setUser({ avatar: data.avatar_url });
+      }
+      overlay.innerHTML = '<i class="fa-solid fa-camera"></i>';
+      input.value = '';
+    })
+    .catch(function (err) {
+      var msg = (err && (err.error || err.detail)) ? (err.error || err.detail) : 'Erro ao enviar avatar. Tente novamente.';
+      alert(msg);
+      overlay.innerHTML = '<i class="fa-solid fa-camera"></i>';
+      input.value = '';
+    });
+  });
 }
 
 /* ============================================================

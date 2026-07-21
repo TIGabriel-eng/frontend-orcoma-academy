@@ -279,14 +279,24 @@ function carregarCurso() {
     document.getElementById('sidebarCourseTitle').textContent = cursoData.titulo;
 
     if (aboutEl) {
-      aboutEl.innerHTML =
+      var html =
         '<p style="color:var(--text-2);font-size:.84rem;line-height:1.7;max-width:600px;">' +
           (cursoData.descricao || 'Nenhuma descri\u00e7\u00e3o dispon\u00edvel.') +
-        '</p>' +
-        '<p style="color:var(--text-3);font-size:.76rem;margin-top:12px;">' +
+        '</p>';
+
+      modulosData.forEach(function(m) {
+        if (m.descricao) {
+          html += '<h4 style="color:var(--text-1);font-size:.82rem;margin:16px 0 4px;">' + m.titulo + '</h4>' +
+              '<p style="color:var(--text-2);font-size:.82rem;line-height:1.6;margin:0;">' + m.descricao + '</p>';
+        }
+      });
+
+      html += '<p style="color:var(--text-3);font-size:.76rem;margin-top:12px;">' +
           'Tipo: ' + (cursoData.tipo === 'video' ? 'V\u00eddeo' : 'Curso') +
           ' \u00b7 Status: ' + cursoData.status +
         '</p>';
+
+      aboutEl.innerHTML = html;
     }
 
     renderizarModulos();
@@ -309,10 +319,20 @@ function carregarCurso() {
 
     updateModuleLocks();
     verificarConclusaoAnterior();
-  }).catch(function (err) {
-    titleEl.textContent = 'Erro ao carregar curso';
-    if (metaEl) metaEl.textContent = err.message || 'Curso n\u00e3o encontrado.';
-  });
+   }).catch(function (err) {
+     titleEl.textContent = 'Erro ao carregar curso';
+     var errorMsg = 'Curso não encontrado ou você não tem permissão para acessá-lo.';
+     if (err && err.message) {
+       errorMsg = err.message;
+     }
+     if (metaEl) metaEl.textContent = errorMsg;
+     
+     // Remove loading state to prevent infinite loading
+     var sidebar = document.getElementById('sidebar');
+     if (sidebar) {
+       sidebar.classList.remove('loading');
+     }
+   });
   }
 
   if (cursoSlug) {
