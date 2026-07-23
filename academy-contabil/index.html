@@ -13,8 +13,19 @@
   <!-- Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="../responsive.css" />
+
+  <style>
+    .hero-row > div:last-child {
+      max-width: 400px !important;
+      width: 100% !important;
+    }
+    .hero-row > div:last-child > div {
+      width: 100% !important;
+    }
+  </style>
 </head>
 <body>
 
@@ -39,6 +50,11 @@
         <li class="nav-item" data-page="cursos">
           <i class="fa-solid fa-book"></i>
           <span>Catálogo</span>
+        </li>
+
+        <li class="nav-item" data-page="eventos">
+          <i class="fa-regular fa-calendar"></i>
+          <span>Eventos</span>
         </li>
 
         <li class="nav-divider">Progresso</li>
@@ -121,7 +137,7 @@
       Voltar
     </a>
     <div class="hero-row">
-      <section class="hero">
+      <section class="hero flex-1 min-w-0">
         <div class="hero__welcome">
           <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:40px;font-weight:800;color:var(--color-text-primary);">Bem-Vindo de Volta<br><span id="heroUserName" style="color:#ff9d00;"></span></h1>
           <p style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:300;font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin-top:8px;">
@@ -131,22 +147,22 @@
           </p>
         </div>
       </section>
-      <div class="hero-stats">
-        <div class="hero-stat-card" id="cardTempoEstudo">
+      <div class="flex flex-col gap-3 w-full max-w-[400px]">
+        <div class="w-full rounded-xl bg-[#0f1629] border border-[#1e293b] p-4" id="cardTempoEstudo">
           <div class="hero-stat-card__icon"><i class="fa-solid fa-clock"></i></div>
           <div class="hero-stat-card__info">
             <span class="hero-stat-card__label">Tempo de Estudo</span>
             <span class="hero-stat-card__value" id="statTempoEstudo">0h</span>
           </div>
         </div>
-        <div class="hero-stat-card" id="cardCertificados">
+        <div class="w-full rounded-xl bg-[#0f1629] border border-[#1e293b] p-4" id="cardCertificados">
           <div class="hero-stat-card__icon"><i class="fa-solid fa-award"></i></div>
           <div class="hero-stat-card__info">
             <span class="hero-stat-card__label">Certificados</span>
             <span class="hero-stat-card__value" id="statCertificados">0</span>
           </div>
         </div>
-        <div class="hero-stat-card" id="cardMeta">
+        <div class="w-full rounded-xl bg-[#0f1629] border border-[#1e293b] p-4" id="cardMeta">
           <div class="hero-stat-card__icon"><i class="fa-solid fa-bullseye"></i></div>
           <div class="hero-stat-card__info" id="metaContent">
             <span class="hero-stat-card__label">Meta Semanal</span>
@@ -164,9 +180,10 @@
     </div>
     <!-- ===== FIM HERO ===== -->
 
-    <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:700;color:var(--color-text-primary);margin:16px 0 0;animation:fadeUp 1.5s ease both;">Continue Assistindo</h1>
-
-    <div id="continuarAssistindo" class="continuar-card">
+    <div class="max-w-[900px] mx-auto px-4 py-2">
+      <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:700;color:var(--color-text-primary);margin:16px 0 0;animation:fadeUp 1.5s ease both;">Continue Assistindo</h1>
+      <div id="continuarAssistindo" class="continuar-card">
+      </div>
     </div>
 
     <!--Cursos Disponíveis-->
@@ -177,7 +194,18 @@
         <h2>Cursos Disponíveis</h2>
     </div>
 
-    <div id="cursosContainer"></div>
+    <div class="relative w-full max-w-[calc(100%-2rem)] mx-auto">
+      <button id="prev-cursos" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#1e3a8a] hover:bg-[#2563eb] flex items-center justify-center text-white transition-colors -ml-5">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="overflow-hidden rounded-xl">
+        <div id="carousel-track" class="flex gap-4 transition-transform duration-300 ease-in-out">
+        </div>
+      </div>
+      <button id="next-cursos" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#1e3a8a] hover:bg-[#2563eb] flex items-center justify-center text-white transition-colors -mr-5">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
     <!-- ===== STATS ===== -->
     <section class="stats-bar">
 

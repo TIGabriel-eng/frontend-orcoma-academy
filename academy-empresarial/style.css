@@ -612,7 +612,9 @@ padding:16px;
 position:relative;
 overflow:hidden;
 width: 700px;
-max-width: 100%;
+max-width: 800px;
+max-height: 340px;
+min-width: 381px;
 }
 
 .hero-row {

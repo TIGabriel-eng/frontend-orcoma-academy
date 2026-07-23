@@ -60,6 +60,7 @@ function initSidebarNav() {
       if (page === "inicio") url = "../academy-empresarial/index.html";
       else if (page === "meu-perfil") url = "../meu-perfil/index.html";
       else if (page === "cursos") url = "../meuscursos/index.html";
+      else if (page === "eventos") url = "../eventos/index.html";
       else if (page === "continuar") url = "../continuarassistindo/index.html";
       else if (page === "concluidos") url = "../cursos-concluidos/index.html";
       else if (page === "certificados") url = "/Certificados/index.html";

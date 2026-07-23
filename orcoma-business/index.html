@@ -13,6 +13,7 @@
 
   <!-- Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="../responsive.css" />
@@ -40,6 +41,11 @@
         <li class="nav-item" data-page="cursos">
           <i class="fa-solid fa-book"></i>
           <span>Catálogo</span>
+        </li>
+
+        <li class="nav-item" data-page="eventos">
+          <i class="fa-regular fa-calendar"></i>
+          <span>Eventos</span>
         </li>
 
         <li class="nav-divider">Progresso</li>
@@ -109,9 +115,9 @@
       <button class="topbar__menu-btn" id="menuToggle" aria-label="Abrir menu">
         <i class="fa-solid fa-bars"></i>
       </button>
-      <div class="topbar__search">
+      <div class="topbar__search" id="searchOpenBtn" style="cursor:pointer;">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" placeholder="Buscar cursos, trilhas ou conteúdos..." />
+        <input type="text" id="searchInput" placeholder="Buscar cursos, trilhas ou conteúdos..." readonly tabindex="-1" />
         <kbd>Ctrl K</kbd>
       </div>
       <div class="topbar__actions">
@@ -351,18 +357,26 @@
   <!-- ========== FIM CARD DE PROGRESSO ========== -->
 
   <!-- ========== CARD DE EVENTOS ========== -->
-  <section class="events-sidebar">
+  <section class="events-sidebar" id="eventsSidebar">
 
     <div class="events-header">
       <h3>Próximos eventos</h3>
     </div>
 
-    <div class="events-list"></div>
+    <div class="events-body" id="eventsBody">
+      <div class="events-empty" id="eventsEmpty" style="display:none;">
+        <i class="ti ti-calendar-off"></i>
+        <p>Nenhum evento agendado</p>
+      </div>
+      <div class="events-list" id="eventsList"></div>
+    </div>
 
-    <a href="#" class="events-link">
-      Ver calendário completo
-      <i class="fa-solid fa-arrow-right"></i>
-    </a>
+    <div class="events-footer">
+      <a href="../eventos/index.html" class="events-link">
+        Ver calendário completo
+        <i class="ti ti-arrow-right"></i>
+      </a>
+    </div>
 
   </section>
   <!-- ========== FIM CARD DE EVENTOS ========== -->
@@ -508,6 +522,203 @@
           localStorage.setItem('theme', 'light');
         }
       });
+    })();
+  </script>
+  <!-- Modal de Busca -->
+  <div class="search-modal-overlay" id="searchModalOverlay">
+    <div class="search-modal">
+      <div class="search-modal__header">
+        <i class="fa-solid fa-magnifying-glass search-modal__icon"></i>
+        <span class="search-modal__title">Search</span>
+      </div>
+      <div class="search-modal__subtitle">Como podemos te ajudar?</div>
+      <div class="search-modal__divider"></div>
+      <div class="search-modal__input-wrap">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchModalInput" placeholder="Pesquisar..." autocomplete="off" />
+      </div>
+      <div class="search-modal__divider"></div>
+      <div class="search-modal__filter">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Filtrar</span>
+      </div>
+      <div class="search-modal__nav">
+        <button class="search-modal__nav-item is-active" data-filter="recomendados">
+          <i class="fa-solid fa-star"></i>
+          Recomendados
+        </button>
+        <button class="search-modal__nav-item" data-filter="eventos">
+          <i class="fa-solid fa-calendar-days"></i>
+          Eventos
+        </button>
+      </div>
+      <div class="search-modal__results" id="searchModalResults"></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var overlay = document.getElementById('searchModalOverlay');
+      var openBtn = document.getElementById('searchOpenBtn');
+      var resultsEl = document.getElementById('searchModalResults');
+      var searchInput = document.getElementById('searchModalInput');
+      var navBtns = document.querySelectorAll('.search-modal__nav-item');
+      var cursosCache = [];
+      var eventosCache = [];
+      var abaAtual = 'recomendados';
+      if (!overlay || !openBtn) return;
+
+      function parseBRDateTime(str) {
+        if (!str) return null;
+        var parts = str.split(' ');
+        if (parts.length < 2) return null;
+        var dp = parts[0].split('/');
+        var tp = parts[1].split(':');
+        if (dp.length < 3 || tp.length < 2) return null;
+        var d = new Date(parseInt(dp[2],10), parseInt(dp[1],10)-1, parseInt(dp[0],10), parseInt(tp[0],10), parseInt(tp[1],10));
+        return isNaN(d.getTime()) ? null : d;
+      }
+
+      function renderizarCursos(lista) {
+        if (lista.length === 0) {
+          resultsEl.innerHTML = '<div class="search-modal__empty">Nenhum resultado encontrado.</div>';
+          return;
+        }
+        resultsEl.innerHTML = lista.map(function(c) {
+          return '<a class="search-modal__card" href="../curso/' + (c.slug || c.id) + '/">' +
+            '<img class="search-modal__card-img" src="' + (c.thumbnail_url || '../assets/images/onboarding-mei.jpg') + '" alt="' + c.titulo + '">' +
+            '<div class="search-modal__card-body">' +
+              '<div class="search-modal__card-title">' + c.titulo + '</div>' +
+              '<div class="search-modal__card-meta">' + (c.tipo || 'Curso') + (c.is_gratuito ? ' · Gratuito' : '') + '</div>' +
+            '</div>' +
+          '</a>';
+        }).join('');
+      }
+
+      function renderizarEventos(lista) {
+        if (lista.length === 0) {
+          resultsEl.innerHTML = '<div class="search-modal__empty">Nenhum resultado encontrado.</div>';
+          return;
+        }
+        resultsEl.innerHTML = lista.map(function(item) {
+          var ev = item.evento;
+          var d = item.data;
+          var meses = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+          var dataStr = d ? (d.getDate() + ' ' + meses[d.getMonth()] + ' ' + d.getFullYear()) : '';
+          var horaStr = d ? d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+          var href = '../eventos/index.html';
+          var imgSrc = ev.imagem_url || '../assets/images/onboarding-mei.jpg';
+          return '<a class="search-modal__card" href="' + href + '">' +
+            '<img class="search-modal__card-img" src="' + imgSrc + '" alt="' + (ev.titulo || 'Evento') + '">' +
+            '<div class="search-modal__card-body">' +
+              '<div class="search-modal__card-title">' + (ev.titulo || 'Evento') + '</div>' +
+              '<div class="search-modal__card-meta">' + dataStr + (horaStr ? ' · ' + horaStr : '') + '</div>' +
+            '</div>' +
+          '</a>';
+        }).join('');
+      }
+
+      function filtrar(termo) {
+        var lista = abaAtual === 'recomendados' ? cursosCache : eventosCache;
+        if (!termo.trim()) {
+          if (abaAtual === 'recomendados') renderizarCursos(lista);
+          else renderizarEventos(lista);
+          return;
+        }
+        var t = termo.toLowerCase();
+        if (abaAtual === 'recomendados') {
+          renderizarCursos(cursosCache.filter(function(c) {
+            return (c.titulo && c.titulo.toLowerCase().indexOf(t) !== -1) ||
+                   (c.tipo && c.tipo.toLowerCase().indexOf(t) !== -1);
+          }));
+        } else {
+          renderizarEventos(eventosCache.filter(function(item) {
+            return item.evento.titulo && item.evento.titulo.toLowerCase().indexOf(t) !== -1;
+          }));
+        }
+      }
+
+      function trocarAba(filtro) {
+        abaAtual = filtro;
+        navBtns.forEach(function(btn) {
+          btn.classList.toggle('is-active', btn.getAttribute('data-filter') === filtro);
+        });
+        searchInput.value = '';
+        if (filtro === 'recomendados') {
+          renderizarCursos(cursosCache);
+        } else {
+          renderizarEventos(eventosCache);
+        }
+      }
+
+      function abrirSearchModal() {
+        overlay.classList.add('is-visible');
+        document.body.style.overflow = 'hidden';
+        searchInput.value = '';
+        abaAtual = 'recomendados';
+        navBtns.forEach(function(btn) {
+          btn.classList.toggle('is-active', btn.getAttribute('data-filter') === 'recomendados');
+        });
+        carregarDados();
+        setTimeout(function() { searchInput.focus(); }, 100);
+      }
+
+      function fecharSearchModal() {
+        overlay.classList.remove('is-visible');
+        document.body.style.overflow = '';
+        searchInput.value = '';
+      }
+
+      openBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        abrirSearchModal();
+      });
+
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) fecharSearchModal();
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') fecharSearchModal();
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          abrirSearchModal();
+        }
+      });
+
+      searchInput.addEventListener('input', function() {
+        filtrar(this.value);
+      });
+
+      navBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          trocarAba(this.getAttribute('data-filter'));
+        });
+      });
+
+      function carregarDados() {
+        resultsEl.innerHTML = '<div class="search-modal__loading"><i class="fa-solid fa-spinner fa-spin"></i> Carregando...</div>';
+        Promise.all([
+          API.get('/api/cursos-recomendados/'),
+          API.get('/api/eventos/')
+        ]).then(function(resultados) {
+          cursosCache = resultados[0] || [];
+          var eventosRaw = resultados[1] || [];
+          var agora = new Date();
+          eventosCache = eventosRaw.map(function(e) {
+            var d = parseBRDateTime(e.data);
+            return d ? { evento: e, data: d } : null;
+          }).filter(function(item) {
+            return item !== null && item.data > agora;
+          }).sort(function(a, b) { return a.data - b.data; });
+          if (abaAtual === 'recomendados') renderizarCursos(cursosCache);
+          else renderizarEventos(eventosCache);
+        }).catch(function() {
+          cursosCache = [];
+          eventosCache = [];
+          resultsEl.innerHTML = '<div class="search-modal__empty">Erro ao carregar dados.</div>';
+        });
+      }
     })();
   </script>
 </body>

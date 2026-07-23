@@ -92,6 +92,7 @@ function initSidebarNav() {
       if (page === "inicio") url = "../academy-contabil/index.html";
       else if (page === "meu-perfil") url = "../meu-perfil/index.html";
       else if (page === "cursos") url = "../meuscursos/index.html";
+      else if (page === "eventos") url = "../eventos/index.html";
       else if (page === "continuar") url = "../continuarassistindo/index.html";
       else if (page === "concluidos") url = "../cursos-concluidos/index.html";
       else if (page === "certificados") url = "/Certificados/index.html";
@@ -202,17 +203,15 @@ function carregarStats() {
    ============================================================ */
 
 function carregarCursos() {
-  var container = document.getElementById('cursosContainer');
-  if (!container) return;
+  var track = document.getElementById('carousel-track');
+  if (!track) return;
 
   API.get('/api/cursos/').then(function (cursos) {
-    container.innerHTML = '';
+    track.innerHTML = '';
     if (!cursos || cursos.length === 0) {
-      container.innerHTML = '<p style="color:var(--color-text-secondary);padding:20px;">Nenhum curso dispon\u00edvel no momento.</p>';
+      track.innerHTML = '<p style="color:var(--color-text-secondary);padding:20px;width:100%;">Nenhum curso dispon\u00edvel no momento.</p>';
       return;
     }
-    var grid = document.createElement('div');
-    grid.className = 'cursos-grid';
     cursos.forEach(function (curso) {
       var card = document.createElement('div');
       card.className = 'curso-card';
@@ -240,12 +239,64 @@ function carregarCursos() {
       card.addEventListener('click', function () {
         window.location.href = '../video-area/index.html?curso=' + curso.slug;
       });
-      grid.appendChild(card);
+      track.appendChild(card);
     });
-    container.appendChild(grid);
+    initCarousel();
   }).catch(function () {
-    container.innerHTML = '<p style="color:var(--color-text-secondary);padding:20px;">Erro ao carregar cursos.</p>';
+    track.innerHTML = '<p style="color:var(--color-text-secondary);padding:20px;width:100%;">Erro ao carregar cursos.</p>';
   });
+}
+
+function initCarousel() {
+  var track = document.getElementById('carousel-track');
+  var prevBtn = document.getElementById('prev-cursos');
+  var nextBtn = document.getElementById('next-cursos');
+  if (!track || !prevBtn || !nextBtn) return;
+
+  var cards = track.querySelectorAll('.curso-card');
+  var totalCards = cards.length;
+  var visibleCount = 4;
+  var currentIndex = 0;
+  var maxIndex = Math.max(0, totalCards - visibleCount);
+
+  function getCardWidth() {
+    if (!cards.length) return 163;
+    return cards[0].offsetWidth;
+  }
+
+  function getGap() {
+    return 16;
+  }
+
+  function getStep() {
+    return (getCardWidth() + getGap()) * visibleCount;
+  }
+
+  function update() {
+    var offset = -(currentIndex * getStep());
+    track.style.transform = 'translateX(' + offset + 'px)';
+    prevBtn.style.opacity = currentIndex === 0 ? '0.3' : '1';
+    nextBtn.style.opacity = currentIndex >= maxIndex ? '0.3' : '1';
+    prevBtn.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
+    nextBtn.style.pointerEvents = currentIndex >= maxIndex ? 'none' : 'auto';
+  }
+
+  nextBtn.addEventListener('click', function () {
+    if (currentIndex < maxIndex) {
+      currentIndex++;
+      update();
+    }
+  });
+
+  prevBtn.addEventListener('click', function () {
+    if (currentIndex > 0) {
+      currentIndex--;
+      update();
+    }
+  });
+
+  window.addEventListener('resize', update);
+  update();
 }
 
 

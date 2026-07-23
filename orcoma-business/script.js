@@ -21,6 +21,7 @@ function initSidebarNav() {
       if (page === "inicio") url = "../orcoma-business/index.html";
       else if (page === "meu-perfil") url = "../meu-perfil/index.html";
       else if (page === "cursos") url = "../meuscursos/index.html";
+      else if (page === "eventos") url = "../eventos/index.html";
       else if (page === "continuar") url = "../continuarassistindo/index.html";
       else if (page === "concluidos") url = "../cursos-concluidos/index.html";
       else if (page === "certificados") url = "/Certificados/index.html";
@@ -251,24 +252,82 @@ function carregarRecomendados() {
   }).catch(function () {});
 }
 
+function parseBRDateTime(str) {
+  if (!str) return null;
+  var parts = str.split(' ');
+  if (parts.length < 2) return null;
+  var dateParts = parts[0].split('/');
+  var timeParts = parts[1].split(':');
+  if (dateParts.length < 3 || timeParts.length < 2) return null;
+  var d = new Date(
+    parseInt(dateParts[2], 10),
+    parseInt(dateParts[1], 10) - 1,
+    parseInt(dateParts[0], 10),
+    parseInt(timeParts[0], 10),
+    parseInt(timeParts[1], 10)
+  );
+  return isNaN(d.getTime()) ? null : d;
+}
+
 function carregarEventos() {
+  var emptyEl = document.getElementById('eventsEmpty');
+  var listEl = document.getElementById('eventsList');
+  if (!emptyEl || !listEl) return;
+
   API.get('/api/eventos/').then(function (eventos) {
-    var eventsList = document.querySelector(".events-list");
-    if (!eventsList || !eventos || eventos.length === 0) return;
-    eventsList.innerHTML = eventos.slice(0, 3).map(function (e) {
-      var d = new Date(e.data);
-      var day = d.getDate();
-      var months = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
-      var month = months[d.getMonth()];
-      var time = d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-      var imgHtml = e.imagem ? '<img src="' + API.BASE_URL + e.imagem + '" alt="' + e.titulo + '" style="width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;">' : '';
-      return '<article class="event-card">' +
-        imgHtml +
-        '<div class="event-date"><span class="day">' + day + '</span><span class="month">' + month + '</span></div>' +
-        '<div class="event-content"><h4>' + e.titulo + '</h4><span>' + time + '</span></div>' +
-        '</article>';
-    }).join("");
-  }).catch(function () {});
+    if (!eventos || eventos.length === 0) {
+      emptyEl.style.display = '';
+      listEl.innerHTML = '';
+      return;
+    }
+
+    var agora = new Date();
+    var futuro = eventos
+      .map(function (e) {
+        var d = parseBRDateTime(e.data);
+        return d ? { evento: e, data: d } : null;
+      })
+      .filter(function (item) {
+        return item !== null && item.data > agora;
+      });
+
+    if (futuro.length === 0) {
+      emptyEl.style.display = '';
+      listEl.innerHTML = '';
+      return;
+    }
+
+    futuro.sort(function (a, b) {
+      return a.data - b.data;
+    });
+
+    var limitados = futuro.slice(0, 5);
+    var meses = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+
+    listEl.innerHTML = limitados.map(function (item) {
+      var ev = item.evento;
+      var d = item.data;
+      var mes = meses[d.getMonth()];
+      var dia = d.getDate();
+      var hora = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      return '<div class="events-list__item" data-evento-id="' + ev.id + '">' +
+        '<div class="events-list__date">' +
+        '<span class="events-list__month">' + mes + '</span>' +
+        '<span class="events-list__day">' + dia + '</span>' +
+        '</div>' +
+        '<div class="events-list__info">' +
+        '<div class="events-list__title">' + (ev.titulo || 'Evento') + '</div>' +
+        '<div class="events-list__time">' + hora + '</div>' +
+        '</div>' +
+        '<i class="ti ti-chevron-right events-list__arrow"></i>' +
+        '</div>';
+    }).join('');
+
+    emptyEl.style.display = 'none';
+  }).catch(function () {
+    emptyEl.style.display = '';
+    listEl.innerHTML = '';
+  });
 }
 
 function carregarTrilhas() {

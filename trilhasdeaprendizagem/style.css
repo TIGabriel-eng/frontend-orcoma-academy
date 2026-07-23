@@ -221,8 +221,8 @@ img { max-width: 100%; display: block; }
 .page-header h1 { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--color-accent); }
 .page-header p { color: var(--color-text-secondary); font-size: 15px; }
 
-.trilhas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(700px, 1fr)); gap: var(--spacing-lg); }
-.trilha-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color var(--transition-fast), transform var(--transition-fast); width: 700px; height: 150px; display: flex; flex-direction: row; }
+.trilhas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--spacing-lg); }
+.trilha-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color var(--transition-fast), transform var(--transition-fast); width: 200px; min-width: 200px; min-height: 200px; display: flex; flex-direction: row; }
 .trilha-card:hover { border-color: var(--color-accent-2); transform: translateY(-2px); }
 .trilha-card__banner { width: 200px; min-width: 200px; background: linear-gradient(135deg, #1a2e4a, #0f1e35); display: flex; align-items: center; justify-content: center; position: relative; }
 .trilha-card__banner i { font-size: 28px; color: var(--color-accent); opacity: .6; }

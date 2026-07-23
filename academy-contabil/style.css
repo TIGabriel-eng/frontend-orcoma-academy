@@ -612,7 +612,9 @@ padding:16px;
 position:relative;
 overflow:hidden;
 width: 700px;
-max-width: 100%;
+max-width: 800px;
+max-height: 340px;
+min-width: 381px;
 }
 
 .hero-row {
@@ -633,11 +635,11 @@ max-width: 100%;
 .hero-stat-card {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 14px 16px;
+  padding: 4px 16px;
   transition: border-color .3s, transform .3s;
   animation: fadeUp 1.5s ease both;
 }
@@ -647,16 +649,16 @@ max-width: 100%;
 .hero-stat-card:hover { border-color: var(--color-accent-2); transform: translateY(-2px); }
 
 .hero-stat-card__icon {
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 8px;
   background: rgba(59,130,246,.12);
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.hero-stat-card__icon i { font-size: 18px; color: var(--color-accent-2); }
+.hero-stat-card__icon i { font-size: 14px; color: var(--color-accent-2); }
 .hero-stat-card__icon:nth-child(1) i { color: #ff9d00; }
 
 .hero-stat-card__info {
@@ -674,7 +676,7 @@ max-width: 100%;
 }
 .hero-stat-card__value {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--color-text-primary);
 }
@@ -738,11 +740,11 @@ z-index: 2;
 .hero::after{
 content:'';
 position:absolute;
-bottom:-10px;
+top:-40px;
 right:-50px;
 width:340px;
 height:340px;
-background:url('../assets/images/leão.png') no-repeat center bottom;
+background:url('../assets/images/leão.png') no-repeat center top;
 background-size:contain;
 pointer-events:none;
 z-index:2;
@@ -1498,7 +1500,39 @@ RESPONSIVO
 
 .cursos-disponiveis{
     margin-top:32px;
-    width: 700px   /*esse controla o tamanho dos cards dos cursos do Cursos Disponíveis*/
+    width: 1048px;
+}
+
+.cursos-disponiveis .relative {
+    max-width: 100% !important;
+}
+
+.cursos-disponiveis .overflow-hidden {
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.cursos-disponiveis #carousel-track {
+    display: flex;
+    gap: 16px;
+    transition: transform 300ms ease-in-out;
+}
+
+.cursos-disponiveis .curso-card {
+    width: 250px;
+    min-width: 250px;
+    height: 250px;
+    flex-shrink: 0;
+}
+
+.cursos-disponiveis .curso-card__image {
+    height: 170px;
+}
+
+.cursos-disponiveis #prev-cursos,
+.cursos-disponiveis #next-cursos {
+    display: flex;
+    z-index: 10;
 }
 
 .curso-card{
